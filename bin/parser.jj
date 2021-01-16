@@ -1,0 +1,70 @@
+ options {
+    IGNORE_CASE = false;
+    OPTIMIZE_TOKEN_MANAGER = true;
+  }
+
+  PARSER_BEGIN(ParserHDDL)
+
+  import java.io.*;
+  import java.util.*;
+
+  public class ParserHDDL {
+
+    public static void main(String[] args) throws ParseException,FileNotFoundException {
+
+       if (args.length < 1) {
+           System.out.println("Please pass in the filename for a parameter.");
+           System.exit(1);
+       }
+
+        ParserHDDL parser = new ParserHDDL(new FileInputStream(args[0]));
+
+        parser.calculator();
+        System.out.println("Parse completed.");
+     }
+   }
+
+
+
+  PARSER_END(ParserHDDL)
+
+   SKIP: /* Whitespaces */
+   {
+     "\t"
+   | "\n"
+   | "\r"
+   | " "
+   }
+
+  TOKEN:
+  {
+    <LPAR:    			    "(">										/* ( */
+    | <RPAR:    			")">										/* ) */
+    | <LSBRA:    			"[">										/* [ */
+    | <RSBRA:    			"]">										/* ] */
+    | <LT:    			    "<">										/* < */
+    | <GT:    			    ">">										/* > */
+    | <EQ:    			    "=">										/* = */
+    | <COLON:    			":">										/* : */
+    | <QUESTIONMARK:  	    "?">										/* ? */
+    | <AND:  				"and">										/* and */
+    | <NOT:  				"not">										/* not */
+    | <OR:  				"or">										/* or */
+    | <DEFINE:    		    "define">									/* define */
+    | <DOMAIN:    		    "domain">									/* domain */
+    | <REQUIREMENTS:  	    "requirements">								/* requirements */
+    | <TYPES:  			    "types">									/* types */
+    | <CONSTANTS:  		    "constants">								/* constants */
+    | <PREDICATES:  		"predicates">								/* predicates */
+    | <VAR:  				["a"-"z", "A"-"Z", "0"-"9","_"]+>			/* variables, words, consts */
+    | <ARG:  				"?"(<VAR>)>									/* argument = ?var */
+  }
+
+  void Start() :
+  {}
+    {
+        domain() | problem() <EOF>
+    }
+
+
+   
