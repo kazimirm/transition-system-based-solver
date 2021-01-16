@@ -61,10 +61,18 @@
   }
 
   void Start() :
-  {}
-    {
+  {
+
+  }
+  {
         domain() | problem() <EOF>
-    }
+  }
+
+  Domain domain() :
+  {
+    Domain newDomain = new Domain();
+  }
+
 
 
    
