@@ -66,24 +66,28 @@
 
   }
   {
-    domain() | problem() <EOF>
+    domain()  <EOF>
   }
 
   Domain domain():
   {
     Domain domain = new Domain();
     List<Types> types = new ArrayList<>();
+    String domainName;
   }
   {
-
+    <DEFINE> <LPAR> <DOMAIN> domainName = getAttribute() <RPAR>
+    types = getTypes()
+    {
+        domain.setName(domainName);
+        domain.setTypes(types);
+        return domain;
+    }
   }
 
-  Problem problem():
-  {
-      Problem problem = new Problem();
-  }
 
- List<Types> types():
+
+ List<Types> getTypes():
  {
     List<Types> types = new ArrayList<>();
  }

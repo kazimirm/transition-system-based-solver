@@ -5,7 +5,7 @@ import java.util.List;
 public class Domain {
     private String name;
     private List<Requirement> requirements;
-    private List<Type>  types;
+    private List<Type> types;
     private List<Constant>  constants;
     private List<Predicate> predicates;
     private List<Task> tasks;
