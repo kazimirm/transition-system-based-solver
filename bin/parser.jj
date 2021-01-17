@@ -36,7 +36,7 @@
    | " "
    }
 
-  TOKEN:
+  TOKEN: /* All possible valid tokens */
   {
     <LPAR:    			    "(">										/* ( */
     | <RPAR:    			")">										/* ) */
@@ -45,6 +45,7 @@
     | <LT:    			    "<">										/* < */
     | <GT:    			    ">">										/* > */
     | <EQ:    			    "=">										/* = */
+    | <DASH:    			"-">										/* - */
     | <COLON:    			":">										/* : */
     | <QUESTIONMARK:  	    "?">										/* ? */
     | <AND:  				"and">										/* and */
@@ -60,18 +61,61 @@
     | <ARG:  				"?"(<VAR>)>									/* argument = ?var */
   }
 
-  void Start() :
+  void Start():
   {
 
   }
   {
-        domain() | problem() <EOF>
+    domain() | problem() <EOF>
   }
 
-  Domain domain() :
+  Domain domain():
   {
-    Domain newDomain = new Domain();
+    Domain domain = new Domain();
+    List<Types> types = new ArrayList<>();
   }
+  {
+
+  }
+
+  Problem problem():
+  {
+      Problem problem = new Problem();
+  }
+
+ List<Types> types():
+ {
+    List<Types> types = new ArrayList<>();
+ }
+ {
+    <LPAR> <COLON> <TYPES> (types.add(type()))* <RPAR>
+ }
+
+ Type type():
+  {
+     Type type = new Type();
+     String name;
+     String baseType;
+  }
+  {
+     name = getAttribute() <DASH> baseType = getAttribute()
+     {
+        type.setName(name);
+        type.setBaseType(baseType);
+        return type;
+     }
+  }
+
+ String getAttribute() :
+ {
+   String attribute;
+ }
+ {
+   attribute = <VAR>
+   {
+     return attribute;
+   }
+ }
 
 
 
