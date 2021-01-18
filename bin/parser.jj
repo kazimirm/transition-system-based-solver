@@ -57,7 +57,7 @@
     | <TYPES:  			    "types">									/* types */
     | <CONSTANTS:  		    "constants">								/* constants */
     | <PREDICATES:  		"predicates">								/* predicates */
-    | <VAR:  				["a"-"z", "A"-"Z", "0"-"9","_"]+>			/* variables, words, consts */
+    | <VAR:  				(["a"-"z", "A"-"Z", "0"-"9","_"])+>			/* variables, words, consts */
     | <ARG:  				"?"(<VAR>)>									/* argument = ?var */
   }
 
@@ -90,25 +90,29 @@
  List<Types> getTypes():
  {
     List<Types> types = new ArrayList<>();
+    Type type;
  }
  {
-    <LPAR> <COLON> <TYPES> (types.add(type()))* <RPAR>
+    <LPAR> <COLON> <TYPES> (type = getType() { types.add(type);})* <RPAR>
+    {
+        return types;
+    }
  }
 
- Type type():
-  {
+ Type getType():
+ {
      Type type = new Type();
      String name;
      String baseType;
-  }
-  {
+ }
+ {
      name = getAttribute() <DASH> baseType = getAttribute()
      {
         type.setName(name);
         type.setBaseType(baseType);
         return type;
      }
-  }
+ }
 
  String getAttribute() :
  {
