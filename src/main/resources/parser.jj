@@ -19,7 +19,7 @@
 
         ParserHDDL parser = new ParserHDDL(new FileInputStream(args[0]));
 
-        parser.calculator();
+        parser.start();
         System.out.println("Parse completed.");
      }
    }
@@ -76,7 +76,7 @@
     String domainName;
   }
   {
-    <DEFINE> <LPAR> <DOMAIN> domainName = getAttribute() <RPAR>
+    <LPAR> <DEFINE> <LPAR> <DOMAIN> domainName = getAttribute() <RPAR>
     types = getTypes()
     {
         domain.setName(domainName);
