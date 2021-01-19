@@ -72,7 +72,7 @@
   Domain domain():
   {
     Domain domain = new Domain();
-    List<Types> types = new ArrayList<>();
+    List<Type> types = new ArrayList<>();
     String domainName;
   }
   {
@@ -87,9 +87,9 @@
 
 
 
- List<Types> getTypes():
+ List<Type> getTypes():
  {
-    List<Types> types = new ArrayList<>();
+    List<Type> types = new ArrayList<>();
     Type type;
  }
  {
