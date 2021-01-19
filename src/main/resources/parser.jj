@@ -61,7 +61,7 @@
     | <ARG:  				"?"(<VAR>)>									/* argument = ?var */
   }
 
-  void Start():
+  void start():
   {
 
   }

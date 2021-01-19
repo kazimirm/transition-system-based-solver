@@ -23,6 +23,9 @@ public class Domain {
         this.actions = actions;
     }
 
+    public Domain() {
+    }
+
     public String getName() {
         return name;
     }
