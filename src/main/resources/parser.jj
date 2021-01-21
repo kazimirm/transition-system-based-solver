@@ -57,7 +57,7 @@
     | <TYPES:  			    "types">									/* types */
     | <CONSTANTS:  		    "constants">								/* constants */
     | <PREDICATES:  		"predicates">								/* predicates */
-    | <VAR:  				(["a"-"z", "A"-"Z", "0"-"9","_"])+>			/* variables, words, consts */
+    | <VAR:  				(["a"-"z", "A"-"Z", "0"-"9","_","-"])+>			/* variables, words, consts */
     | <ARG:  				"?"(<VAR>)>									/* argument = ?var */
   }
 
@@ -72,16 +72,19 @@
   Domain domain():
   {
     Domain domain = new Domain();
+    List<Requirement> requirements = new ArrayList<>();
     List<Type> types = new ArrayList<>();
     List<Predicate> predicates = new ArrayList<>();
     String domainName;
   }
   {
     <LPAR> <DEFINE> <LPAR> <DOMAIN> domainName = getAttribute() <RPAR>
+    requirements = getRequirements()
     types = getTypes()
     (predicates = getPredicates())?
     {
         domain.setName(domainName);
+        domain.setRequirements(requirements);
         domain.setTypes(types);
         domain.setPredicates(predicates);
         return domain;
@@ -89,6 +92,30 @@
   }
 
 
+List<Requirement> getRequirements():
+ {
+    List<Requirement> requirements = new ArrayList<>();
+    Requirement requirement;
+ }
+ {
+    <LPAR> <COLON> <REQUIREMENTS> (requirement = getRequirement() { requirements.add(requirement);})* <RPAR>
+    {
+        return requirements;
+    }
+ }
+
+ Requirement getRequirement():
+ {
+     Requirement requirement = new Requirement();
+     String value;
+ }
+ {
+     <COLON> value = getAttribute()
+     {
+        requirement.setValue(value);
+        return requirement;
+     }
+ }
 
  List<Type> getTypes():
  {
