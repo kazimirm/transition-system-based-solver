@@ -73,14 +73,17 @@
   {
     Domain domain = new Domain();
     List<Type> types = new ArrayList<>();
+    List<Predicate> predicates = new ArrayList<>();
     String domainName;
   }
   {
     <LPAR> <DEFINE> <LPAR> <DOMAIN> domainName = getAttribute() <RPAR>
     types = getTypes()
+    (predicates = getPredicates())?
     {
         domain.setName(domainName);
         domain.setTypes(types);
+        domain.setPredicates(predicates);
         return domain;
     }
   }
@@ -116,15 +119,66 @@
 
  String getAttribute() :
  {
-   String attribute;
+   Token attribute;
  }
  {
    attribute = <VAR>
    {
-     return attribute;
+     return attribute.toString();
    }
  }
 
+  List<Predicate> getPredicates():
+  {
+     List<Predicate> predicates = new ArrayList<>();
+     Predicate predicate;
+  }
+  {
+     <LPAR> <COLON> <PREDICATES> (predicate = getPredicate()
+                                    {
+                                        predicates.add(predicate);
+                                    })* <RPAR>
+     {
+         return predicates;
+     }
+  }
 
+ Predicate getPredicate():
+ {
+     Predicate predicate = new Predicate();
+     List<Argument> arguments = new ArrayList<>();
+     Argument argument = new Argument();
+     String name;
+     String argumentName;
+     String argumentType;
+ }
+ {
+     <LPAR> (
+                name = getAttribute()
+                    (argumentName = getArgument() <DASH> argumentType = getAttribute()
+                        {
+                            argument.setName(argumentName);
+                            argument.setType(argumentType);
+                            arguments.add(argument);
+                        }
+                    )+
+                ) <RPAR>
+     {
+        predicate.setName(name);
+        return predicate;
+     }
+ }
+
+
+ String getArgument() :
+ {
+   Token argument;
+ }
+ {
+   argument = <ARG>
+   {
+     return argument.toString();
+   }
+ }
 
    
