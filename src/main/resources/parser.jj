@@ -81,7 +81,7 @@
     <LPAR> <DEFINE> <LPAR> <DOMAIN> domainName = getAttribute() <RPAR>
     requirements = getRequirements()
     types = getTypes()
-    (predicates = getPredicates())?
+    predicates = getPredicates()
     {
         domain.setName(domainName);
         domain.setRequirements(requirements);
@@ -192,6 +192,7 @@ List<Requirement> getRequirements():
                 ) <RPAR>
      {
         predicate.setName(name);
+        predicate.setArguments(arguments);
         return predicate;
      }
  }
