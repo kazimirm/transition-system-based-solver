@@ -21,8 +21,8 @@ public class ParserHDDL implements ParserHDDLConstants {
         System.out.println("Parse completed.");
     }
 
-    static final public void start() throws ParseException {
-        Domain d = domain();
+    static final public void start() throws ParseException {Domain domain = new Domain();
+        domain = domain();
         jj_consume_token(0);
     }
 
@@ -157,14 +157,15 @@ public class ParserHDDL implements ParserHDDLConstants {
         name = getAttribute();
         label_4:
         while (true) {
-            argumentName = getArgument();
+            jj_consume_token(QUESTIONMARK);
+            argumentName = getAttribute();
             jj_consume_token(DASH);
             argumentType = getAttribute();
             argument.setName(argumentName);
             argument.setType(argumentType);
             arguments.add(argument);
             switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-                case ARG:{
+                case QUESTIONMARK:{
                     ;
                     break;
                 }
@@ -177,12 +178,6 @@ public class ParserHDDL implements ParserHDDLConstants {
         predicate.setName(name);
         predicate.setArguments(arguments);
         {if ("" != null) return predicate;}
-        throw new Error("Missing return statement in function");
-    }
-
-    static final public String getArgument() throws ParseException {Token argument;
-        argument = jj_consume_token(ARG);
-        {if ("" != null) return argument.toString();}
         throw new Error("Missing return statement in function");
     }
 
@@ -202,7 +197,7 @@ public class ParserHDDL implements ParserHDDLConstants {
         jj_la1_init_0();
     }
     private static void jj_la1_init_0() {
-        jj_la1_0 = new int[] {0x2000,0x1000000,0x20,0x2000000,};
+        jj_la1_0 = new int[] {0x2000,0x1000000,0x20,0x4000,};
     }
 
     /** Constructor with InputStream. */
@@ -348,7 +343,7 @@ public class ParserHDDL implements ParserHDDLConstants {
     /** Generate ParseException. */
     static public ParseException generateParseException() {
         jj_expentries.clear();
-        boolean[] la1tokens = new boolean[26];
+        boolean[] la1tokens = new boolean[25];
         if (jj_kind >= 0) {
             la1tokens[jj_kind] = true;
             jj_kind = -1;
@@ -362,7 +357,7 @@ public class ParserHDDL implements ParserHDDLConstants {
                 }
             }
         }
-        for (int i = 0; i < 26; i++) {
+        for (int i = 0; i < 25; i++) {
             if (la1tokens[i]) {
                 jj_expentry = new int[1];
                 jj_expentry[0] = i;

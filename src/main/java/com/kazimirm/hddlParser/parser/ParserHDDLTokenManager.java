@@ -23,8 +23,6 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
             }
             if ((active0 & 0x1000L) != 0L)
                return 0;
-            if ((active0 & 0x4000L) != 0L)
-               return 2;
             return -1;
          case 1:
             if ((active0 & 0x20000L) != 0L)
@@ -149,7 +147,7 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
          case 62:
             return jjStopAtPos(0, 10);
          case 63:
-            return jjStartNfaWithStates_0(0, 14, 2);
+            return jjStopAtPos(0, 14);
          case 91:
             return jjStopAtPos(0, 7);
          case 93:
@@ -171,7 +169,7 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
          case 116:
             return jjMoveStringLiteralDfa1_0(0x200000L);
          default :
-            return jjMoveNfa_0(1, 0);
+            return jjMoveNfa_0(0, 0);
       }
    }
    static private int jjMoveStringLiteralDfa1_0(long active0){
@@ -444,7 +442,7 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
    static private int jjMoveNfa_0(int startState, int curPos)
    {
       int startsAt = 0;
-      jjnewStateCnt = 3;
+      jjnewStateCnt = 1;
       int i = 1;
       jjstateSet[0] = startState;
       int kind = 0x7fffffff;
@@ -459,30 +457,12 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
             {
                switch(jjstateSet[--i])
                {
-                  case 1:
-                     if ((0x3ff200000000000L & l) != 0L)
-                     {
-                        if (kind > 24)
-                           kind = 24;
-                        { jjCheckNAdd(0); }
-                     }
-                     else if (curChar == 63)
-                     { jjCheckNAdd(2); }
-                     break;
                   case 0:
                      if ((0x3ff200000000000L & l) == 0L)
                         break;
-                     if (kind > 24)
-                        kind = 24;
-                  { jjCheckNAdd(0); }
-                  break;
-                  case 2:
-                     if ((0x3ff200000000000L & l) == 0L)
-                        break;
-                     if (kind > 25)
-                        kind = 25;
-                  { jjCheckNAdd(2); }
-                  break;
+                     kind = 24;
+                     jjstateSet[jjnewStateCnt++] = 0;
+                     break;
                   default : break;
                }
             } while(i != startsAt);
@@ -494,20 +474,11 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
             {
                switch(jjstateSet[--i])
                {
-                  case 1:
                   case 0:
                      if ((0x7fffffe87fffffeL & l) == 0L)
                         break;
-                     if (kind > 24)
-                        kind = 24;
-                  { jjCheckNAdd(0); }
-                  break;
-                  case 2:
-                     if ((0x7fffffe87fffffeL & l) == 0L)
-                        break;
-                     if (kind > 25)
-                        kind = 25;
-                     jjstateSet[jjnewStateCnt++] = 2;
+                     kind = 24;
+                     jjstateSet[jjnewStateCnt++] = 0;
                      break;
                   default : break;
                }
@@ -532,7 +503,7 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
             kind = 0x7fffffff;
          }
          ++curPos;
-         if ((i = jjnewStateCnt) == (startsAt = 3 - (jjnewStateCnt = startsAt)))
+         if ((i = jjnewStateCnt) == (startsAt = 1 - (jjnewStateCnt = startsAt)))
             return curPos;
          try { curChar = input_stream.readChar(); }
          catch(java.io.IOException e) { return curPos; }
@@ -545,7 +516,7 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
            "\55", "\72", "\77", "\141\156\144", "\156\157\164", "\157\162",
            "\144\145\146\151\156\145", "\144\157\155\141\151\156",
            "\162\145\161\165\151\162\145\155\145\156\164\163", "\164\171\160\145\163", "\143\157\156\163\164\141\156\164\163",
-           "\160\162\145\144\151\143\141\164\145\163", null, null, };
+           "\160\162\145\144\151\143\141\164\145\163", null, };
    static protected Token jjFillToken()
    {
       final Token t;
@@ -723,7 +694,7 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
    {
       int i;
       jjround = 0x80000001;
-      for (i = 3; i-- > 0;)
+      for (i = 1; i-- > 0;)
          jjrounds[i] = 0x80000000;
    }
 
@@ -753,10 +724,9 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
    /** Lex State array. */
    public static final int[] jjnewLexState = {
            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-           -1,
    };
    static final long[] jjtoToken = {
-           0x3ffffe1L,
+           0x1ffffe1L,
    };
    static final long[] jjtoSkip = {
            0x1eL,
@@ -769,8 +739,8 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
    };
    static protected SimpleCharStream  input_stream;
 
-   static private final int[] jjrounds = new int[3];
-   static private final int[] jjstateSet = new int[2 * 3];
+   static private final int[] jjrounds = new int[1];
+   static private final int[] jjstateSet = new int[2 * 1];
    private static final StringBuilder jjimage = new StringBuilder();
    private static StringBuilder image = jjimage;
    private static int jjimageLen;

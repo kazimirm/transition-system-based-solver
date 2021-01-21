@@ -49,40 +49,37 @@ public interface ParserHDDLConstants {
   int PREDICATES = 23;
   /** RegularExpression Id. */
   int VAR = 24;
-  /** RegularExpression Id. */
-  int ARG = 25;
 
   /** Lexical state. */
   int DEFAULT = 0;
 
   /** Literal token values. */
   String[] tokenImage = {
-    "<EOF>",
-    "\"\\t\"",
-    "\"\\n\"",
-    "\"\\r\"",
-    "\" \"",
-    "\"(\"",
-    "\")\"",
-    "\"[\"",
-    "\"]\"",
-    "\"<\"",
-    "\">\"",
-    "\"=\"",
-    "\"-\"",
-    "\":\"",
-    "\"?\"",
-    "\"and\"",
-    "\"not\"",
-    "\"or\"",
-    "\"define\"",
-    "\"domain\"",
-    "\"requirements\"",
-    "\"types\"",
-    "\"constants\"",
-    "\"predicates\"",
-    "<VAR>",
-    "<ARG>",
+          "<EOF>",
+          "\"\\t\"",
+          "\"\\n\"",
+          "\"\\r\"",
+          "\" \"",
+          "\"(\"",
+          "\")\"",
+          "\"[\"",
+          "\"]\"",
+          "\"<\"",
+          "\">\"",
+          "\"=\"",
+          "\"-\"",
+          "\":\"",
+          "\"?\"",
+          "\"and\"",
+          "\"not\"",
+          "\"or\"",
+          "\"define\"",
+          "\"domain\"",
+          "\"requirements\"",
+          "\"types\"",
+          "\"constants\"",
+          "\"predicates\"",
+          "<VAR>",
   };
 
 }

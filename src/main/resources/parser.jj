@@ -58,15 +58,14 @@
     | <CONSTANTS:  		    "constants">								/* constants */
     | <PREDICATES:  		"predicates">								/* predicates */
     | <VAR:  				(["a"-"z", "A"-"Z", "0"-"9","_","-"])+>			/* variables, words, consts */
-    | <ARG:  				"?"(<VAR>)>									/* argument = ?var */
   }
 
   void start():
   {
-
+      Domain domain = new Domain();
   }
   {
-    domain()  <EOF>
+    domain = domain()  <EOF>
   }
 
   Domain domain():
@@ -182,7 +181,7 @@ List<Requirement> getRequirements():
  {
      <LPAR> (
                 name = getAttribute()
-                    (argumentName = getArgument() <DASH> argumentType = getAttribute()
+                    (<QUESTIONMARK> argumentName = getAttribute() <DASH> argumentType = getAttribute()
                         {
                             argument.setName(argumentName);
                             argument.setType(argumentType);
@@ -198,15 +197,5 @@ List<Requirement> getRequirements():
  }
 
 
- String getArgument() :
- {
-   Token argument;
- }
- {
-   argument = <ARG>
-   {
-     return argument.toString();
-   }
- }
 
    
