@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="HDDLParser" target="11" />
+      <module name="HDDLParser" target="15" />
     </bytecodeTargetLevel>
   </component>
 </project>

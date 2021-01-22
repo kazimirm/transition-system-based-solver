@@ -8,7 +8,7 @@ import java.util.*;
 
 public class ParserHDDL implements ParserHDDLConstants {
 
-    public static void main(String[] args) throws ParseException,FileNotFoundException {
+    public static void parse(String[] args) throws ParseException,FileNotFoundException {
 
         if (args.length < 1) {
             System.out.println("Please pass in the filename for a parameter.");
@@ -17,7 +17,7 @@ public class ParserHDDL implements ParserHDDLConstants {
 
         ParserHDDL parser = new ParserHDDL(new FileInputStream(args[0]));
 
-        parser.start();
+        Domain domain = parser.start();
         System.out.println("Parse completed.");
     }
 
@@ -25,11 +25,13 @@ public class ParserHDDL implements ParserHDDLConstants {
 ////////////////    ENTRY POINT      ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
     static final public
-    void start() throws ParseException {Domain domain = new Domain();
+    Domain start() throws ParseException {Domain domain = new Domain();
 //      Problem problem = new Problem();
 
         domain = domain();
         jj_consume_token(0);
+        {if ("" != null) return domain;}
+        throw new Error("Missing return statement in function");
     }
 
     ////////////////////////////////////////////////////////////////////////
