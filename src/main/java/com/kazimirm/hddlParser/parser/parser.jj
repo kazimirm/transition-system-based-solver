@@ -4,9 +4,11 @@
   }
 
   PARSER_BEGIN(ParserHDDL)
+  package com.kazimirm.hddlParser.parser;
 
   import java.io.*;
   import java.util.*;
+  import com.kazimirm.hddlParser.hddlObjects.*;
 
   public class ParserHDDL {
 
