@@ -8,7 +8,7 @@ import java.util.*;
 
 public class ParserHDDL implements ParserHDDLConstants {
 
-    public static void parse(String[] args) throws ParseException,FileNotFoundException {
+    public static void main(String[] args) throws ParseException,FileNotFoundException {
 
         if (args.length < 1) {
             System.out.println("Please pass in the filename for a parameter.");
