@@ -16,20 +16,20 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
       switch (pos)
       {
          case 0:
-            if ((active0 & 0xff8000L) != 0L)
-            {
-               jjmatchedKind = 24;
-               return 0;
-            }
             if ((active0 & 0x1000L) != 0L)
                return 0;
+            if ((active0 & 0x3ff8000L) != 0L)
+            {
+               jjmatchedKind = 26;
+               return 0;
+            }
             return -1;
          case 1:
             if ((active0 & 0x20000L) != 0L)
                return 0;
-            if ((active0 & 0xfd8000L) != 0L)
+            if ((active0 & 0x3fd8000L) != 0L)
             {
-               jjmatchedKind = 24;
+               jjmatchedKind = 26;
                jjmatchedPos = 1;
                return 0;
             }
@@ -37,17 +37,19 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
          case 2:
             if ((active0 & 0x18000L) != 0L)
                return 0;
-            if ((active0 & 0xfc0000L) != 0L)
+            if ((active0 & 0x3fc0000L) != 0L)
             {
-               jjmatchedKind = 24;
+               jjmatchedKind = 26;
                jjmatchedPos = 2;
                return 0;
             }
             return -1;
          case 3:
-            if ((active0 & 0xfc0000L) != 0L)
+            if ((active0 & 0x2000000L) != 0L)
+               return 0;
+            if ((active0 & 0x1fc0000L) != 0L)
             {
-               jjmatchedKind = 24;
+               jjmatchedKind = 26;
                jjmatchedPos = 3;
                return 0;
             }
@@ -55,9 +57,9 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
          case 4:
             if ((active0 & 0x200000L) != 0L)
                return 0;
-            if ((active0 & 0xdc0000L) != 0L)
+            if ((active0 & 0x1dc0000L) != 0L)
             {
-               jjmatchedKind = 24;
+               jjmatchedKind = 26;
                jjmatchedPos = 4;
                return 0;
             }
@@ -65,25 +67,25 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
          case 5:
             if ((active0 & 0xc0000L) != 0L)
                return 0;
-            if ((active0 & 0xd00000L) != 0L)
+            if ((active0 & 0x1d00000L) != 0L)
             {
-               jjmatchedKind = 24;
+               jjmatchedKind = 26;
                jjmatchedPos = 5;
                return 0;
             }
             return -1;
          case 6:
-            if ((active0 & 0xd00000L) != 0L)
+            if ((active0 & 0x1d00000L) != 0L)
             {
-               jjmatchedKind = 24;
+               jjmatchedKind = 26;
                jjmatchedPos = 6;
                return 0;
             }
             return -1;
          case 7:
-            if ((active0 & 0xd00000L) != 0L)
+            if ((active0 & 0x1d00000L) != 0L)
             {
-               jjmatchedKind = 24;
+               jjmatchedKind = 26;
                jjmatchedPos = 7;
                return 0;
             }
@@ -91,19 +93,19 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
          case 8:
             if ((active0 & 0x400000L) != 0L)
                return 0;
-            if ((active0 & 0x900000L) != 0L)
+            if ((active0 & 0x1900000L) != 0L)
             {
-               jjmatchedKind = 24;
+               jjmatchedKind = 26;
                jjmatchedPos = 8;
                return 0;
             }
             return -1;
          case 9:
-            if ((active0 & 0x800000L) != 0L)
+            if ((active0 & 0x1800000L) != 0L)
                return 0;
             if ((active0 & 0x100000L) != 0L)
             {
-               jjmatchedKind = 24;
+               jjmatchedKind = 26;
                jjmatchedPos = 9;
                return 0;
             }
@@ -111,7 +113,7 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
          case 10:
             if ((active0 & 0x100000L) != 0L)
             {
-               jjmatchedKind = 24;
+               jjmatchedKind = 26;
                jjmatchedPos = 10;
                return 0;
             }
@@ -163,11 +165,11 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
          case 111:
             return jjMoveStringLiteralDfa1_0(0x20000L);
          case 112:
-            return jjMoveStringLiteralDfa1_0(0x800000L);
+            return jjMoveStringLiteralDfa1_0(0x1800000L);
          case 114:
             return jjMoveStringLiteralDfa1_0(0x100000L);
          case 116:
-            return jjMoveStringLiteralDfa1_0(0x200000L);
+            return jjMoveStringLiteralDfa1_0(0x2200000L);
          default :
             return jjMoveNfa_0(0, 0);
       }
@@ -180,6 +182,8 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
       }
       switch(curChar)
       {
+         case 97:
+            return jjMoveStringLiteralDfa2_0(active0, 0x3000000L);
          case 101:
             return jjMoveStringLiteralDfa2_0(active0, 0x140000L);
          case 110:
@@ -223,6 +227,10 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
             return jjMoveStringLiteralDfa3_0(active0, 0x200000L);
          case 113:
             return jjMoveStringLiteralDfa3_0(active0, 0x100000L);
+         case 114:
+            return jjMoveStringLiteralDfa3_0(active0, 0x1000000L);
+         case 115:
+            return jjMoveStringLiteralDfa3_0(active0, 0x2000000L);
          case 116:
             if ((active0 & 0x10000L) != 0L)
                return jjStartNfaWithStates_0(2, 16, 0);
@@ -243,13 +251,17 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
       switch(curChar)
       {
          case 97:
-            return jjMoveStringLiteralDfa4_0(active0, 0x80000L);
+            return jjMoveStringLiteralDfa4_0(active0, 0x1080000L);
          case 100:
             return jjMoveStringLiteralDfa4_0(active0, 0x800000L);
          case 101:
             return jjMoveStringLiteralDfa4_0(active0, 0x200000L);
          case 105:
             return jjMoveStringLiteralDfa4_0(active0, 0x40000L);
+         case 107:
+            if ((active0 & 0x2000000L) != 0L)
+               return jjStartNfaWithStates_0(3, 25, 0);
+            break;
          case 115:
             return jjMoveStringLiteralDfa4_0(active0, 0x400000L);
          case 117:
@@ -271,6 +283,8 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
       {
          case 105:
             return jjMoveStringLiteralDfa5_0(active0, 0x980000L);
+         case 109:
+            return jjMoveStringLiteralDfa5_0(active0, 0x1000000L);
          case 110:
             return jjMoveStringLiteralDfa5_0(active0, 0x40000L);
          case 115:
@@ -301,7 +315,7 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
          case 101:
             if ((active0 & 0x40000L) != 0L)
                return jjStartNfaWithStates_0(5, 18, 0);
-            break;
+            return jjMoveStringLiteralDfa6_0(active0, 0x1000000L);
          case 110:
             if ((active0 & 0x80000L) != 0L)
                return jjStartNfaWithStates_0(5, 19, 0);
@@ -329,6 +343,8 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
             return jjMoveStringLiteralDfa7_0(active0, 0x100000L);
          case 110:
             return jjMoveStringLiteralDfa7_0(active0, 0x400000L);
+         case 116:
+            return jjMoveStringLiteralDfa7_0(active0, 0x1000000L);
          default :
             break;
       }
@@ -344,6 +360,8 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
       }
       switch(curChar)
       {
+         case 101:
+            return jjMoveStringLiteralDfa8_0(active0, 0x1000000L);
          case 109:
             return jjMoveStringLiteralDfa8_0(active0, 0x100000L);
          case 116:
@@ -365,6 +383,8 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
       {
          case 101:
             return jjMoveStringLiteralDfa9_0(active0, 0x900000L);
+         case 114:
+            return jjMoveStringLiteralDfa9_0(active0, 0x1000000L);
          case 115:
             if ((active0 & 0x400000L) != 0L)
                return jjStartNfaWithStates_0(8, 22, 0);
@@ -389,6 +409,8 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
          case 115:
             if ((active0 & 0x800000L) != 0L)
                return jjStartNfaWithStates_0(9, 23, 0);
+            else if ((active0 & 0x1000000L) != 0L)
+               return jjStartNfaWithStates_0(9, 24, 0);
             break;
          default :
             break;
@@ -460,7 +482,7 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
                   case 0:
                      if ((0x3ff200000000000L & l) == 0L)
                         break;
-                     kind = 24;
+                     kind = 26;
                      jjstateSet[jjnewStateCnt++] = 0;
                      break;
                   default : break;
@@ -477,7 +499,7 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
                   case 0:
                      if ((0x7fffffe87fffffeL & l) == 0L)
                         break;
-                     kind = 24;
+                     kind = 26;
                      jjstateSet[jjnewStateCnt++] = 0;
                      break;
                   default : break;
@@ -516,7 +538,7 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
            "\55", "\72", "\77", "\141\156\144", "\156\157\164", "\157\162",
            "\144\145\146\151\156\145", "\144\157\155\141\151\156",
            "\162\145\161\165\151\162\145\155\145\156\164\163", "\164\171\160\145\163", "\143\157\156\163\164\141\156\164\163",
-           "\160\162\145\144\151\143\141\164\145\163", null, };
+           "\160\162\145\144\151\143\141\164\145\163", "\160\141\162\141\155\145\164\145\162\163", "\164\141\163\153", null, };
    static protected Token jjFillToken()
    {
       final Token t;
@@ -724,9 +746,10 @@ public class ParserHDDLTokenManager implements ParserHDDLConstants {
    /** Lex State array. */
    public static final int[] jjnewLexState = {
            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+           -1, -1,
    };
    static final long[] jjtoToken = {
-           0x1ffffe1L,
+           0x7ffffe1L,
    };
    static final long[] jjtoSkip = {
            0x1eL,

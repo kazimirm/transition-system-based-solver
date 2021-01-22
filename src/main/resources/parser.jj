@@ -57,7 +57,9 @@
     | <TYPES:  			    "types">									/* types */
     | <CONSTANTS:  		    "constants">								/* constants */
     | <PREDICATES:  		"predicates">								/* predicates */
-    | <VAR:  				(["a"-"z", "A"-"Z", "0"-"9","_","-"])+>			/* variables, words, consts */
+    | <PARAMETERS:  		"parameters">								/* parameters */
+    | <TASK:  		        "task">								        /* tasks */
+    | <VAR:  				(["a"-"z", "A"-"Z", "0"-"9","_","-"])+>		/* variables, words, consts */
   }
 
   void start():
@@ -74,6 +76,7 @@
     List<Requirement> requirements = new ArrayList<>();
     List<Type> types = new ArrayList<>();
     List<Predicate> predicates = new ArrayList<>();
+    List<Task> tasks = new ArrayList<>();
     String domainName;
   }
   {
@@ -81,11 +84,13 @@
     requirements = getRequirements()
     types = getTypes()
     predicates = getPredicates()
+    tasks = getTasks()
     {
         domain.setName(domainName);
         domain.setRequirements(requirements);
         domain.setTypes(types);
         domain.setPredicates(predicates);
+        domain.setTasks(tasks);
         return domain;
     }
   }
@@ -197,5 +202,60 @@ List<Requirement> getRequirements():
  }
 
 
+
+
+
+
+
+
+
+
+
+
+Task getTask():
+ {
+    Task task = new Task();
+    List<Argument> arguments = new ArrayList<>();
+    String name;
+    String paramName;
+    String paramType;
+ }
+ {
+    <LPAR> <COLON> <TASK> name = getAttribute()
+        <COLON> <PARAMETERS> <LPAR> (<QUESTIONMARK> paramName = getAttribute() <DASH> paramType = getAttribute()
+        {
+            Argument argument = new Argument();
+            argument.setName(paramName);
+            argument.setType(paramType);
+            arguments.add(argument);
+        })* <RPAR> <RPAR>
+    {
+        task.setName(name);
+        task.setArguments(arguments);
+        return task;
+    }
+ }
+
+ List<Task> getTasks():
+ {
+     List<Task> tasks = new ArrayList<>();
+
+     String name;
+     List<Argument> arguments = new ArrayList<>();
+ }
+ {
+    (
+        {
+            Task task = new Task();
+        }
+     task = getTask()
+        {
+            tasks.add(task);
+        }
+    )*
+    {
+        return tasks;
+    }
+ }
 
    
