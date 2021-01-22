@@ -63,9 +63,9 @@
     | <VAR:  				(["a"-"z", "A"-"Z", "0"-"9","_","-"])+>		/* variables, words, consts */
   }
 
- ////////////////////////////////////////////////////////////////////////
- ////////////////    ENTRY POINT      ///////////////////////////////////
- ////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+////////////////    ENTRY POINT      ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
   void start():
   {
@@ -77,9 +77,9 @@
 //    | problem = problem()
     <EOF>
   }
- ////////////////////////////////////////////////////////////////////////
- ////////////////    HELP METHODS       /////////////////////////////////
- ////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+////////////////    HELP METHODS       /////////////////////////////////
+////////////////////////////////////////////////////////////////////////
   String getAttribute() :
   {
     Token attribute;
@@ -94,16 +94,6 @@
 ////////////////    DOMAIN      ////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
- String getAttribute() :
- {
-   Token attribute;
- }
- {
-   attribute = <VAR>
-   {
-     return attribute.toString();
-   }
- }
   Domain domain():
   {
     Domain domain = new Domain();
@@ -241,7 +231,7 @@ List<Requirement> getRequirements():
 Task getTask():
  {
     Task task = new Task();
-    List<Argument> arguments = new ArrayList<>();
+    List<Parameter> parameters = new ArrayList<>();
     String name;
     String paramName;
     String paramType;
@@ -250,14 +240,14 @@ Task getTask():
     <LPAR> <COLON> <TASK> name = getAttribute()
         <COLON> <PARAMETERS> <LPAR> (<QUESTIONMARK> paramName = getAttribute() <DASH> paramType = getAttribute()
         {
-            Argument argument = new Argument();
-            argument.setName(paramName);
-            argument.setType(paramType);
-            arguments.add(argument);
+            Parameter parameter = new Parameter();
+            parameter.setName(paramName);
+            parameter.setType(paramType);
+            parameters.add(parameter);
         })* <RPAR> <RPAR>
     {
         task.setName(name);
-        task.setArguments(arguments);
+        task.setParameters(parameters);
         return task;
     }
  }

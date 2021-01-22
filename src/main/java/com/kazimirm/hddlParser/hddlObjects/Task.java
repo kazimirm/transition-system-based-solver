@@ -4,14 +4,14 @@ import java.util.List;
 
 public class Task {
     private String name;
-    private List<Argument> arguments;
+    private List<Parameter> parameters;
 
     public Task() {
     }
 
-    public Task(String name, List<Argument> arguments) {
+    public Task(String name, List<Parameter> parameters) {
         this.name = name;
-        this.arguments = arguments;
+        this.parameters = parameters;
     }
 
     public String getName() {
@@ -22,11 +22,11 @@ public class Task {
         this.name = name;
     }
 
-    public List<Argument> getArguments() {
-        return arguments;
+    public List<Parameter> getParameters() {
+        return parameters;
     }
 
-    public void setArguments(List<Argument> arguments) {
-        this.arguments = arguments;
+    public void setParameters(List<Parameter> parameters) {
+        this.parameters = parameters;
     }
 }

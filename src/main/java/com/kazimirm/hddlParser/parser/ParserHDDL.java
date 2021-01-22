@@ -21,12 +21,31 @@ public class ParserHDDL implements ParserHDDLConstants {
         System.out.println("Parse completed.");
     }
 
-    static final public void start() throws ParseException {Domain domain = new Domain();
+    ////////////////////////////////////////////////////////////////////////
+////////////////    ENTRY POINT      ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+    static final public
+    void start() throws ParseException {Domain domain = new Domain();
+//      Problem problem = new Problem();
+
         domain = domain();
         jj_consume_token(0);
     }
 
-    static final public Domain domain() throws ParseException {Domain domain = new Domain();
+    ////////////////////////////////////////////////////////////////////////
+////////////////    HELP METHODS       /////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+    static final public   String getAttribute() throws ParseException {Token attribute;
+        attribute = jj_consume_token(VAR);
+        {if ("" != null) return attribute.toString();}
+        throw new Error("Missing return statement in function");
+    }
+
+    ////////////////////////////////////////////////////////////////////////
+////////////////    DOMAIN      ////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+    static final public
+    Domain domain() throws ParseException {Domain domain = new Domain();
         List<Requirement> requirements = new ArrayList<>();
         List<Type> types = new ArrayList<>();
         List<Predicate> predicates = new ArrayList<>();
@@ -51,7 +70,11 @@ public class ParserHDDL implements ParserHDDLConstants {
         throw new Error("Missing return statement in function");
     }
 
-    static final public List<Requirement> getRequirements() throws ParseException {List<Requirement> requirements = new ArrayList<>();
+    ////////////////////////////////////////////////////////////////////////
+////////////////    REQUIREMENTS       /////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+    static final public
+    List<Requirement> getRequirements() throws ParseException {List<Requirement> requirements = new ArrayList<>();
         Requirement requirement;
         jj_consume_token(LPAR);
         jj_consume_token(COLON);
@@ -84,7 +107,11 @@ public class ParserHDDL implements ParserHDDLConstants {
         throw new Error("Missing return statement in function");
     }
 
-    static final public List<Type> getTypes() throws ParseException {List<Type> types = new ArrayList<>();
+    ////////////////////////////////////////////////////////////////////////
+////////////////    TYPES   ////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+    static final public
+    List<Type> getTypes() throws ParseException {List<Type> types = new ArrayList<>();
         Type type;
         jj_consume_token(LPAR);
         jj_consume_token(COLON);
@@ -120,13 +147,11 @@ public class ParserHDDL implements ParserHDDLConstants {
         throw new Error("Missing return statement in function");
     }
 
-    static final public String getAttribute() throws ParseException {Token attribute;
-        attribute = jj_consume_token(VAR);
-        {if ("" != null) return attribute.toString();}
-        throw new Error("Missing return statement in function");
-    }
-
-    static final public List<Predicate> getPredicates() throws ParseException {List<Predicate> predicates = new ArrayList<>();
+    ////////////////////////////////////////////////////////////////////////
+////////////////    PREDICATES   ///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+    static final public
+    List<Predicate> getPredicates() throws ParseException {List<Predicate> predicates = new ArrayList<>();
         Predicate predicate;
         jj_consume_token(LPAR);
         jj_consume_token(COLON);
@@ -184,8 +209,12 @@ public class ParserHDDL implements ParserHDDLConstants {
         throw new Error("Missing return statement in function");
     }
 
-    static final public Task getTask() throws ParseException {Task task = new Task();
-        List<Argument> arguments = new ArrayList<>();
+    ////////////////////////////////////////////////////////////////////////
+////////////////    TASKS   ////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+    static final public
+    Task getTask() throws ParseException {Task task = new Task();
+        List<Parameter> parameters = new ArrayList<>();
         String name;
         String paramName;
         String paramType;
@@ -211,15 +240,15 @@ public class ParserHDDL implements ParserHDDLConstants {
             paramName = getAttribute();
             jj_consume_token(DASH);
             paramType = getAttribute();
-            Argument argument = new Argument();
-            argument.setName(paramName);
-            argument.setType(paramType);
-            arguments.add(argument);
+            Parameter parameter = new Parameter();
+            parameter.setName(paramName);
+            parameter.setType(paramType);
+            parameters.add(parameter);
         }
         jj_consume_token(RPAR);
         jj_consume_token(RPAR);
         task.setName(name);
-        task.setArguments(arguments);
+        task.setParameters(parameters);
         {if ("" != null) return task;}
         throw new Error("Missing return statement in function");
     }
@@ -263,7 +292,7 @@ public class ParserHDDL implements ParserHDDLConstants {
         jj_la1_init_0();
     }
     private static void jj_la1_init_0() {
-        jj_la1_0 = new int[] {0x2000,0x4000000,0x20,0x4000,0x4000,0x20,};
+        jj_la1_0 = new int[] {0x2000,0x8000000,0x20,0x4000,0x4000,0x20,};
     }
 
     /** Constructor with InputStream. */
@@ -409,7 +438,7 @@ public class ParserHDDL implements ParserHDDLConstants {
     /** Generate ParseException. */
     static public ParseException generateParseException() {
         jj_expentries.clear();
-        boolean[] la1tokens = new boolean[27];
+        boolean[] la1tokens = new boolean[28];
         if (jj_kind >= 0) {
             la1tokens[jj_kind] = true;
             jj_kind = -1;
@@ -423,7 +452,7 @@ public class ParserHDDL implements ParserHDDLConstants {
                 }
             }
         }
-        for (int i = 0; i < 27; i++) {
+        for (int i = 0; i < 28; i++) {
             if (la1tokens[i]) {
                 jj_expentry = new int[1];
                 jj_expentry[0] = i;
