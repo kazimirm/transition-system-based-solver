@@ -1,0 +1,2 @@
+(define (domain domain_htn)
+	(:requirements :negative-preconditions : typing :hierarchy)
