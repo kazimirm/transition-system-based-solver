@@ -61,6 +61,7 @@
     | <PREDICATES:  		"predicates">								/* predicates */
     | <PARAMETERS:  		"parameters">								/* parameters */
     | <TASK:  		        "task">								        /* tasks */
+    | <SUBTASKS:  		    "subtasks">								    /* subtasks */
     | <METHOD:  		    "method">								    /* method */
     | <VAR:  				(["a"-"z", "A"-"Z", "0"-"9","_","-"])+>		/* variables, words, consts */
   }
@@ -229,6 +230,29 @@ List<Requirement> getRequirements():
         return predicate;
      }
  }
+////////////////////////////////////////////////////////////////////////
+////////////////    GET PARAMETERS   ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+List<Parameter> getParameters():
+ {
+    List<Parameter> parameters = new ArrayList<>();
+    String paramName;
+    String paramType;
+ }
+ {
+    <COLON> <PARAMETERS> <LPAR> (<QUESTIONMARK> paramName = getAttribute() <DASH> paramType = getAttribute()
+    {
+             Parameter parameter = new Parameter();
+             parameter.setName(paramName);
+             parameter.setType(paramType);
+             parameters.add(parameter);
+    })* <RPAR>
+
+    {
+        return parameters;
+    }
+ }
 
 ////////////////////////////////////////////////////////////////////////
 ////////////////    TASKS   ////////////////////////////////////////////
@@ -244,13 +268,8 @@ Task getTask():
  }
  {
     <LPAR> <COLON> <TASK> name = getAttribute()
-        <COLON> <PARAMETERS> <LPAR> (<QUESTIONMARK> paramName = getAttribute() <DASH> paramType = getAttribute()
-        {
-            Parameter parameter = new Parameter();
-            parameter.setName(paramName);
-            parameter.setType(paramType);
-            parameters.add(parameter);
-        })* <RPAR> <RPAR>
+        parameters = getParameters()
+    <RPAR>
     {
         task.setName(name);
         task.setParameters(parameters);
@@ -280,4 +299,42 @@ Task getTask():
     }
  }
 
-   
+////////////////////////////////////////////////////////////////////////
+////////////////    METHODS   //////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+Task getMethod():
+ {
+    Method method = new Method();
+    Task task = new Task();
+    List<Parameter> methodParameters = new ArrayList<>();
+    List<Parameter> taskParameters = new ArrayList<>();
+    String methodName;
+    String paramName;
+    String paramType;
+    String taskName;
+ }
+ {
+    <LPAR> <COLON> <METHOD> methodName = getAttribute()
+        methodParameters = getParameters()
+        <COLON> <TASK> <LPAR> taskName = getAttribute() (<QUESTIONMARK> paramName = getAttribute()
+        {
+            for(Parameter p : methodParameters) {
+                if(p.getName().equals(paramName)) {
+                    taskParameters.add(p);
+                }
+            }
+        })* <RPAR>
+        <COLON> <SUBTASKS> (getSubtasks())
+
+
+    {
+        method.setName(methodName);
+        task.setParameters(methodParameters);
+        task.setName(taskName);
+        task.taskParameters(taskParameters);
+        return task;
+    }
+ }
+
+

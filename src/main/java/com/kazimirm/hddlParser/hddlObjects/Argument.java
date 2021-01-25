@@ -27,4 +27,5 @@ public class Argument {
     public void setType(String type) {
         this.type = type;
     }
+
 }
