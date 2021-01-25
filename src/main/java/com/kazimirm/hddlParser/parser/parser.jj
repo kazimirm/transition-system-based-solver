@@ -233,6 +233,8 @@ List<Requirement> getRequirements():
 ////////////////////////////////////////////////////////////////////////
 ////////////////    GET PARAMETERS   ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
+///                 Used in task/method body                         ///
+////////////////////////////////////////////////////////////////////////
 
 List<Parameter> getParameters():
  {
@@ -303,12 +305,11 @@ Task getTask():
 ////////////////    METHODS   //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-Task getMethod():
+Method getMethod():
  {
     Method method = new Method();
     Task task = new Task();
     List<Parameter> methodParameters = new ArrayList<>();
-    List<Parameter> taskParameters = new ArrayList<>();
     String methodName;
     String paramName;
     String paramType;
@@ -317,14 +318,7 @@ Task getMethod():
  {
     <LPAR> <COLON> <METHOD> methodName = getAttribute()
         methodParameters = getParameters()
-        <COLON> <TASK> <LPAR> taskName = getAttribute() (<QUESTIONMARK> paramName = getAttribute()
-        {
-            for(Parameter p : methodParameters) {
-                if(p.getName().equals(paramName)) {
-                    taskParameters.add(p);
-                }
-            }
-        })* <RPAR>
+        task = getTaskSignature(methodParameters)
         <COLON> <SUBTASKS> (getSubtasks())
 
 
@@ -337,4 +331,24 @@ Task getMethod():
     }
  }
 
+Task getTaskSignature(List<Parameter> parameters):
+ {
+     Task task = new Task();
+     List<Parameter> taskParameters = new ArrayList<>();
+ }
+ {
+     <COLON> <TASK> <LPAR> taskName = getAttribute() (<QUESTIONMARK> paramName = getAttribute()
+     {
+        for(Parameter p : parameters) {
+            if(p.getName().equals(paramName)) {
+                taskParameters.add(p);
+            }
+        }
+     })* <RPAR>
 
+    {
+        task.setName(taskName);
+        task.setParameters(taskParameters);
+        return task;
+    }
+ }
