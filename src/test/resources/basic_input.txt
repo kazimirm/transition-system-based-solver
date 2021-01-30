@@ -41,11 +41,6 @@
 		 (task2 (get_to ?v ?l2))
 		 (task3 (unload ?v ?l2 ?p))
 		)
-		:ordering (and
-			(< task0 task1)
-			(< task1 task2)
-			(< task2 task3)
-		)
 	)
 
 	(:method m_unload_ordering_0
@@ -78,9 +73,6 @@
 		:subtasks (and
 		 (task0 (get_to ?v ?l2))
 		 (task1 (drive ?v ?l2 ?l3))
-		)
-		:ordering (and
-			(< task0 task1)
 		)
 	)
 

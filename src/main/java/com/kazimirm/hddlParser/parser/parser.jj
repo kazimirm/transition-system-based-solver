@@ -108,6 +108,7 @@
     List<Type> types = new ArrayList<>();
     List<Predicate> predicates = new ArrayList<>();
     List<Task> tasks = new ArrayList<>();
+    List<Method> methods = new ArrayList<>();
     String domainName;
   }
   {
@@ -116,12 +117,14 @@
     types = getTypes()
     predicates = getPredicates()
     tasks = getTasks()
+    methods = getMethods()
     {
         domain.setName(domainName);
         domain.setRequirements(requirements);
         domain.setTypes(types);
         domain.setPredicates(predicates);
         domain.setTasks(tasks);
+        domain.setMethods(methods);
         return domain;
     }
   }
@@ -282,16 +285,15 @@ Task getTask():
  List<Task> getTasks():
  {
      List<Task> tasks = new ArrayList<>();
-
-     String name;
      List<Argument> arguments = new ArrayList<>();
+     String name;
  }
  {
     (
         {
             Task task = new Task();
         }
-     task = getTask()
+            task = getTask()
         {
             tasks.add(task);
         }
@@ -304,12 +306,27 @@ Task getTask():
 ////////////////////////////////////////////////////////////////////////
 ////////////////    METHODS   //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
+List<Method> getMethods():
+{
+    List<Method> methods = new ArrayList<>();
+    Method method;
+
+}
+{
+    (method = getMethod() { methods.add(method);})*
+    {
+        return methods;
+    }
+}
+
+
 
 Method getMethod():
  {
     Method method = new Method();
     Task task = new Task();
     List<Parameter> methodParameters = new ArrayList<>();
+    List<Subtask> subtasks = new ArrayList<>();
     String methodName;
     String paramName;
     String paramType;
@@ -319,15 +336,14 @@ Method getMethod():
     <LPAR> <COLON> <METHOD> methodName = getAttribute()
         methodParameters = getParameters()
         task = getTaskSignature(methodParameters)
-        <COLON> <SUBTASKS> (getSubtasks())
+        subtasks = getSubtasks()
 
 
     {
         method.setName(methodName);
-        task.setParameters(methodParameters);
-        task.setName(taskName);
-        task.taskParameters(taskParameters);
-        return task;
+        method.setTask(task);
+        method.setSubtasks(subtasks);
+        return method;
     }
  }
 
@@ -335,6 +351,8 @@ Task getTaskSignature(List<Parameter> parameters):
  {
      Task task = new Task();
      List<Parameter> taskParameters = new ArrayList<>();
+     String taskName;
+     String paramName;
  }
  {
      <COLON> <TASK> <LPAR> taskName = getAttribute() (<QUESTIONMARK> paramName = getAttribute()
@@ -352,3 +370,40 @@ Task getTaskSignature(List<Parameter> parameters):
         return task;
     }
  }
+
+
+List<Subtask> getSubtasks():
+{
+    List<Subtask> subtasks = new ArrayList<>();
+    List<Parameter> subtaskParameters = new ArrayList<>();
+    String subtaskName;
+    String taskName;
+    String param;
+}
+{
+    <COLON> <SUBTASKS> <LPAR> <AND>
+        (<LPAR> subtaskName = getAttribute() <LPAR> taskName = getAttribute()
+            (
+                <QUESTIONMARK> param = getAttribute()
+                    {
+                        Parameter parameter = new Parameter();
+                        parameter.setName(taskName);
+                        subtaskParameters.add(parameter);
+                    }
+            )* <RPAR> <RPAR>
+        )
+        {
+            Subtask subtask = new Subtask();
+            Task task = new Task();
+            subtask.setName(subtaskName);
+            task.setName(taskName);
+            task.setParameters(subtaskParameters);
+            subtask.setTask(task);
+            subtasks.add(subtask);
+        }
+        <RPAR>
+
+    {
+        return subtasks;
+    }
+}

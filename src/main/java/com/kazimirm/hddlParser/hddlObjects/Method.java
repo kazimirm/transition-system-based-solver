@@ -6,7 +6,7 @@ public class Method {
     private String name;
     private List<Parameter> parameters;
     private Task task;
-    private List<Task> subtasks;
+    private List<Subtask> subtasks;
     private List<Ordering> ordering;
 
     public Method() {
@@ -36,11 +36,11 @@ public class Method {
         this.task = task;
     }
 
-    public List<Task> getSubtasks() {
+    public List<Subtask> getSubtasks() {
         return subtasks;
     }
 
-    public void setSubtasks(List<Task> subtasks) {
+    public void setSubtasks(List<Subtask> subtasks) {
         this.subtasks = subtasks;
     }
 

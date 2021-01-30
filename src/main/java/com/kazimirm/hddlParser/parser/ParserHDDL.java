@@ -52,6 +52,7 @@
     List<Type> types = new ArrayList<>();
     List<Predicate> predicates = new ArrayList<>();
     List<Task> tasks = new ArrayList<>();
+    List<Method> methods = new ArrayList<>();
     String domainName;
     jj_consume_token(LPAR);
     jj_consume_token(DEFINE);
@@ -63,11 +64,13 @@
     types = getTypes();
     predicates = getPredicates();
     tasks = getTasks();
+    methods = getMethods();
 domain.setName(domainName);
         domain.setRequirements(requirements);
         domain.setTypes(types);
         domain.setPredicates(predicates);
         domain.setTasks(tasks);
+        domain.setMethods(methods);
         {if ("" != null) return domain;}
     throw new Error("Missing return statement in function");
 }
@@ -212,18 +215,14 @@ predicate.setName(name);
 }
 
 ////////////////////////////////////////////////////////////////////////
-////////////////    TASKS   ////////////////////////////////////////////
+////////////////    GET PARAMETERS   ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+///                 Used in task/method body                         ///
 ////////////////////////////////////////////////////////////////////////
   static final public 
-Task getTask() throws ParseException {Task task = new Task();
-    List<Parameter> parameters = new ArrayList<>();
-    String name;
+List<Parameter> getParameters() throws ParseException {List<Parameter> parameters = new ArrayList<>();
     String paramName;
     String paramType;
-    jj_consume_token(LPAR);
-    jj_consume_token(COLON);
-    jj_consume_token(TASK);
-    name = getAttribute();
     jj_consume_token(COLON);
     jj_consume_token(PARAMETERS);
     jj_consume_token(LPAR);
@@ -243,11 +242,29 @@ Task getTask() throws ParseException {Task task = new Task();
       jj_consume_token(DASH);
       paramType = getAttribute();
 Parameter parameter = new Parameter();
-            parameter.setName(paramName);
-            parameter.setType(paramType);
-            parameters.add(parameter);
+             parameter.setName(paramName);
+             parameter.setType(paramType);
+             parameters.add(parameter);
     }
     jj_consume_token(RPAR);
+{if ("" != null) return parameters;}
+    throw new Error("Missing return statement in function");
+}
+
+////////////////////////////////////////////////////////////////////////
+////////////////    TASKS   ////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+  static final public 
+Task getTask() throws ParseException {Task task = new Task();
+    List<Parameter> parameters = new ArrayList<>();
+    String name;
+    String paramName;
+    String paramType;
+    jj_consume_token(LPAR);
+    jj_consume_token(COLON);
+    jj_consume_token(TASK);
+    name = getAttribute();
+    parameters = getParameters();
     jj_consume_token(RPAR);
 task.setName(name);
         task.setParameters(parameters);
@@ -256,9 +273,8 @@ task.setName(name);
 }
 
   static final public List<Task> getTasks() throws ParseException {List<Task> tasks = new ArrayList<>();
-
-     String name;
      List<Argument> arguments = new ArrayList<>();
+     String name;
     label_6:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -278,6 +294,129 @@ tasks.add(task);
     throw new Error("Missing return statement in function");
 }
 
+////////////////////////////////////////////////////////////////////////
+////////////////    METHODS   //////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+  static final public List<Method> getMethods() throws ParseException {List<Method> methods = new ArrayList<>();
+    Method method;
+    label_7:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case LPAR:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[6] = jj_gen;
+        break label_7;
+      }
+      method = getMethod();
+methods.add(method);
+    }
+{if ("" != null) return methods;}
+    throw new Error("Missing return statement in function");
+}
+
+  static final public Method getMethod() throws ParseException {Method method = new Method();
+    Task task = new Task();
+    List<Parameter> methodParameters = new ArrayList<>();
+    List<Subtask> subtasks = new ArrayList<>();
+    String methodName;
+    String paramName;
+    String paramType;
+    String taskName;
+    jj_consume_token(LPAR);
+    jj_consume_token(COLON);
+    jj_consume_token(METHOD);
+    methodName = getAttribute();
+    methodParameters = getParameters();
+    task = getTaskSignature(methodParameters);
+    subtasks = getSubtasks();
+method.setName(methodName);
+        method.setTask(task);
+        method.setSubtasks(subtasks);
+        {if ("" != null) return method;}
+    throw new Error("Missing return statement in function");
+}
+
+  static final public Task getTaskSignature(List<Parameter> parameters) throws ParseException {Task task = new Task();
+     List<Parameter> taskParameters = new ArrayList<>();
+     String taskName;
+     String paramName;
+    jj_consume_token(COLON);
+    jj_consume_token(TASK);
+    jj_consume_token(LPAR);
+    taskName = getAttribute();
+    label_8:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case QUESTIONMARK:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[7] = jj_gen;
+        break label_8;
+      }
+      jj_consume_token(QUESTIONMARK);
+      paramName = getAttribute();
+for(Parameter p : parameters) {
+            if(p.getName().equals(paramName)) {
+                taskParameters.add(p);
+            }
+        }
+    }
+    jj_consume_token(RPAR);
+task.setName(taskName);
+        task.setParameters(taskParameters);
+        {if ("" != null) return task;}
+    throw new Error("Missing return statement in function");
+}
+
+  static final public List<Subtask> getSubtasks() throws ParseException {List<Subtask> subtasks = new ArrayList<>();
+    List<Parameter> subtaskParameters = new ArrayList<>();
+    String subtaskName;
+    String taskName;
+    String param;
+    jj_consume_token(COLON);
+    jj_consume_token(SUBTASKS);
+    jj_consume_token(LPAR);
+    jj_consume_token(AND);
+    jj_consume_token(LPAR);
+    subtaskName = getAttribute();
+    jj_consume_token(LPAR);
+    taskName = getAttribute();
+    label_9:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case QUESTIONMARK:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[8] = jj_gen;
+        break label_9;
+      }
+      jj_consume_token(QUESTIONMARK);
+      param = getAttribute();
+Parameter parameter = new Parameter();
+                        parameter.setName(taskName);
+                        subtaskParameters.add(parameter);
+    }
+    jj_consume_token(RPAR);
+    jj_consume_token(RPAR);
+Subtask subtask = new Subtask();
+            Task task = new Task();
+            subtask.setName(subtaskName);
+            task.setName(taskName);
+            task.setParameters(subtaskParameters);
+            subtask.setTask(task);
+            subtasks.add(subtask);
+    jj_consume_token(RPAR);
+{if ("" != null) return subtasks;}
+    throw new Error("Missing return statement in function");
+}
+
   static private boolean jj_initialized_once = false;
   /** Generated Token Manager. */
   static public ParserHDDLTokenManager token_source;
@@ -288,13 +427,13 @@ tasks.add(task);
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[6];
+  static final private int[] jj_la1 = new int[9];
   static private int[] jj_la1_0;
   static {
 	   jj_la1_init_0();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x2000,0x8000000,0x20,0x4000,0x4000,0x20,};
+	   jj_la1_0 = new int[] {0x2000,0x10000000,0x20,0x4000,0x4000,0x20,0x20,0x4000,0x4000,};
 	}
 
   /** Constructor with InputStream. */
@@ -315,7 +454,7 @@ tasks.add(task);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -329,7 +468,7 @@ tasks.add(task);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -346,7 +485,7 @@ tasks.add(task);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -364,7 +503,7 @@ tasks.add(task);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -380,7 +519,7 @@ tasks.add(task);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -389,7 +528,7 @@ tasks.add(task);
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 6; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 9; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -440,12 +579,12 @@ tasks.add(task);
   /** Generate ParseException. */
   static public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[28];
+	 boolean[] la1tokens = new boolean[29];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
 	 }
-	 for (int i = 0; i < 6; i++) {
+	 for (int i = 0; i < 9; i++) {
 	   if (jj_la1[i] == jj_gen) {
 		 for (int j = 0; j < 32; j++) {
 		   if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -454,7 +593,7 @@ tasks.add(task);
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 28; i++) {
+	 for (int i = 0; i < 29; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;
