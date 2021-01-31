@@ -1,6 +1,7 @@
  options {
     IGNORE_CASE = false;
     OPTIMIZE_TOKEN_MANAGER = true;
+    LOOKAHEAD=3;
   }
 
   PARSER_BEGIN(ParserHDDL)
@@ -272,9 +273,9 @@ Task getTask():
     String paramType;
  }
  {
-    <LPAR> <COLON> <TASK> name = getAttribute()
+     name = getAttribute()
         parameters = getParameters()
-    <RPAR>
+
     {
         task.setName(name);
         task.setParameters(parameters);
@@ -293,7 +294,7 @@ Task getTask():
         {
             Task task = new Task();
         }
-            task = getTask()
+            <LPAR> <COLON> <TASK> task = getTask() <RPAR>
         {
             tasks.add(task);
         }
@@ -313,7 +314,7 @@ List<Method> getMethods():
 
 }
 {
-    (method = getMethod() { methods.add(method);})*
+    (<LPAR> <COLON> <METHOD> method = getMethod() { methods.add(method);})*
     {
         return methods;
     }
@@ -333,7 +334,7 @@ Method getMethod():
     String taskName;
  }
  {
-    <LPAR> <COLON> <METHOD> methodName = getAttribute()
+     methodName = getAttribute()
         methodParameters = getParameters()
         task = getTaskSignature(methodParameters)
         subtasks = getSubtasks()

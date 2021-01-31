@@ -86,13 +86,9 @@ List<Requirement> getRequirements() throws ParseException {List<Requirement> req
     jj_consume_token(REQUIREMENTS);
     label_1:
     while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case COLON:{
+      if (jj_2_1(3)) {
         ;
-        break;
-        }
-      default:
-        jj_la1[0] = jj_gen;
+      } else {
         break label_1;
       }
       requirement = getRequirement();
@@ -123,13 +119,9 @@ requirement.setValue(value);
     jj_consume_token(TYPES);
     label_2:
     while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case VAR:{
+      if (jj_2_2(3)) {
         ;
-        break;
-        }
-      default:
-        jj_la1[1] = jj_gen;
+      } else {
         break label_2;
       }
       type = getType();
@@ -163,13 +155,9 @@ type.setName(name);
     jj_consume_token(PREDICATES);
     label_3:
     while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case LPAR:{
+      if (jj_2_3(3)) {
         ;
-        break;
-        }
-      default:
-        jj_la1[2] = jj_gen;
+      } else {
         break label_3;
       }
       predicate = getPredicate();
@@ -197,13 +185,9 @@ predicates.add(predicate);
 argument.setName(argumentName);
                             argument.setType(argumentType);
                             arguments.add(argument);
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case QUESTIONMARK:{
+      if (jj_2_4(3)) {
         ;
-        break;
-        }
-      default:
-        jj_la1[3] = jj_gen;
+      } else {
         break label_4;
       }
     }
@@ -228,13 +212,9 @@ List<Parameter> getParameters() throws ParseException {List<Parameter> parameter
     jj_consume_token(LPAR);
     label_5:
     while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case QUESTIONMARK:{
+      if (jj_2_5(3)) {
         ;
-        break;
-        }
-      default:
-        jj_la1[4] = jj_gen;
+      } else {
         break label_5;
       }
       jj_consume_token(QUESTIONMARK);
@@ -260,12 +240,8 @@ Task getTask() throws ParseException {Task task = new Task();
     String name;
     String paramName;
     String paramType;
-    jj_consume_token(LPAR);
-    jj_consume_token(COLON);
-    jj_consume_token(TASK);
     name = getAttribute();
     parameters = getParameters();
-    jj_consume_token(RPAR);
 task.setName(name);
         task.setParameters(parameters);
         {if ("" != null) return task;}
@@ -277,17 +253,17 @@ task.setName(name);
      String name;
     label_6:
     while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case LPAR:{
+      if (jj_2_6(3)) {
         ;
-        break;
-        }
-      default:
-        jj_la1[5] = jj_gen;
+      } else {
         break label_6;
       }
 Task task = new Task();
+      jj_consume_token(LPAR);
+      jj_consume_token(COLON);
+      jj_consume_token(TASK);
       task = getTask();
+      jj_consume_token(RPAR);
 tasks.add(task);
     }
 {if ("" != null) return tasks;}
@@ -301,15 +277,14 @@ tasks.add(task);
     Method method;
     label_7:
     while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case LPAR:{
+      if (jj_2_7(3)) {
         ;
-        break;
-        }
-      default:
-        jj_la1[6] = jj_gen;
+      } else {
         break label_7;
       }
+      jj_consume_token(LPAR);
+      jj_consume_token(COLON);
+      jj_consume_token(METHOD);
       method = getMethod();
 methods.add(method);
     }
@@ -325,9 +300,6 @@ methods.add(method);
     String paramName;
     String paramType;
     String taskName;
-    jj_consume_token(LPAR);
-    jj_consume_token(COLON);
-    jj_consume_token(METHOD);
     methodName = getAttribute();
     methodParameters = getParameters();
     task = getTaskSignature(methodParameters);
@@ -349,13 +321,9 @@ method.setName(methodName);
     taskName = getAttribute();
     label_8:
     while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case QUESTIONMARK:{
+      if (jj_2_8(3)) {
         ;
-        break;
-        }
-      default:
-        jj_la1[7] = jj_gen;
+      } else {
         break label_8;
       }
       jj_consume_token(QUESTIONMARK);
@@ -388,13 +356,9 @@ task.setName(taskName);
     taskName = getAttribute();
     label_9:
     while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case QUESTIONMARK:{
+      if (jj_2_9(3)) {
         ;
-        break;
-        }
-      default:
-        jj_la1[8] = jj_gen;
+      } else {
         break label_9;
       }
       jj_consume_token(QUESTIONMARK);
@@ -417,6 +381,176 @@ Subtask subtask = new Subtask();
     throw new Error("Missing return statement in function");
 }
 
+  static private boolean jj_2_1(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_1()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(0, xla); }
+  }
+
+  static private boolean jj_2_2(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_2()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(1, xla); }
+  }
+
+  static private boolean jj_2_3(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_3()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(2, xla); }
+  }
+
+  static private boolean jj_2_4(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_4()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(3, xla); }
+  }
+
+  static private boolean jj_2_5(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_5()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(4, xla); }
+  }
+
+  static private boolean jj_2_6(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_6()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(5, xla); }
+  }
+
+  static private boolean jj_2_7(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_7()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(6, xla); }
+  }
+
+  static private boolean jj_2_8(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_8()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(7, xla); }
+  }
+
+  static private boolean jj_2_9(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_9()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(8, xla); }
+  }
+
+  static private boolean jj_3R_getRequirement_154_6_10()
+ {
+    if (jj_scan_token(COLON)) return true;
+    if (jj_3R_getAttribute_96_5_13()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_getPredicate_221_6_12()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_3R_getAttribute_96_5_13()) return true;
+    Token xsp;
+    if (jj_3_4()) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_4()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  static private boolean jj_3_1()
+ {
+    if (jj_3R_getRequirement_154_6_10()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_2()
+ {
+    if (jj_3R_getType_184_6_11()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_4()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_96_5_13()) return true;
+    if (jj_scan_token(DASH)) return true;
+    return false;
+  }
+
+  static private boolean jj_3_9()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_96_5_13()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_getAttribute_96_5_13()
+ {
+    if (jj_scan_token(VAR)) return true;
+    return false;
+  }
+
+  static private boolean jj_3_5()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_96_5_13()) return true;
+    if (jj_scan_token(DASH)) return true;
+    return false;
+  }
+
+  static private boolean jj_3_3()
+ {
+    if (jj_3R_getPredicate_221_6_12()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_getType_184_6_11()
+ {
+    if (jj_3R_getAttribute_96_5_13()) return true;
+    if (jj_scan_token(DASH)) return true;
+    if (jj_3R_getAttribute_96_5_13()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_6()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(COLON)) return true;
+    if (jj_scan_token(TASK)) return true;
+    return false;
+  }
+
+  static private boolean jj_3_7()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(COLON)) return true;
+    if (jj_scan_token(METHOD)) return true;
+    return false;
+  }
+
+  static private boolean jj_3_8()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_96_5_13()) return true;
+    return false;
+  }
+
   static private boolean jj_initialized_once = false;
   /** Generated Token Manager. */
   static public ParserHDDLTokenManager token_source;
@@ -426,15 +560,20 @@ Subtask subtask = new Subtask();
   /** Next token. */
   static public Token jj_nt;
   static private int jj_ntk;
+  static private Token jj_scanpos, jj_lastpos;
+  static private int jj_la;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[9];
+  static final private int[] jj_la1 = new int[0];
   static private int[] jj_la1_0;
   static {
 	   jj_la1_init_0();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x2000,0x10000000,0x20,0x4000,0x4000,0x20,0x20,0x4000,0x4000,};
+	   jj_la1_0 = new int[] {};
 	}
+  static final private JJCalls[] jj_2_rtns = new JJCalls[9];
+  static private boolean jj_rescan = false;
+  static private int jj_gc = 0;
 
   /** Constructor with InputStream. */
   public ParserHDDL(java.io.InputStream stream) {
@@ -454,7 +593,7 @@ Subtask subtask = new Subtask();
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Reinitialise. */
@@ -468,7 +607,8 @@ Subtask subtask = new Subtask();
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 0; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Constructor. */
@@ -485,7 +625,7 @@ Subtask subtask = new Subtask();
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Reinitialise. */
@@ -503,7 +643,7 @@ Subtask subtask = new Subtask();
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Constructor with generated Token Manager. */
@@ -519,7 +659,7 @@ Subtask subtask = new Subtask();
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Reinitialise. */
@@ -528,7 +668,7 @@ Subtask subtask = new Subtask();
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 9; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -538,11 +678,50 @@ Subtask subtask = new Subtask();
 	 jj_ntk = -1;
 	 if (token.kind == kind) {
 	   jj_gen++;
+	   if (++jj_gc > 100) {
+		 jj_gc = 0;
+		 for (int i = 0; i < jj_2_rtns.length; i++) {
+		   JJCalls c = jj_2_rtns[i];
+		   while (c != null) {
+			 if (c.gen < jj_gen) c.first = null;
+			 c = c.next;
+		   }
+		 }
+	   }
 	   return token;
 	 }
 	 token = oldToken;
 	 jj_kind = kind;
 	 throw generateParseException();
+  }
+
+  @SuppressWarnings("serial")
+  static private final class LookaheadSuccess extends java.lang.Error {
+    @Override
+    public Throwable fillInStackTrace() {
+      return this;
+    }
+  }
+  static private final LookaheadSuccess jj_ls = new LookaheadSuccess();
+  static private boolean jj_scan_token(int kind) {
+	 if (jj_scanpos == jj_lastpos) {
+	   jj_la--;
+	   if (jj_scanpos.next == null) {
+		 jj_lastpos = jj_scanpos = jj_scanpos.next = token_source.getNextToken();
+	   } else {
+		 jj_lastpos = jj_scanpos = jj_scanpos.next;
+	   }
+	 } else {
+	   jj_scanpos = jj_scanpos.next;
+	 }
+	 if (jj_rescan) {
+	   int i = 0; Token tok = token;
+	   while (tok != null && tok != jj_scanpos) { i++; tok = tok.next; }
+	   if (tok != null) jj_add_error_token(kind, i);
+	 }
+	 if (jj_scanpos.kind != kind) return true;
+	 if (jj_la == 0 && jj_scanpos == jj_lastpos) throw jj_ls;
+	 return false;
   }
 
 
@@ -575,6 +754,46 @@ Subtask subtask = new Subtask();
   static private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
   static private int[] jj_expentry;
   static private int jj_kind = -1;
+  static private int[] jj_lasttokens = new int[100];
+  static private int jj_endpos;
+
+  static private void jj_add_error_token(int kind, int pos) {
+	 if (pos >= 100) {
+		return;
+	 }
+
+	 if (pos == jj_endpos + 1) {
+	   jj_lasttokens[jj_endpos++] = kind;
+	 } else if (jj_endpos != 0) {
+	   jj_expentry = new int[jj_endpos];
+
+	   for (int i = 0; i < jj_endpos; i++) {
+		 jj_expentry[i] = jj_lasttokens[i];
+	   }
+
+	   for (int[] oldentry : jj_expentries) {
+		 if (oldentry.length == jj_expentry.length) {
+		   boolean isMatched = true;
+
+		   for (int i = 0; i < jj_expentry.length; i++) {
+			 if (oldentry[i] != jj_expentry[i]) {
+			   isMatched = false;
+			   break;
+			 }
+
+		   }
+		   if (isMatched) {
+			 jj_expentries.add(jj_expentry);
+			 break;
+		   }
+		 }
+	   }
+
+	   if (pos != 0) {
+		 jj_lasttokens[(jj_endpos = pos) - 1] = kind;
+	   }
+	 }
+  }
 
   /** Generate ParseException. */
   static public ParseException generateParseException() {
@@ -584,7 +803,7 @@ Subtask subtask = new Subtask();
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
 	 }
-	 for (int i = 0; i < 9; i++) {
+	 for (int i = 0; i < 0; i++) {
 	   if (jj_la1[i] == jj_gen) {
 		 for (int j = 0; j < 32; j++) {
 		   if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -600,6 +819,9 @@ Subtask subtask = new Subtask();
 		 jj_expentries.add(jj_expentry);
 	   }
 	 }
+	 jj_endpos = 0;
+	 jj_rescan_token();
+	 jj_add_error_token(0, 0);
 	 int[][] exptokseq = new int[jj_expentries.size()][];
 	 for (int i = 0; i < jj_expentries.size(); i++) {
 	   exptokseq[i] = jj_expentries.get(i);
@@ -620,6 +842,54 @@ Subtask subtask = new Subtask();
 
   /** Disable tracing. */
   static final public void disable_tracing() {
+  }
+
+  static private void jj_rescan_token() {
+	 jj_rescan = true;
+	 for (int i = 0; i < 9; i++) {
+	   try {
+		 JJCalls p = jj_2_rtns[i];
+
+		 do {
+		   if (p.gen > jj_gen) {
+			 jj_la = p.arg; jj_lastpos = jj_scanpos = p.first;
+			 switch (i) {
+			   case 0: jj_3_1(); break;
+			   case 1: jj_3_2(); break;
+			   case 2: jj_3_3(); break;
+			   case 3: jj_3_4(); break;
+			   case 4: jj_3_5(); break;
+			   case 5: jj_3_6(); break;
+			   case 6: jj_3_7(); break;
+			   case 7: jj_3_8(); break;
+			   case 8: jj_3_9(); break;
+			 }
+		   }
+		   p = p.next;
+		 } while (p != null);
+
+		 } catch(LookaheadSuccess ls) { }
+	 }
+	 jj_rescan = false;
+  }
+
+  static private void jj_save(int index, int xla) {
+	 JJCalls p = jj_2_rtns[index];
+	 while (p.gen > jj_gen) {
+	   if (p.next == null) { p = p.next = new JJCalls(); break; }
+	   p = p.next;
+	 }
+
+	 p.gen = jj_gen + xla - jj_la; 
+	 p.first = token;
+	 p.arg = xla;
+  }
+
+  static final class JJCalls {
+	 int gen;
+	 Token first;
+	 int arg;
+	 JJCalls next;
   }
 
    }
