@@ -287,6 +287,7 @@ tasks.add(task);
       jj_consume_token(METHOD);
       method = getMethod();
 methods.add(method);
+      jj_consume_token(RPAR);
     }
 {if ("" != null) return methods;}
     throw new Error("Missing return statement in function");
@@ -350,10 +351,6 @@ task.setName(taskName);
     jj_consume_token(SUBTASKS);
     jj_consume_token(LPAR);
     jj_consume_token(AND);
-    jj_consume_token(LPAR);
-    subtaskName = getAttribute();
-    jj_consume_token(LPAR);
-    taskName = getAttribute();
     label_9:
     while (true) {
       if (jj_2_9(3)) {
@@ -361,14 +358,25 @@ task.setName(taskName);
       } else {
         break label_9;
       }
-      jj_consume_token(QUESTIONMARK);
-      param = getAttribute();
+      jj_consume_token(LPAR);
+      subtaskName = getAttribute();
+      jj_consume_token(LPAR);
+      taskName = getAttribute();
+      label_10:
+      while (true) {
+        if (jj_2_10(3)) {
+          ;
+        } else {
+          break label_10;
+        }
+        jj_consume_token(QUESTIONMARK);
+        param = getAttribute();
 Parameter parameter = new Parameter();
-                        parameter.setName(taskName);
+                        parameter.setName(param);
                         subtaskParameters.add(parameter);
-    }
-    jj_consume_token(RPAR);
-    jj_consume_token(RPAR);
+      }
+      jj_consume_token(RPAR);
+      jj_consume_token(RPAR);
 Subtask subtask = new Subtask();
             Task task = new Task();
             subtask.setName(subtaskName);
@@ -376,6 +384,7 @@ Subtask subtask = new Subtask();
             task.setParameters(subtaskParameters);
             subtask.setTask(task);
             subtasks.add(subtask);
+    }
     jj_consume_token(RPAR);
 {if ("" != null) return subtasks;}
     throw new Error("Missing return statement in function");
@@ -453,17 +462,25 @@ Subtask subtask = new Subtask();
     finally { jj_save(8, xla); }
   }
 
-  static private boolean jj_3R_getRequirement_154_6_10()
+  static private boolean jj_2_10(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_10()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(9, xla); }
+  }
+
+  static private boolean jj_3R_getRequirement_154_6_11()
  {
     if (jj_scan_token(COLON)) return true;
-    if (jj_3R_getAttribute_96_5_13()) return true;
+    if (jj_3R_getAttribute_96_5_14()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getPredicate_221_6_12()
+  static private boolean jj_3R_getPredicate_221_6_13()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_96_5_13()) return true;
+    if (jj_3R_getAttribute_96_5_14()) return true;
     Token xsp;
     if (jj_3_4()) return true;
     while (true) {
@@ -475,32 +492,32 @@ Subtask subtask = new Subtask();
 
   static private boolean jj_3_1()
  {
-    if (jj_3R_getRequirement_154_6_10()) return true;
+    if (jj_3R_getRequirement_154_6_11()) return true;
     return false;
   }
 
   static private boolean jj_3_2()
  {
-    if (jj_3R_getType_184_6_11()) return true;
+    if (jj_3R_getType_184_6_12()) return true;
     return false;
   }
 
   static private boolean jj_3_4()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_96_5_13()) return true;
+    if (jj_3R_getAttribute_96_5_14()) return true;
     if (jj_scan_token(DASH)) return true;
     return false;
   }
 
-  static private boolean jj_3_9()
+  static private boolean jj_3_10()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_96_5_13()) return true;
+    if (jj_3R_getAttribute_96_5_14()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getAttribute_96_5_13()
+  static private boolean jj_3R_getAttribute_96_5_14()
  {
     if (jj_scan_token(VAR)) return true;
     return false;
@@ -509,22 +526,30 @@ Subtask subtask = new Subtask();
   static private boolean jj_3_5()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_96_5_13()) return true;
+    if (jj_3R_getAttribute_96_5_14()) return true;
     if (jj_scan_token(DASH)) return true;
     return false;
   }
 
   static private boolean jj_3_3()
  {
-    if (jj_3R_getPredicate_221_6_12()) return true;
+    if (jj_3R_getPredicate_221_6_13()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getType_184_6_11()
+  static private boolean jj_3R_getType_184_6_12()
  {
-    if (jj_3R_getAttribute_96_5_13()) return true;
+    if (jj_3R_getAttribute_96_5_14()) return true;
     if (jj_scan_token(DASH)) return true;
-    if (jj_3R_getAttribute_96_5_13()) return true;
+    if (jj_3R_getAttribute_96_5_14()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_9()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_3R_getAttribute_96_5_14()) return true;
+    if (jj_scan_token(LPAR)) return true;
     return false;
   }
 
@@ -547,7 +572,7 @@ Subtask subtask = new Subtask();
   static private boolean jj_3_8()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_96_5_13()) return true;
+    if (jj_3R_getAttribute_96_5_14()) return true;
     return false;
   }
 
@@ -571,7 +596,7 @@ Subtask subtask = new Subtask();
 	private static void jj_la1_init_0() {
 	   jj_la1_0 = new int[] {};
 	}
-  static final private JJCalls[] jj_2_rtns = new JJCalls[9];
+  static final private JJCalls[] jj_2_rtns = new JJCalls[10];
   static private boolean jj_rescan = false;
   static private int jj_gc = 0;
 
@@ -846,7 +871,7 @@ Subtask subtask = new Subtask();
 
   static private void jj_rescan_token() {
 	 jj_rescan = true;
-	 for (int i = 0; i < 9; i++) {
+	 for (int i = 0; i < 10; i++) {
 	   try {
 		 JJCalls p = jj_2_rtns[i];
 
@@ -863,6 +888,7 @@ Subtask subtask = new Subtask();
 			   case 6: jj_3_7(); break;
 			   case 7: jj_3_8(); break;
 			   case 8: jj_3_9(); break;
+			   case 9: jj_3_10(); break;
 			 }
 		   }
 		   p = p.next;

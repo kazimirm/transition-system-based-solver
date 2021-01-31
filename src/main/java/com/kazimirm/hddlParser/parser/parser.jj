@@ -314,7 +314,7 @@ List<Method> getMethods():
 
 }
 {
-    (<LPAR> <COLON> <METHOD> method = getMethod() { methods.add(method);})*
+    (<LPAR> <COLON> <METHOD> method = getMethod() { methods.add(method);} <RPAR>)*
     {
         return methods;
     }
@@ -388,11 +388,11 @@ List<Subtask> getSubtasks():
                 <QUESTIONMARK> param = getAttribute()
                     {
                         Parameter parameter = new Parameter();
-                        parameter.setName(taskName);
+                        parameter.setName(param);
                         subtaskParameters.add(parameter);
                     }
             )* <RPAR> <RPAR>
-        )
+
         {
             Subtask subtask = new Subtask();
             Task task = new Task();
@@ -402,6 +402,7 @@ List<Subtask> getSubtasks():
             subtask.setTask(task);
             subtasks.add(subtask);
         }
+        )*
         <RPAR>
 
     {
