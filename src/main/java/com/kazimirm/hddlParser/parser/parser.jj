@@ -65,6 +65,9 @@
     | <SUBTASKS:  		    "subtasks">								    /* subtasks */
     | <ORDERING:  		    "ordering">								    /* ordering */
     | <METHOD:  		    "method">								    /* method */
+    | <ACTION:  		    "action">								    /* action */
+    | <PRECONDITION:  		"precondition">								/* precondition */
+    | <EFFECT:  		    "effect">								    /* effect */
     | <VAR:  				(["a"-"z", "A"-"Z", "0"-"9","_","-"])+>		/* variables, words, consts */
   }
 
@@ -111,6 +114,7 @@
     List<Predicate> predicates = new ArrayList<>();
     List<Task> tasks = new ArrayList<>();
     List<Method> methods = new ArrayList<>();
+    List<Action> actions = new ArrayList<>();
     String domainName;
   }
   {
@@ -120,6 +124,8 @@
     predicates = getPredicates()
     tasks = getTasks()
     methods = getMethods()
+    actions = getActions()
+    <RPAR>
     {
         domain.setName(domainName);
         domain.setRequirements(requirements);
@@ -127,6 +133,7 @@
         domain.setPredicates(predicates);
         domain.setTasks(tasks);
         domain.setMethods(methods);
+        domain.setActions(actions);
         return domain;
     }
   }
@@ -238,7 +245,7 @@ List<Requirement> getRequirements():
 ////////////////////////////////////////////////////////////////////////
 ////////////////    GET PARAMETERS   ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-///                 Used in task/method body                         ///
+///                 Used in task/method/action body                  ///
 ////////////////////////////////////////////////////////////////////////
 
 List<Parameter> getParameters():
@@ -432,5 +439,113 @@ List<Ordering> getOrdering():
     <RPAR>
     {
         return ordering;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////
+////////////////    Actions   //////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+List<Action> getActions():
+{
+    List<Action> actions = new ArrayList<>();
+    Action action = new Action();
+}
+{
+    (action = getAction(){actions.add(action);})*
+    {
+        return actions;
+    }
+}
+
+Action getAction():
+{
+    Action action = new Action();
+    List<Parameter> parameters = new ArrayList<>();
+    List<Predicate> preconditions = new ArrayList<>();
+    List<Predicate> effects = new ArrayList<>();
+    String actionName;
+}
+{
+    <LPAR> <COLON> <ACTION>
+    actionName = getAttribute()
+    parameters = getParameters()
+    <COLON> <PRECONDITION> preconditions = getActionPredicates()
+    <COLON> <EFFECT> effects = getActionPredicates()
+    <RPAR>
+    {
+        action.setName(actionName);
+        action.setParameters(parameters);
+        action.setPreconditions(preconditions);
+        action.setEffects(effects);
+        return action;
+    }
+}
+
+List<Predicate> getActionPredicates():
+{
+    List<Predicate> predicates = new ArrayList<>();
+    List<Argument> arguments = new ArrayList<>();
+    String name;
+    String param;
+
+}
+{
+    <LPAR>
+    (
+        <AND>
+        (
+            //////////////////////////////////////////
+            ////////////// TRUE //////////////////////
+            //////////////////////////////////////////
+            (
+            <LPAR> name = getAttribute()
+            (
+                <QUESTIONMARK> param = getAttribute()
+                {
+                   Argument argument = new Argument();
+                   argument.setName(param);
+                   arguments.add(argument);
+                }
+            )*
+            <RPAR>
+            {
+                Predicate predicate = new Predicate();
+                predicate.setName(name);
+                predicate.setArguments(arguments);
+                predicate.setValue(true);
+                predicates.add(predicate);
+            }
+            )
+
+            |
+            //////////////////////////////////////////
+            ////////////// FALSE /////////////////////
+            //////////////////////////////////////////
+            (
+            <LPAR> <NOT> <LPAR>name = getAttribute()
+            (
+                <QUESTIONMARK> param = getAttribute()
+                {
+                   Argument argument = new Argument();
+                   argument.setName(param);
+                   arguments.add(argument);
+                }
+            )*
+            <RPAR>
+            {
+                Predicate predicate = new Predicate();
+                predicate.setName(name);
+                predicate.setArguments(arguments);
+                predicate.setValue(false);
+                predicates.add(predicate);
+            }
+            <RPAR>
+            )
+        )*
+    )*
+    <RPAR>
+    {
+        return predicates;
     }
 }

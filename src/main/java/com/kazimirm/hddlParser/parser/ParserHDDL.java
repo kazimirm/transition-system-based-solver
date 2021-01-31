@@ -53,6 +53,7 @@
     List<Predicate> predicates = new ArrayList<>();
     List<Task> tasks = new ArrayList<>();
     List<Method> methods = new ArrayList<>();
+    List<Action> actions = new ArrayList<>();
     String domainName;
     jj_consume_token(LPAR);
     jj_consume_token(DEFINE);
@@ -65,12 +66,15 @@
     predicates = getPredicates();
     tasks = getTasks();
     methods = getMethods();
+    actions = getActions();
+    jj_consume_token(RPAR);
 domain.setName(domainName);
         domain.setRequirements(requirements);
         domain.setTypes(types);
         domain.setPredicates(predicates);
         domain.setTasks(tasks);
         domain.setMethods(methods);
+        domain.setActions(actions);
         {if ("" != null) return domain;}
     throw new Error("Missing return statement in function");
 }
@@ -201,7 +205,7 @@ predicate.setName(name);
 ////////////////////////////////////////////////////////////////////////
 ////////////////    GET PARAMETERS   ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-///                 Used in task/method body                         ///
+///                 Used in task/method/action body                  ///
 ////////////////////////////////////////////////////////////////////////
   static final public 
 List<Parameter> getParameters() throws ParseException {List<Parameter> parameters = new ArrayList<>();
@@ -430,6 +434,129 @@ Ordering o = new Ordering();
     throw new Error("Missing return statement in function");
 }
 
+////////////////////////////////////////////////////////////////////////
+////////////////    Actions   //////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+  static final public 
+List<Action> getActions() throws ParseException {List<Action> actions = new ArrayList<>();
+    Action action = new Action();
+    label_13:
+    while (true) {
+      if (jj_2_13(3)) {
+        ;
+      } else {
+        break label_13;
+      }
+      action = getAction();
+actions.add(action);
+    }
+{if ("" != null) return actions;}
+    throw new Error("Missing return statement in function");
+}
+
+  static final public Action getAction() throws ParseException {Action action = new Action();
+    List<Parameter> parameters = new ArrayList<>();
+    List<Predicate> preconditions = new ArrayList<>();
+    List<Predicate> effects = new ArrayList<>();
+    String actionName;
+    jj_consume_token(LPAR);
+    jj_consume_token(COLON);
+    jj_consume_token(ACTION);
+    actionName = getAttribute();
+    parameters = getParameters();
+    jj_consume_token(COLON);
+    jj_consume_token(PRECONDITION);
+    preconditions = getActionPredicates();
+    jj_consume_token(COLON);
+    jj_consume_token(EFFECT);
+    effects = getActionPredicates();
+    jj_consume_token(RPAR);
+action.setName(actionName);
+        action.setParameters(parameters);
+        action.setPreconditions(preconditions);
+        action.setEffects(effects);
+        {if ("" != null) return action;}
+    throw new Error("Missing return statement in function");
+}
+
+  static final public List<Predicate> getActionPredicates() throws ParseException {List<Predicate> predicates = new ArrayList<>();
+    List<Argument> arguments = new ArrayList<>();
+    String name;
+    String param;
+    jj_consume_token(LPAR);
+    label_14:
+    while (true) {
+      if (jj_2_14(3)) {
+        ;
+      } else {
+        break label_14;
+      }
+      jj_consume_token(AND);
+      label_15:
+      while (true) {
+        if (jj_2_15(3)) {
+          ;
+        } else {
+          break label_15;
+        }
+        if (jj_2_18(3)) {
+          jj_consume_token(LPAR);
+          name = getAttribute();
+          label_16:
+          while (true) {
+            if (jj_2_16(3)) {
+              ;
+            } else {
+              break label_16;
+            }
+            jj_consume_token(QUESTIONMARK);
+            param = getAttribute();
+Argument argument = new Argument();
+                   argument.setName(param);
+                   arguments.add(argument);
+          }
+          jj_consume_token(RPAR);
+Predicate predicate = new Predicate();
+                predicate.setName(name);
+                predicate.setArguments(arguments);
+                predicate.setValue(true);
+                predicates.add(predicate);
+        } else if (jj_2_19(3)) {
+          jj_consume_token(LPAR);
+          jj_consume_token(NOT);
+          jj_consume_token(LPAR);
+          name = getAttribute();
+          label_17:
+          while (true) {
+            if (jj_2_17(3)) {
+              ;
+            } else {
+              break label_17;
+            }
+            jj_consume_token(QUESTIONMARK);
+            param = getAttribute();
+Argument argument = new Argument();
+                   argument.setName(param);
+                   arguments.add(argument);
+          }
+          jj_consume_token(RPAR);
+Predicate predicate = new Predicate();
+                predicate.setName(name);
+                predicate.setArguments(arguments);
+                predicate.setValue(false);
+                predicates.add(predicate);
+          jj_consume_token(RPAR);
+        } else {
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+      }
+    }
+    jj_consume_token(RPAR);
+{if ("" != null) return predicates;}
+    throw new Error("Missing return statement in function");
+}
+
   static private boolean jj_2_1(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
@@ -526,101 +653,127 @@ Ordering o = new Ordering();
     finally { jj_save(11, xla); }
   }
 
-  static private boolean jj_3R_getPredicate_222_6_15()
+  static private boolean jj_2_13(int xla)
  {
-    if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_97_5_16()) return true;
-    Token xsp;
-    if (jj_3_4()) return true;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_4()) { jj_scanpos = xsp; break; }
-    }
-    return false;
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_13()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(12, xla); }
+  }
+
+  static private boolean jj_2_14(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_14()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(13, xla); }
+  }
+
+  static private boolean jj_2_15(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_15()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(14, xla); }
+  }
+
+  static private boolean jj_2_16(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_16()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(15, xla); }
+  }
+
+  static private boolean jj_2_17(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_17()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(16, xla); }
+  }
+
+  static private boolean jj_2_18(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_18()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(17, xla); }
+  }
+
+  static private boolean jj_2_19(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_19()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(18, xla); }
   }
 
   static private boolean jj_3_1()
  {
-    if (jj_3R_getRequirement_155_6_13()) return true;
+    if (jj_3R_getRequirement_162_6_18()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_18()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_3R_getAttribute_100_5_21()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_16()) { jj_scanpos = xsp; break; }
+    }
+    if (jj_scan_token(RPAR)) return true;
+    return false;
+  }
+
+  static private boolean jj_3_15()
+ {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_18()) {
+    jj_scanpos = xsp;
+    if (jj_3_19()) return true;
+    }
     return false;
   }
 
   static private boolean jj_3_11()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_97_5_16()) return true;
+    if (jj_3R_getAttribute_100_5_21()) return true;
     return false;
   }
 
-  static private boolean jj_3_2()
+  static private boolean jj_3_13()
  {
-    if (jj_3R_getType_185_6_14()) return true;
+    if (jj_3R_getAction_470_5_23()) return true;
     return false;
   }
 
-  static private boolean jj_3_12()
+  static private boolean jj_3_14()
  {
-    if (jj_scan_token(LPAR)) return true;
-    if (jj_scan_token(LT)) return true;
-    if (jj_3R_getAttribute_97_5_16()) return true;
+    if (jj_scan_token(AND)) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_15()) { jj_scanpos = xsp; break; }
+    }
     return false;
   }
 
-  static private boolean jj_3_4()
+  static private boolean jj_3_8()
  {
-    if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_97_5_16()) return true;
-    if (jj_scan_token(DASH)) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_getOrdering_423_5_17()
- {
-    if (jj_scan_token(COLON)) return true;
-    if (jj_scan_token(ORDERING)) return true;
-    if (jj_scan_token(LPAR)) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_getAttribute_97_5_16()
- {
-    if (jj_scan_token(VAR)) return true;
-    return false;
-  }
-
-  static private boolean jj_3_5()
- {
-    if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_97_5_16()) return true;
-    if (jj_scan_token(DASH)) return true;
+    if (jj_3R_getOrdering_430_5_22()) return true;
     return false;
   }
 
   static private boolean jj_3_10()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_97_5_16()) return true;
+    if (jj_3R_getAttribute_100_5_21()) return true;
     if (jj_scan_token(LPAR)) return true;
-    return false;
-  }
-
-  static private boolean jj_3_8()
- {
-    if (jj_3R_getOrdering_423_5_17()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_3()
- {
-    if (jj_3R_getPredicate_222_6_15()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_getType_185_6_14()
- {
-    if (jj_3R_getAttribute_97_5_16()) return true;
-    if (jj_scan_token(DASH)) return true;
-    if (jj_3R_getAttribute_97_5_16()) return true;
     return false;
   }
 
@@ -632,10 +785,98 @@ Ordering o = new Ordering();
     return false;
   }
 
-  static private boolean jj_3_9()
+  static private boolean jj_3_17()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_97_5_16()) return true;
+    if (jj_3R_getAttribute_100_5_21()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_getRequirement_162_6_18()
+ {
+    if (jj_scan_token(COLON)) return true;
+    if (jj_3R_getAttribute_100_5_21()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_19()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(NOT)) return true;
+    if (jj_scan_token(LPAR)) return true;
+    return false;
+  }
+
+  static private boolean jj_3_2()
+ {
+    if (jj_3R_getType_192_6_19()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_4()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_100_5_21()) return true;
+    if (jj_scan_token(DASH)) return true;
+    return false;
+  }
+
+  static private boolean jj_3_12()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(LT)) return true;
+    if (jj_3R_getAttribute_100_5_21()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_getOrdering_430_5_22()
+ {
+    if (jj_scan_token(COLON)) return true;
+    if (jj_scan_token(ORDERING)) return true;
+    if (jj_scan_token(LPAR)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_getAttribute_100_5_21()
+ {
+    if (jj_scan_token(VAR)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_getType_192_6_19()
+ {
+    if (jj_3R_getAttribute_100_5_21()) return true;
+    if (jj_scan_token(DASH)) return true;
+    if (jj_3R_getAttribute_100_5_21()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_3()
+ {
+    if (jj_3R_getPredicate_229_6_20()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_5()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_100_5_21()) return true;
+    if (jj_scan_token(DASH)) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_getAction_470_5_23()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(COLON)) return true;
+    if (jj_scan_token(ACTION)) return true;
+    return false;
+  }
+
+  static private boolean jj_3_16()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_100_5_21()) return true;
     return false;
   }
 
@@ -647,10 +888,23 @@ Ordering o = new Ordering();
     return false;
   }
 
-  static private boolean jj_3R_getRequirement_155_6_13()
+  static private boolean jj_3_9()
  {
-    if (jj_scan_token(COLON)) return true;
-    if (jj_3R_getAttribute_97_5_16()) return true;
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_100_5_21()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_getPredicate_229_6_20()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_3R_getAttribute_100_5_21()) return true;
+    Token xsp;
+    if (jj_3_4()) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_4()) { jj_scanpos = xsp; break; }
+    }
     return false;
   }
 
@@ -668,13 +922,18 @@ Ordering o = new Ordering();
   static private int jj_gen;
   static final private int[] jj_la1 = new int[0];
   static private int[] jj_la1_0;
+  static private int[] jj_la1_1;
   static {
 	   jj_la1_init_0();
+	   jj_la1_init_1();
 	}
 	private static void jj_la1_init_0() {
 	   jj_la1_0 = new int[] {};
 	}
-  static final private JJCalls[] jj_2_rtns = new JJCalls[12];
+	private static void jj_la1_init_1() {
+	   jj_la1_1 = new int[] {};
+	}
+  static final private JJCalls[] jj_2_rtns = new JJCalls[19];
   static private boolean jj_rescan = false;
   static private int jj_gc = 0;
 
@@ -901,7 +1160,7 @@ Ordering o = new Ordering();
   /** Generate ParseException. */
   static public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[30];
+	 boolean[] la1tokens = new boolean[33];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
@@ -912,10 +1171,13 @@ Ordering o = new Ordering();
 		   if ((jj_la1_0[i] & (1<<j)) != 0) {
 			 la1tokens[j] = true;
 		   }
+		   if ((jj_la1_1[i] & (1<<j)) != 0) {
+			 la1tokens[32+j] = true;
+		   }
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 30; i++) {
+	 for (int i = 0; i < 33; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;
@@ -949,7 +1211,7 @@ Ordering o = new Ordering();
 
   static private void jj_rescan_token() {
 	 jj_rescan = true;
-	 for (int i = 0; i < 12; i++) {
+	 for (int i = 0; i < 19; i++) {
 	   try {
 		 JJCalls p = jj_2_rtns[i];
 
@@ -969,6 +1231,13 @@ Ordering o = new Ordering();
 			   case 9: jj_3_10(); break;
 			   case 10: jj_3_11(); break;
 			   case 11: jj_3_12(); break;
+			   case 12: jj_3_13(); break;
+			   case 13: jj_3_14(); break;
+			   case 14: jj_3_15(); break;
+			   case 15: jj_3_16(); break;
+			   case 16: jj_3_17(); break;
+			   case 17: jj_3_18(); break;
+			   case 18: jj_3_19(); break;
 			 }
 		   }
 		   p = p.next;

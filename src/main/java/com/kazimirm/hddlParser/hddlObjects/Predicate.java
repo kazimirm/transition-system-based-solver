@@ -4,13 +4,15 @@ import java.util.List;
 
 public class Predicate {
     private String name;
+    private Boolean value;
     private List<Argument> arguments;
 
     public Predicate() {
     }
 
-    public Predicate(String name, List<Argument> arguments) {
+    public Predicate(String name, Boolean value, List<Argument> arguments) {
         this.name = name;
+        this.value = value;
         this.arguments = arguments;
     }
 
@@ -20,6 +22,14 @@ public class Predicate {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getValue() {
+        return value;
+    }
+
+    public void setValue(Boolean value) {
+        this.value = value;
     }
 
     public List<Argument> getArguments() {

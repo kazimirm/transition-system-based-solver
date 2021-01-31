@@ -91,3 +91,63 @@
 		 (task0 (noop ?v ?l))
 		)
 	)
+
+	(:action drive
+		:parameters (?v - vehicle ?l1 - location ?l2 - location)
+		:precondition
+			(and
+				(at ?v ?l1)
+				(road ?l1 ?l2)
+			)
+		:effect
+			(and
+				(not (at ?v ?l1))
+				(at ?v ?l2)
+			)
+	)
+
+	(:action noop
+		:parameters (?v - vehicle ?l2 - location)
+		:precondition
+			(and
+				(at ?v ?l2)
+			)
+		:effect ()
+	)
+
+	(:action pick_up
+		:parameters (?v - vehicle ?l - location ?p - package ?s1 - capacity_number ?s2 - capacity_number)
+		:precondition
+			(and
+				(at ?v ?l)
+				(at ?p ?l)
+				(capacity_predecessor ?s1 ?s2)
+				(capacity ?v ?s2)
+			)
+		:effect
+			(and
+				(not (at ?p ?l))
+				(in ?p ?v)
+				(capacity ?v ?s1)
+				(not (capacity ?v ?s2))
+			)
+	)
+
+	(:action drop
+		:parameters (?v - vehicle ?l - location ?p - package ?s1 - capacity_number ?s2 - capacity_number)
+		:precondition
+			(and
+				(at ?v ?l)
+				(in ?p ?v)
+				(capacity_predecessor ?s1 ?s2)
+				(capacity ?v ?s1)
+			)
+		:effect
+			(and
+				(not (in ?p ?v))
+				(at ?p ?l)
+				(capacity ?v ?s2)
+				(not (capacity ?v ?s1))
+			)
+	)
+)
