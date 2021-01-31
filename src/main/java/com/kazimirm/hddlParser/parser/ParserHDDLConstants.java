@@ -55,9 +55,11 @@ public interface ParserHDDLConstants {
   /** RegularExpression Id. */
   int SUBTASKS = 26;
   /** RegularExpression Id. */
-  int METHOD = 27;
+  int ORDERING = 27;
   /** RegularExpression Id. */
-  int VAR = 28;
+  int METHOD = 28;
+  /** RegularExpression Id. */
+  int VAR = 29;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -91,6 +93,7 @@ public interface ParserHDDLConstants {
     "\"parameters\"",
     "\"task\"",
     "\"subtasks\"",
+    "\"ordering\"",
     "\"method\"",
     "<VAR>",
   };

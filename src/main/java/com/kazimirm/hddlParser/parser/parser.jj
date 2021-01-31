@@ -63,6 +63,7 @@
     | <PARAMETERS:  		"parameters">								/* parameters */
     | <TASK:  		        "task">								        /* tasks */
     | <SUBTASKS:  		    "subtasks">								    /* subtasks */
+    | <ORDERING:  		    "ordering">								    /* ordering */
     | <METHOD:  		    "method">								    /* method */
     | <VAR:  				(["a"-"z", "A"-"Z", "0"-"9","_","-"])+>		/* variables, words, consts */
   }
@@ -328,6 +329,7 @@ Method getMethod():
     Task task = new Task();
     List<Parameter> methodParameters = new ArrayList<>();
     List<Subtask> subtasks = new ArrayList<>();
+    List<Ordering> ordering = new ArrayList<>();
     String methodName;
     String paramName;
     String paramType;
@@ -338,12 +340,13 @@ Method getMethod():
         methodParameters = getParameters()
         task = getTaskSignature(methodParameters)
         subtasks = getSubtasks()
-
+        (ordering = getOrdering())*
 
     {
         method.setName(methodName);
         method.setTask(task);
         method.setSubtasks(subtasks);
+        method.setOrdering(ordering);
         return method;
     }
  }
@@ -407,5 +410,27 @@ List<Subtask> getSubtasks():
 
     {
         return subtasks;
+    }
+}
+
+List<Ordering> getOrdering():
+{
+    List<Ordering> ordering = new ArrayList<>();
+    String subtaskBefore;
+    String subtaskAfter;
+}
+{
+    <COLON> <ORDERING> <LPAR> <AND>
+    (<LPAR> <LT> subtaskBefore = getAttribute() subtaskAfter = getAttribute() <RPAR>
+        {
+            Ordering o = new Ordering();
+            o.setSubtaskBefore(subtaskBefore);
+            o.setSubtaskAfter(subtaskAfter);
+            ordering.add(o);
+        }
+    )*
+    <RPAR>
+    {
+        return ordering;
     }
 }

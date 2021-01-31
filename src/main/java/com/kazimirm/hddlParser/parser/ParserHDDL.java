@@ -297,6 +297,7 @@ methods.add(method);
     Task task = new Task();
     List<Parameter> methodParameters = new ArrayList<>();
     List<Subtask> subtasks = new ArrayList<>();
+    List<Ordering> ordering = new ArrayList<>();
     String methodName;
     String paramName;
     String paramType;
@@ -305,9 +306,19 @@ methods.add(method);
     methodParameters = getParameters();
     task = getTaskSignature(methodParameters);
     subtasks = getSubtasks();
+    label_8:
+    while (true) {
+      if (jj_2_8(3)) {
+        ;
+      } else {
+        break label_8;
+      }
+      ordering = getOrdering();
+    }
 method.setName(methodName);
         method.setTask(task);
         method.setSubtasks(subtasks);
+        method.setOrdering(ordering);
         {if ("" != null) return method;}
     throw new Error("Missing return statement in function");
 }
@@ -320,12 +331,12 @@ method.setName(methodName);
     jj_consume_token(TASK);
     jj_consume_token(LPAR);
     taskName = getAttribute();
-    label_8:
+    label_9:
     while (true) {
-      if (jj_2_8(3)) {
+      if (jj_2_9(3)) {
         ;
       } else {
-        break label_8;
+        break label_9;
       }
       jj_consume_token(QUESTIONMARK);
       paramName = getAttribute();
@@ -351,23 +362,23 @@ task.setName(taskName);
     jj_consume_token(SUBTASKS);
     jj_consume_token(LPAR);
     jj_consume_token(AND);
-    label_9:
+    label_10:
     while (true) {
-      if (jj_2_9(3)) {
+      if (jj_2_10(3)) {
         ;
       } else {
-        break label_9;
+        break label_10;
       }
       jj_consume_token(LPAR);
       subtaskName = getAttribute();
       jj_consume_token(LPAR);
       taskName = getAttribute();
-      label_10:
+      label_11:
       while (true) {
-        if (jj_2_10(3)) {
+        if (jj_2_11(3)) {
           ;
         } else {
-          break label_10;
+          break label_11;
         }
         jj_consume_token(QUESTIONMARK);
         param = getAttribute();
@@ -387,6 +398,35 @@ Subtask subtask = new Subtask();
     }
     jj_consume_token(RPAR);
 {if ("" != null) return subtasks;}
+    throw new Error("Missing return statement in function");
+}
+
+  static final public List<Ordering> getOrdering() throws ParseException {List<Ordering> ordering = new ArrayList<>();
+    String subtaskBefore;
+    String subtaskAfter;
+    jj_consume_token(COLON);
+    jj_consume_token(ORDERING);
+    jj_consume_token(LPAR);
+    jj_consume_token(AND);
+    label_12:
+    while (true) {
+      if (jj_2_12(3)) {
+        ;
+      } else {
+        break label_12;
+      }
+      jj_consume_token(LPAR);
+      jj_consume_token(LT);
+      subtaskBefore = getAttribute();
+      subtaskAfter = getAttribute();
+      jj_consume_token(RPAR);
+Ordering o = new Ordering();
+            o.setSubtaskBefore(subtaskBefore);
+            o.setSubtaskAfter(subtaskAfter);
+            ordering.add(o);
+    }
+    jj_consume_token(RPAR);
+{if ("" != null) return ordering;}
     throw new Error("Missing return statement in function");
 }
 
@@ -470,17 +510,26 @@ Subtask subtask = new Subtask();
     finally { jj_save(9, xla); }
   }
 
-  static private boolean jj_3R_getRequirement_154_6_11()
+  static private boolean jj_2_11(int xla)
  {
-    if (jj_scan_token(COLON)) return true;
-    if (jj_3R_getAttribute_96_5_14()) return true;
-    return false;
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_11()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(10, xla); }
   }
 
-  static private boolean jj_3R_getPredicate_221_6_13()
+  static private boolean jj_2_12(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_12()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(11, xla); }
+  }
+
+  static private boolean jj_3R_getPredicate_222_6_15()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_96_5_14()) return true;
+    if (jj_3R_getAttribute_97_5_16()) return true;
     Token xsp;
     if (jj_3_4()) return true;
     while (true) {
@@ -492,32 +541,48 @@ Subtask subtask = new Subtask();
 
   static private boolean jj_3_1()
  {
-    if (jj_3R_getRequirement_154_6_11()) return true;
+    if (jj_3R_getRequirement_155_6_13()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_11()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_97_5_16()) return true;
     return false;
   }
 
   static private boolean jj_3_2()
  {
-    if (jj_3R_getType_184_6_12()) return true;
+    if (jj_3R_getType_185_6_14()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_12()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(LT)) return true;
+    if (jj_3R_getAttribute_97_5_16()) return true;
     return false;
   }
 
   static private boolean jj_3_4()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_96_5_14()) return true;
+    if (jj_3R_getAttribute_97_5_16()) return true;
     if (jj_scan_token(DASH)) return true;
     return false;
   }
 
-  static private boolean jj_3_10()
+  static private boolean jj_3R_getOrdering_423_5_17()
  {
-    if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_96_5_14()) return true;
+    if (jj_scan_token(COLON)) return true;
+    if (jj_scan_token(ORDERING)) return true;
+    if (jj_scan_token(LPAR)) return true;
     return false;
   }
 
-  static private boolean jj_3R_getAttribute_96_5_14()
+  static private boolean jj_3R_getAttribute_97_5_16()
  {
     if (jj_scan_token(VAR)) return true;
     return false;
@@ -526,30 +591,36 @@ Subtask subtask = new Subtask();
   static private boolean jj_3_5()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_96_5_14()) return true;
+    if (jj_3R_getAttribute_97_5_16()) return true;
     if (jj_scan_token(DASH)) return true;
+    return false;
+  }
+
+  static private boolean jj_3_10()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_3R_getAttribute_97_5_16()) return true;
+    if (jj_scan_token(LPAR)) return true;
+    return false;
+  }
+
+  static private boolean jj_3_8()
+ {
+    if (jj_3R_getOrdering_423_5_17()) return true;
     return false;
   }
 
   static private boolean jj_3_3()
  {
-    if (jj_3R_getPredicate_221_6_13()) return true;
+    if (jj_3R_getPredicate_222_6_15()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getType_184_6_12()
+  static private boolean jj_3R_getType_185_6_14()
  {
-    if (jj_3R_getAttribute_96_5_14()) return true;
+    if (jj_3R_getAttribute_97_5_16()) return true;
     if (jj_scan_token(DASH)) return true;
-    if (jj_3R_getAttribute_96_5_14()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_9()
- {
-    if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_96_5_14()) return true;
-    if (jj_scan_token(LPAR)) return true;
+    if (jj_3R_getAttribute_97_5_16()) return true;
     return false;
   }
 
@@ -561,6 +632,13 @@ Subtask subtask = new Subtask();
     return false;
   }
 
+  static private boolean jj_3_9()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_97_5_16()) return true;
+    return false;
+  }
+
   static private boolean jj_3_7()
  {
     if (jj_scan_token(LPAR)) return true;
@@ -569,10 +647,10 @@ Subtask subtask = new Subtask();
     return false;
   }
 
-  static private boolean jj_3_8()
+  static private boolean jj_3R_getRequirement_155_6_13()
  {
-    if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_96_5_14()) return true;
+    if (jj_scan_token(COLON)) return true;
+    if (jj_3R_getAttribute_97_5_16()) return true;
     return false;
   }
 
@@ -596,7 +674,7 @@ Subtask subtask = new Subtask();
 	private static void jj_la1_init_0() {
 	   jj_la1_0 = new int[] {};
 	}
-  static final private JJCalls[] jj_2_rtns = new JJCalls[10];
+  static final private JJCalls[] jj_2_rtns = new JJCalls[12];
   static private boolean jj_rescan = false;
   static private int jj_gc = 0;
 
@@ -823,7 +901,7 @@ Subtask subtask = new Subtask();
   /** Generate ParseException. */
   static public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[29];
+	 boolean[] la1tokens = new boolean[30];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
@@ -837,7 +915,7 @@ Subtask subtask = new Subtask();
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 29; i++) {
+	 for (int i = 0; i < 30; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;
@@ -871,7 +949,7 @@ Subtask subtask = new Subtask();
 
   static private void jj_rescan_token() {
 	 jj_rescan = true;
-	 for (int i = 0; i < 10; i++) {
+	 for (int i = 0; i < 12; i++) {
 	   try {
 		 JJCalls p = jj_2_rtns[i];
 
@@ -889,6 +967,8 @@ Subtask subtask = new Subtask();
 			   case 7: jj_3_8(); break;
 			   case 8: jj_3_9(); break;
 			   case 9: jj_3_10(); break;
+			   case 10: jj_3_11(); break;
+			   case 11: jj_3_12(); break;
 			 }
 		   }
 		   p = p.next;

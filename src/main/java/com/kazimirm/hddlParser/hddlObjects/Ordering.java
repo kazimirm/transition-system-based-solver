@@ -2,25 +2,25 @@ package com.kazimirm.hddlParser.hddlObjects;
 
 public class Ordering {
     //todo: is there a better way how to represent it?
-    private String taskBefore;
-    private String taskAfter;
+    private String subtaskBefore;
+    private String subtaskAfter;
 
     public Ordering() {
     }
 
-    public String getTaskBefore() {
-        return taskBefore;
+    public String getSubtaskBefore() {
+        return subtaskBefore;
     }
 
-    public void setTaskBefore(String taskBefore) {
-        this.taskBefore = taskBefore;
+    public void setSubtaskBefore(String subtaskBefore) {
+        this.subtaskBefore = subtaskBefore;
     }
 
-    public String getTaskAfter() {
-        return taskAfter;
+    public String getSubtaskAfter() {
+        return subtaskAfter;
     }
 
-    public void setTaskAfter(String taskAfter) {
-        this.taskAfter = taskAfter;
+    public void setSubtaskAfter(String subtaskAfter) {
+        this.subtaskAfter = subtaskAfter;
     }
 }
