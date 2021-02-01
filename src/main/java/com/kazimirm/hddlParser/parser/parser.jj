@@ -220,7 +220,7 @@ List<Requirement> getRequirements():
  {
      Predicate predicate = new Predicate();
      List<Argument> arguments = new ArrayList<>();
-     Argument argument = new Argument();
+
      String name;
      String argumentName;
      String argumentType;
@@ -230,6 +230,7 @@ List<Requirement> getRequirements():
                 name = getAttribute()
                     (<QUESTIONMARK> argumentName = getAttribute() <DASH> argumentType = getAttribute()
                         {
+                            Argument argument = new Argument();
                             argument.setName(argumentName);
                             argument.setType(argumentType);
                             arguments.add(argument);
@@ -343,7 +344,7 @@ Method getMethod():
     String taskName;
  }
  {
-     methodName = getAttribute()
+        methodName = getAttribute()
         methodParameters = getParameters()
         task = getTaskSignature(methodParameters)
         subtasks = getSubtasks()
@@ -351,6 +352,7 @@ Method getMethod():
 
     {
         method.setName(methodName);
+        method.setParameters(methodParameters);
         method.setTask(task);
         method.setSubtasks(subtasks);
         method.setOrdering(ordering);
@@ -411,6 +413,7 @@ List<Subtask> getSubtasks():
             task.setParameters(subtaskParameters);
             subtask.setTask(task);
             subtasks.add(subtask);
+            subtaskParameters = new ArrayList<>();
         }
         )*
         <RPAR>
@@ -515,6 +518,7 @@ List<Predicate> getActionPredicates():
                 predicate.setArguments(arguments);
                 predicate.setValue(true);
                 predicates.add(predicate);
+                arguments = new ArrayList<>();
             }
             )
 
@@ -539,6 +543,7 @@ List<Predicate> getActionPredicates():
                 predicate.setArguments(arguments);
                 predicate.setValue(false);
                 predicates.add(predicate);
+                arguments = new ArrayList<>();
             }
             <RPAR>
             )
