@@ -564,9 +564,11 @@ Problem problem():
   {
     Problem problem = new Problem();
     String problemName;
+    String domainName;
   }
   {
     <LPAR> <DEFINE> <LPAR> <PROBLEM> problemName = getAttribute() <RPAR>
+    <LPAR> <COLON> <DOMAIN> domainName = getAttribute() <RPAR> 
 
     {
 
