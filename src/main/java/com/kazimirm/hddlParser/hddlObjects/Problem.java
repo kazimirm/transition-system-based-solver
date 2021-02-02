@@ -2,7 +2,7 @@ package com.kazimirm.hddlParser.hddlObjects;
 
 import java.util.List;
 
-public class Problem {
+public class Problem extends HtnInput{
     private String name;
     private Domain domain;
     private List<Argument> objects;
@@ -42,5 +42,10 @@ public class Problem {
 
     public void setInit(List<Predicate> init) {
         this.init = init;
+    }
+
+    @Override
+    public InputType getType() {
+        return InputType.PROBLEM;
     }
 }

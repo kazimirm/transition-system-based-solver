@@ -2,7 +2,7 @@ package com.kazimirm.hddlParser.hddlObjects;
 
 import java.util.List;
 
-public class Domain {
+public class Domain extends HtnInput{
     private String name;
     private List<Requirement> requirements;
     private List<Type> types;
@@ -88,5 +88,10 @@ public class Domain {
 
     public void setActions(List<Action> actions) {
         this.actions = actions;
+    }
+
+    @Override
+    public InputType getType() {
+        return InputType.DOMAIN;
     }
 }
