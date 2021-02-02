@@ -56,6 +56,7 @@
     | <OR:  				"or">										/* or */
     | <DEFINE:    		    "define">									/* define */
     | <DOMAIN:    		    "domain">									/* domain */
+    | <PROBLEM:    		    "problem">									/* problem */
     | <REQUIREMENTS:  	    "requirements">								/* requirements */
     | <TYPES:  			    "types">									/* types */
     | <CONSTANTS:  		    "constants">								/* constants */
@@ -78,7 +79,7 @@
   Domain start():
   {
       Domain domain = new Domain();
-//      Problem problem = new Problem();
+      Problem problem = new Problem();
   }
   {
     domain = domain()
@@ -554,3 +555,21 @@ List<Predicate> getActionPredicates():
         return predicates;
     }
 }
+
+////////////////////////////////////////////////////////////////////////
+////////////////    Problem   //////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+Problem problem():
+  {
+    Problem problem = new Problem();
+    String problemName;
+  }
+  {
+    <LPAR> <DEFINE> <LPAR> <PROBLEM> problemName = getAttribute() <RPAR>
+
+    {
+
+        return problem;
+    }
+  }
