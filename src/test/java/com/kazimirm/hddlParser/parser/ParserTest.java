@@ -72,6 +72,9 @@ public class ParserTest {
         parser.ReInit(targetStream);
         Problem problem = parser.parseProblem();
         assertEquals("pfile01", problem.getName());
+        assertEquals(8, problem.getObjects().size());
+        assertEquals(2, problem.getHtn().getSubtasks().size());
+        assertEquals(9, problem.getInit().size());
     }
 
 }

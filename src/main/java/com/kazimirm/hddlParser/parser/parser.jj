@@ -72,6 +72,7 @@
     | <PRECONDITION:  		"precondition">								/* precondition */
     | <EFFECT:  		    "effect">								    /* effect */
     | <HTN:  		        "htn">								        /* htn */
+    | <INIT:  		        "init">								        /* init */
     | <VAR:  				(["a"-"z", "A"-"Z", "0"-"9","_","-"])+>		/* variables, words, consts */
   }
 
@@ -603,6 +604,7 @@ Problem problem():
   {
     Problem problem = new Problem();
     List<Argument> objects = new ArrayList<>();
+    List<Predicate> init = new ArrayList<>();
     Htn htn;
     String problemName;
     String domainName;
@@ -612,11 +614,13 @@ Problem problem():
     <LPAR> <COLON> <DOMAIN> domainName = getAttribute() <RPAR>
     objects = getObjects()
     htn = getHtn()
-
+    init = getInit()
+    <RPAR>
     {
         problem.setName(problemName);
         problem.setObjects(objects);
         problem.setHtn(htn);
+        problem.setInit(init);
         return problem;
     }
   }
@@ -673,6 +677,10 @@ Htn getHtn():
 
 }
 
+////////////////////////////////////////////////////////////////////////
+////////////////    subtasks - in HTN///////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
 List<Subtask> getSubtasks():
 {
     List<Subtask> subtasks = new ArrayList<>();
@@ -711,3 +719,48 @@ List<Subtask> getSubtasks():
     }
 }
 
+
+////////////////////////////////////////////////////////////////////////
+////////////////    init   /////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+List<Predicate> getInit():
+{
+    List<Predicate> init = new ArrayList<>();
+    List<Argument> arguments = new ArrayList<>();
+    Predicate predicate = new Predicate();
+    Argument argument = new Argument();
+    String name;
+    String arg;
+}
+{
+
+    <LPAR> <COLON> <INIT>
+    (
+        <LPAR>
+        {
+            arguments = new ArrayList<>();
+        }
+        name = getAttribute()
+        (
+            arg = getAttribute()
+            {
+                argument = new Argument();
+                argument.setName(arg);
+                arguments.add(argument);
+            }
+        )*
+        <RPAR>
+        {
+            predicate = new Predicate();
+            predicate.setName(name);
+            predicate.setValue(true);
+            predicate.setArguments(arguments);
+            init.add(predicate);
+        }
+    )*
+    <RPAR>
+    {
+        return init;
+    }
+}
