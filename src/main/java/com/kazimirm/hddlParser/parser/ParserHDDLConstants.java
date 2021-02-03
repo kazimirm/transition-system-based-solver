@@ -41,31 +41,35 @@ public interface ParserHDDLConstants {
   /** RegularExpression Id. */
   int DOMAIN = 19;
   /** RegularExpression Id. */
-  int REQUIREMENTS = 20;
+  int PROBLEM = 20;
   /** RegularExpression Id. */
-  int TYPES = 21;
+  int REQUIREMENTS = 21;
   /** RegularExpression Id. */
-  int CONSTANTS = 22;
+  int TYPES = 22;
   /** RegularExpression Id. */
-  int PREDICATES = 23;
+  int CONSTANTS = 23;
   /** RegularExpression Id. */
-  int PARAMETERS = 24;
+  int PREDICATES = 24;
   /** RegularExpression Id. */
-  int TASK = 25;
+  int PARAMETERS = 25;
   /** RegularExpression Id. */
-  int SUBTASKS = 26;
+  int OBJECTS = 26;
   /** RegularExpression Id. */
-  int ORDERING = 27;
+  int TASK = 27;
   /** RegularExpression Id. */
-  int METHOD = 28;
+  int SUBTASKS = 28;
   /** RegularExpression Id. */
-  int ACTION = 29;
+  int ORDERING = 29;
   /** RegularExpression Id. */
-  int PRECONDITION = 30;
+  int METHOD = 30;
   /** RegularExpression Id. */
-  int EFFECT = 31;
+  int ACTION = 31;
   /** RegularExpression Id. */
-  int VAR = 32;
+  int PRECONDITION = 32;
+  /** RegularExpression Id. */
+  int EFFECT = 33;
+  /** RegularExpression Id. */
+  int VAR = 34;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -92,11 +96,13 @@ public interface ParserHDDLConstants {
     "\"or\"",
     "\"define\"",
     "\"domain\"",
+    "\"problem\"",
     "\"requirements\"",
     "\"types\"",
     "\"constants\"",
     "\"predicates\"",
     "\"parameters\"",
+    "\"objects\"",
     "\"task\"",
     "\"subtasks\"",
     "\"ordering\"",

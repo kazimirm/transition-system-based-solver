@@ -22,8 +22,9 @@
 
         ParserHDDL parser = new ParserHDDL(new FileInputStream(args[0]));
 
-        Domain domain = parser.start();
-        System.out.println("Parse completed.");
+        //Domain domain = parser.start();
+        //HtnInput input = parser.start();
+        //System.out.println("Parse completed.");
      }
    }
 
@@ -77,19 +78,55 @@
 ////////////////    ENTRY POINT      ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-  Domain start():
+  Domain parseDomain():
   {
       Domain domain = new Domain();
-      Problem problem = new Problem();
   }
   {
     domain = domain()
-//    | problem = problem()
     <EOF>
       {
         return domain;
       }
   }
+
+    Problem parseProblem():
+    {
+        Problem problem = new Problem();
+    }
+    {
+      problem = problem()
+      <EOF>
+        {
+          return problem;
+        }
+    }
+
+//  Domain start():
+//  {
+//      Domain domain = new Domain();
+//      Problem problem = new Problem();
+//  }
+//  {
+//    domain = domain()
+////    | problem = problem()
+//    <EOF>
+//      {
+//        return domain;
+//      }
+//  }
+
+//  HtnInput start():
+//  {
+//    HtnInput input = new HtnInput();
+//  }
+//  {
+//    input = domain() | input = problem()
+//    <EOF>
+//      {
+//        return input;
+//      }
+//  }
 
 ////////////////////////////////////////////////////////////////////////
 ////////////////    HELP METHODS       /////////////////////////////////
@@ -574,7 +611,8 @@ Problem problem():
     objects = getObjects()
 
     {
-
+        problem.setName(problemName);
+        problem.setObjects(objects);
         return problem;
     }
   }
