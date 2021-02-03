@@ -238,7 +238,7 @@ predicate.setName(name);
 ////////////////////////////////////////////////////////////////////////
 ////////////////    GET PARAMETERS   ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-///                 Used in task/method/action body                  ///
+///                 Used in task/method/action/problem body          ///
 ////////////////////////////////////////////////////////////////////////
   static final public 
 List<Parameter> getParameters() throws ParseException {List<Parameter> parameters = new ArrayList<>();
@@ -342,7 +342,7 @@ methods.add(method);
     methodName = getAttribute();
     methodParameters = getParameters();
     task = getTaskSignature(methodParameters);
-    subtasks = getSubtasks();
+    subtasks = getSubtasksDefinition();
     label_8:
     while (true) {
       if (jj_2_8(3)) {
@@ -391,7 +391,7 @@ task.setName(taskName);
     throw new Error("Missing return statement in function");
 }
 
-  static final public List<Subtask> getSubtasks() throws ParseException {List<Subtask> subtasks = new ArrayList<>();
+  static final public List<Subtask> getSubtasksDefinition() throws ParseException {List<Subtask> subtasks = new ArrayList<>();
     List<Parameter> subtaskParameters = new ArrayList<>();
     String subtaskName;
     String taskName;
@@ -600,6 +600,7 @@ Predicate predicate = new Predicate();
   static final public 
 Problem problem() throws ParseException {Problem problem = new Problem();
     List<Argument> objects = new ArrayList<>();
+    Htn htn;
     String problemName;
     String domainName;
     jj_consume_token(LPAR);
@@ -614,13 +615,19 @@ Problem problem() throws ParseException {Problem problem = new Problem();
     domainName = getAttribute();
     jj_consume_token(RPAR);
     objects = getObjects();
+    htn = getHtn();
 problem.setName(problemName);
         problem.setObjects(objects);
+        problem.setHtn(htn);
         {if ("" != null) return problem;}
     throw new Error("Missing return statement in function");
 }
 
-  static final public List<Argument> getObjects() throws ParseException {List<Argument> objects = new ArrayList<>();
+////////////////////////////////////////////////////////////////////////
+////////////////    Objects   //////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+  static final public 
+List<Argument> getObjects() throws ParseException {List<Argument> objects = new ArrayList<>();
     String name;
     String type;
     jj_consume_token(LPAR);
@@ -643,6 +650,76 @@ Argument object = new Argument();
     }
     jj_consume_token(RPAR);
 {if ("" != null) return objects;}
+    throw new Error("Missing return statement in function");
+}
+
+////////////////////////////////////////////////////////////////////////
+////////////////    HTN   //////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+  static final public 
+Htn getHtn() throws ParseException {Htn htn = new Htn();
+    List<Parameter> parameters = new ArrayList<>();
+    List<Subtask> subtasks = new ArrayList<>();
+    List<Ordering> ordering = new ArrayList<>();
+    jj_consume_token(LPAR);
+    jj_consume_token(COLON);
+    jj_consume_token(HTN);
+    parameters = getParameters();
+    subtasks = getSubtasks();
+    ordering = getOrdering();
+    jj_consume_token(RPAR);
+htn.setParameters(parameters);
+        htn.setSubtasks(subtasks);
+        htn.setOrdering(ordering);
+        {if ("" != null) return htn;}
+    throw new Error("Missing return statement in function");
+}
+
+  static final public List<Subtask> getSubtasks() throws ParseException {List<Subtask> subtasks = new ArrayList<>();
+    List<Parameter> subtaskParameters = new ArrayList<>();
+    String subtaskName;
+    String taskName;
+    String param;
+    jj_consume_token(COLON);
+    jj_consume_token(SUBTASKS);
+    jj_consume_token(LPAR);
+    jj_consume_token(AND);
+    label_19:
+    while (true) {
+      if (jj_2_21(3)) {
+        ;
+      } else {
+        break label_19;
+      }
+      jj_consume_token(LPAR);
+      subtaskName = getAttribute();
+      jj_consume_token(LPAR);
+      taskName = getAttribute();
+      label_20:
+      while (true) {
+        if (jj_2_22(3)) {
+          ;
+        } else {
+          break label_20;
+        }
+        param = getAttribute();
+Parameter parameter = new Parameter();
+                        parameter.setName(param);
+                        subtaskParameters.add(parameter);
+      }
+      jj_consume_token(RPAR);
+      jj_consume_token(RPAR);
+Subtask subtask = new Subtask();
+            Task task = new Task();
+            subtask.setName(subtaskName);
+            task.setName(taskName);
+            task.setParameters(subtaskParameters);
+            subtask.setTask(task);
+            subtasks.add(subtask);
+            subtaskParameters = new ArrayList<>();
+    }
+    jj_consume_token(RPAR);
+{if ("" != null) return subtasks;}
     throw new Error("Missing return statement in function");
 }
 
@@ -806,11 +883,20 @@ Argument object = new Argument();
     finally { jj_save(19, xla); }
   }
 
-  static private boolean jj_3_16()
+  static private boolean jj_2_21(int xla)
  {
-    if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_139_5_22()) return true;
-    return false;
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_21()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(20, xla); }
+  }
+
+  static private boolean jj_2_22(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_22()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(21, xla); }
   }
 
   static private boolean jj_3_7()
@@ -824,14 +910,14 @@ Argument object = new Argument();
   static private boolean jj_3_9()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_139_5_22()) return true;
+    if (jj_3R_getAttribute_140_5_24()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getPredicate_268_6_21()
+  static private boolean jj_3R_getPredicate_269_6_23()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_139_5_22()) return true;
+    if (jj_3R_getAttribute_140_5_24()) return true;
     Token xsp;
     if (jj_3_4()) return true;
     while (true) {
@@ -844,7 +930,7 @@ Argument object = new Argument();
   static private boolean jj_3_18()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_139_5_22()) return true;
+    if (jj_3R_getAttribute_140_5_24()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -865,22 +951,38 @@ Argument object = new Argument();
     return false;
   }
 
+  static private boolean jj_3_21()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_3R_getAttribute_140_5_24()) return true;
+    if (jj_scan_token(LPAR)) return true;
+    return false;
+  }
+
   static private boolean jj_3_1()
  {
-    if (jj_3R_getRequirement_201_6_19()) return true;
+    if (jj_3R_getRequirement_202_6_21()) return true;
     return false;
   }
 
   static private boolean jj_3_11()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_139_5_22()) return true;
+    if (jj_3R_getAttribute_140_5_24()) return true;
     return false;
   }
 
   static private boolean jj_3_13()
  {
-    if (jj_3R_getAction_512_5_24()) return true;
+    if (jj_3R_getAction_513_5_26()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_20()
+ {
+    if (jj_3R_getAttribute_140_5_24()) return true;
+    if (jj_scan_token(DASH)) return true;
+    if (jj_3R_getAttribute_140_5_24()) return true;
     return false;
   }
 
@@ -897,14 +999,14 @@ Argument object = new Argument();
 
   static private boolean jj_3_8()
  {
-    if (jj_3R_getOrdering_472_5_23()) return true;
+    if (jj_3R_getOrdering_473_5_25()) return true;
     return false;
   }
 
   static private boolean jj_3_10()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_139_5_22()) return true;
+    if (jj_3R_getAttribute_140_5_24()) return true;
     if (jj_scan_token(LPAR)) return true;
     return false;
   }
@@ -912,15 +1014,7 @@ Argument object = new Argument();
   static private boolean jj_3_17()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_139_5_22()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_20()
- {
-    if (jj_3R_getAttribute_139_5_22()) return true;
-    if (jj_scan_token(DASH)) return true;
-    if (jj_3R_getAttribute_139_5_22()) return true;
+    if (jj_3R_getAttribute_140_5_24()) return true;
     return false;
   }
 
@@ -932,10 +1026,10 @@ Argument object = new Argument();
     return false;
   }
 
-  static private boolean jj_3R_getRequirement_201_6_19()
+  static private boolean jj_3R_getRequirement_202_6_21()
  {
     if (jj_scan_token(COLON)) return true;
-    if (jj_3R_getAttribute_139_5_22()) return true;
+    if (jj_3R_getAttribute_140_5_24()) return true;
     return false;
   }
 
@@ -949,14 +1043,14 @@ Argument object = new Argument();
 
   static private boolean jj_3_2()
  {
-    if (jj_3R_getType_231_6_20()) return true;
+    if (jj_3R_getType_232_6_22()) return true;
     return false;
   }
 
   static private boolean jj_3_4()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_139_5_22()) return true;
+    if (jj_3R_getAttribute_140_5_24()) return true;
     if (jj_scan_token(DASH)) return true;
     return false;
   }
@@ -965,11 +1059,11 @@ Argument object = new Argument();
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_scan_token(LT)) return true;
-    if (jj_3R_getAttribute_139_5_22()) return true;
+    if (jj_3R_getAttribute_140_5_24()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getOrdering_472_5_23()
+  static private boolean jj_3R_getOrdering_473_5_25()
  {
     if (jj_scan_token(COLON)) return true;
     if (jj_scan_token(ORDERING)) return true;
@@ -977,7 +1071,7 @@ Argument object = new Argument();
     return false;
   }
 
-  static private boolean jj_3R_getAttribute_139_5_22()
+  static private boolean jj_3R_getAttribute_140_5_24()
  {
     if (jj_scan_token(VAR)) return true;
     return false;
@@ -986,30 +1080,43 @@ Argument object = new Argument();
   static private boolean jj_3_5()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_139_5_22()) return true;
+    if (jj_3R_getAttribute_140_5_24()) return true;
     if (jj_scan_token(DASH)) return true;
     return false;
   }
 
-  static private boolean jj_3R_getType_231_6_20()
+  static private boolean jj_3R_getType_232_6_22()
  {
-    if (jj_3R_getAttribute_139_5_22()) return true;
+    if (jj_3R_getAttribute_140_5_24()) return true;
     if (jj_scan_token(DASH)) return true;
-    if (jj_3R_getAttribute_139_5_22()) return true;
+    if (jj_3R_getAttribute_140_5_24()) return true;
     return false;
   }
 
   static private boolean jj_3_3()
  {
-    if (jj_3R_getPredicate_268_6_21()) return true;
+    if (jj_3R_getPredicate_269_6_23()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getAction_512_5_24()
+  static private boolean jj_3R_getAction_513_5_26()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_scan_token(COLON)) return true;
     if (jj_scan_token(ACTION)) return true;
+    return false;
+  }
+
+  static private boolean jj_3_22()
+ {
+    if (jj_3R_getAttribute_140_5_24()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_16()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_140_5_24()) return true;
     return false;
   }
 
@@ -1038,7 +1145,7 @@ Argument object = new Argument();
 	private static void jj_la1_init_1() {
 	   jj_la1_1 = new int[] {};
 	}
-  static final private JJCalls[] jj_2_rtns = new JJCalls[20];
+  static final private JJCalls[] jj_2_rtns = new JJCalls[22];
   static private boolean jj_rescan = false;
   static private int jj_gc = 0;
 
@@ -1265,7 +1372,7 @@ Argument object = new Argument();
   /** Generate ParseException. */
   static public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[35];
+	 boolean[] la1tokens = new boolean[36];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
@@ -1282,7 +1389,7 @@ Argument object = new Argument();
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 35; i++) {
+	 for (int i = 0; i < 36; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;
@@ -1316,7 +1423,7 @@ Argument object = new Argument();
 
   static private void jj_rescan_token() {
 	 jj_rescan = true;
-	 for (int i = 0; i < 20; i++) {
+	 for (int i = 0; i < 22; i++) {
 	   try {
 		 JJCalls p = jj_2_rtns[i];
 
@@ -1344,6 +1451,8 @@ Argument object = new Argument();
 			   case 17: jj_3_18(); break;
 			   case 18: jj_3_19(); break;
 			   case 19: jj_3_20(); break;
+			   case 20: jj_3_21(); break;
+			   case 21: jj_3_22(); break;
 			 }
 		   }
 		   p = p.next;

@@ -71,6 +71,7 @@
     | <ACTION:  		    "action">								    /* action */
     | <PRECONDITION:  		"precondition">								/* precondition */
     | <EFFECT:  		    "effect">								    /* effect */
+    | <HTN:  		        "htn">								        /* htn */
     | <VAR:  				(["a"-"z", "A"-"Z", "0"-"9","_","-"])+>		/* variables, words, consts */
   }
 
@@ -285,7 +286,7 @@ List<Requirement> getRequirements():
 ////////////////////////////////////////////////////////////////////////
 ////////////////    GET PARAMETERS   ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-///                 Used in task/method/action body                  ///
+///                 Used in task/method/action/problem body          ///
 ////////////////////////////////////////////////////////////////////////
 
 List<Parameter> getParameters():
@@ -386,7 +387,7 @@ Method getMethod():
         methodName = getAttribute()
         methodParameters = getParameters()
         task = getTaskSignature(methodParameters)
-        subtasks = getSubtasks()
+        subtasks = getSubtasksDefinition()
         (ordering = getOrdering())*
 
     {
@@ -424,7 +425,7 @@ Task getTaskSignature(List<Parameter> parameters):
  }
 
 
-List<Subtask> getSubtasks():
+List<Subtask> getSubtasksDefinition():
 {
     List<Subtask> subtasks = new ArrayList<>();
     List<Parameter> subtaskParameters = new ArrayList<>();
@@ -602,6 +603,7 @@ Problem problem():
   {
     Problem problem = new Problem();
     List<Argument> objects = new ArrayList<>();
+    Htn htn;
     String problemName;
     String domainName;
   }
@@ -609,10 +611,12 @@ Problem problem():
     <LPAR> <DEFINE> <LPAR> <PROBLEM> problemName = getAttribute() <RPAR>
     <LPAR> <COLON> <DOMAIN> domainName = getAttribute() <RPAR>
     objects = getObjects()
+    htn = getHtn()
 
     {
         problem.setName(problemName);
         problem.setObjects(objects);
+        problem.setHtn(htn);
         return problem;
     }
   }
@@ -646,4 +650,64 @@ List<Argument> getObjects():
 ////////////////////////////////////////////////////////////////////////
 ////////////////    HTN   //////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
+
+Htn getHtn():
+{
+    Htn htn = new Htn();
+    List<Parameter> parameters = new ArrayList<>();
+    List<Subtask> subtasks = new ArrayList<>();
+    List<Ordering> ordering = new ArrayList<>();
+}
+{
+    <LPAR> <COLON> <HTN>
+    parameters = getParameters()
+    subtasks = getSubtasks()
+    ordering = getOrdering()
+    <RPAR>
+    {
+        htn.setParameters(parameters);
+        htn.setSubtasks(subtasks);
+        htn.setOrdering(ordering);
+        return htn;
+    }
+
+}
+
+List<Subtask> getSubtasks():
+{
+    List<Subtask> subtasks = new ArrayList<>();
+    List<Parameter> subtaskParameters = new ArrayList<>();
+    String subtaskName;
+    String taskName;
+    String param;
+}
+{
+    <COLON> <SUBTASKS> <LPAR> <AND>
+        (<LPAR> subtaskName = getAttribute() <LPAR> taskName = getAttribute()
+            (
+                param = getAttribute()
+                    {
+                        Parameter parameter = new Parameter();
+                        parameter.setName(param);
+                        subtaskParameters.add(parameter);
+                    }
+            )* <RPAR> <RPAR>
+
+        {
+            Subtask subtask = new Subtask();
+            Task task = new Task();
+            subtask.setName(subtaskName);
+            task.setName(taskName);
+            task.setParameters(subtaskParameters);
+            subtask.setTask(task);
+            subtasks.add(subtask);
+            subtaskParameters = new ArrayList<>();
+        }
+        )*
+        <RPAR>
+
+    {
+        return subtasks;
+    }
+}
 

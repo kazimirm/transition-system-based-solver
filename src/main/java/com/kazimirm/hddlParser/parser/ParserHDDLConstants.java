@@ -69,7 +69,9 @@ public interface ParserHDDLConstants {
   /** RegularExpression Id. */
   int EFFECT = 33;
   /** RegularExpression Id. */
-  int VAR = 34;
+  int HTN = 34;
+  /** RegularExpression Id. */
+  int VAR = 35;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -110,6 +112,7 @@ public interface ParserHDDLConstants {
     "\"action\"",
     "\"precondition\"",
     "\"effect\"",
+    "\"htn\"",
     "<VAR>",
   };
 

@@ -6,7 +6,7 @@ public class Problem extends HtnInput{
     private String name;
     private Domain domain;
     private List<Argument> objects;
-    //private <?> htn;
+    private Htn htn;
     private List<Predicate> init;
 
     public Problem() {
@@ -34,6 +34,14 @@ public class Problem extends HtnInput{
 
     public void setObjects(List<Argument> objects) {
         this.objects = objects;
+    }
+
+    public Htn getHtn() {
+        return htn;
+    }
+
+    public void setHtn(Htn htn) {
+        this.htn = htn;
     }
 
     public List<Predicate> getInit() {
