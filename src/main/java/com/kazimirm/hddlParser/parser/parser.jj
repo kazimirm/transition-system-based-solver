@@ -62,6 +62,7 @@
     | <CONSTANTS:  		    "constants">								/* constants */
     | <PREDICATES:  		"predicates">								/* predicates */
     | <PARAMETERS:  		"parameters">								/* parameters */
+    | <OBJECTS:  		    "objects">								    /* objects */
     | <TASK:  		        "task">								        /* tasks */
     | <SUBTASKS:  		    "subtasks">								    /* subtasks */
     | <ORDERING:  		    "ordering">								    /* ordering */
@@ -563,15 +564,39 @@ List<Predicate> getActionPredicates():
 Problem problem():
   {
     Problem problem = new Problem();
+    List<Argument> objects = new ArrayList<>();
     String problemName;
     String domainName;
   }
   {
     <LPAR> <DEFINE> <LPAR> <PROBLEM> problemName = getAttribute() <RPAR>
-    <LPAR> <COLON> <DOMAIN> domainName = getAttribute() <RPAR> 
+    <LPAR> <COLON> <DOMAIN> domainName = getAttribute() <RPAR>
+    objects = getObjects()
 
     {
 
         return problem;
     }
   }
+
+List<Argument> getObjects():
+{
+    List<Argument> objects = new ArrayList<>();
+    String name;
+    String type;
+}
+{
+    <LPAR> <COLON> <OBJECTS>
+    (name = getAttribute() <DASH> type = getAttribute()
+        {
+            Argument object = new Argument();
+            object.setName(name);
+            object.setType(type);
+            objects.add(object);
+        }
+    )*
+    <RPAR>
+    {
+        return objects;
+    }
+}

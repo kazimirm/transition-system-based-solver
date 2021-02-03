@@ -1,0 +1,13 @@
+(define
+	(problem pfile01)
+	(:domain  domain_htn)
+	(:objects
+		package_0 - package
+		package_1 - package
+		capacity_0 - capacity_number
+		capacity_1 - capacity_number
+		city_loc_0 - location
+		city_loc_1 - location
+		city_loc_2 - location
+		truck_0 - vehicle
+	)

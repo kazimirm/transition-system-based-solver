@@ -15,9 +15,10 @@ public class ParserTest {
 
     private ParserHDDL parser;
 
-    private final String BASIC_INPUT_FILE = "basic_input.txt";
-    private final String BASIC_INPUT_FILE_INVALID_1 = "basic_input_invalid_1.txt"; // unexpected text after requirements
-    private final String BASIC_INPUT_FILE_INVALID_2 = "basic_input_invalid_1.txt"; // wrong space
+    private final String DOMAIN_INPUT_BASIC_1 = "domain_input_basic_1.txt";
+    private final String DOMAIN_INPUT_INVALID_1 = "domain_input_invalid_2.txt"; // unexpected text after requirements
+    private final String DOMAIN_INPUT_INVALID_2 = "domain_input_invalid_1.txt"; // wrong space
+    private final String PROBLEM_INPUT_BASIC_1 = "problem_input_basic_1.txt";
 
     @BeforeAll
     static void setup(){
@@ -27,7 +28,7 @@ public class ParserTest {
     @Test
     public void testParser_basicInput_valid() throws FileNotFoundException, ParseException {
         ClassLoader classLoader = this.getClass().getClassLoader();
-        File file = new File(classLoader.getResource(BASIC_INPUT_FILE).getFile());
+        File file = new File(classLoader.getResource(DOMAIN_INPUT_BASIC_1).getFile());
         InputStream targetStream = new FileInputStream(file);
 
         parser.ReInit(targetStream);
@@ -43,7 +44,7 @@ public class ParserTest {
     @Test
     public void testParser_basicInput_invalid_1() throws FileNotFoundException {
         ClassLoader classLoader = this.getClass().getClassLoader();
-        File file = new File(classLoader.getResource(BASIC_INPUT_FILE_INVALID_1).getFile());
+        File file = new File(classLoader.getResource(DOMAIN_INPUT_INVALID_1).getFile());
         InputStream targetStream = new FileInputStream(file);
 
         parser.ReInit(targetStream);
@@ -53,7 +54,17 @@ public class ParserTest {
     @Test
     public void testParser_basicInput_invalid_2() throws FileNotFoundException {
         ClassLoader classLoader = this.getClass().getClassLoader();
-        File file = new File(classLoader.getResource(BASIC_INPUT_FILE_INVALID_2).getFile());
+        File file = new File(classLoader.getResource(DOMAIN_INPUT_INVALID_2).getFile());
+        InputStream targetStream = new FileInputStream(file);
+
+        parser.ReInit(targetStream);
+        assertThrows(ParseException.class, () -> parser.start());
+    }
+
+    @Test
+    public void testParser_basicInput_problem_1() throws FileNotFoundException {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        File file = new File(classLoader.getResource(PROBLEM_INPUT_BASIC_1).getFile());
         InputStream targetStream = new FileInputStream(file);
 
         parser.ReInit(targetStream);
