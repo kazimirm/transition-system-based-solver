@@ -102,4 +102,13 @@ public class ParserTest {
         assertEquals("pfile01", problem.getName());
     }
 
+    @Test
+    public void testParser_problem_giving_valid_domain_instead_of_problem() throws FileNotFoundException {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        File file = new File(Objects.requireNonNull(classLoader.getResource(DOMAIN_INPUT_BASIC_1)).getFile());
+        InputStream targetStream = new FileInputStream(file);
+
+        parser.ReInit(targetStream);
+        assertThrows(ParseException.class, () -> parser.parseProblem());
+    }
 }
