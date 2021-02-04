@@ -1,7 +1,7 @@
  options {
     IGNORE_CASE = false;
     OPTIMIZE_TOKEN_MANAGER = true;
-    LOOKAHEAD=3;
+    LOOKAHEAD=5;
   }
 
   PARSER_BEGIN(ParserHDDL)
@@ -388,7 +388,7 @@ Method getMethod():
         methodName = getAttribute()
         methodParameters = getParameters()
         task = getTaskSignature(methodParameters)
-        subtasks = getSubtasksDefinition()
+        (subtasks = getSubtaskDefinition() | subtasks = getSubtasksDefinition())
         (ordering = getOrdering())*
 
     {
@@ -425,6 +425,44 @@ Task getTaskSignature(List<Parameter> parameters):
     }
  }
 
+List<Subtask> getSubtaskDefinition():
+{
+    List<Subtask> subtasks = new ArrayList<>();
+    List<Parameter> subtaskParameters = new ArrayList<>();
+    String subtaskName;
+    String taskName;
+    String param;
+}
+{
+    <COLON> <SUBTASKS> <LPAR>
+        ( subtaskName = getAttribute() <LPAR> taskName = getAttribute()
+            (
+                <QUESTIONMARK> param = getAttribute()
+                    {
+                        Parameter parameter = new Parameter();
+                        parameter.setName(param);
+                        subtaskParameters.add(parameter);
+                    }
+            )*
+        <RPAR>
+
+        {
+            Subtask subtask = new Subtask();
+            Task task = new Task();
+            subtask.setName(subtaskName);
+            task.setName(taskName);
+            task.setParameters(subtaskParameters);
+            subtask.setTask(task);
+            subtasks.add(subtask);
+            subtaskParameters = new ArrayList<>();
+        }
+        )
+        <RPAR>
+
+    {
+        return subtasks;
+    }
+}
 
 List<Subtask> getSubtasksDefinition():
 {
