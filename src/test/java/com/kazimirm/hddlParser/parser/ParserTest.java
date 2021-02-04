@@ -18,6 +18,7 @@ public class ParserTest {
     private ParserHDDL parser;
 
     private final String DOMAIN_INPUT_BASIC_1 = "domain_input_basic_1.txt";
+    private final String DOMAIN_BASIC_FROM_PRELIMINARIES = "domain_basic_from_preliminaries.txt";
     private final String DOMAIN_INPUT_INVALID_1 = "domain_input_invalid_2.txt"; // unexpected text after requirements
     private final String DOMAIN_INPUT_INVALID_2 = "domain_input_invalid_1.txt"; // wrong space
     private final String PROBLEM_INPUT_BASIC_1 = "problem_input_basic_1.txt";
@@ -25,6 +26,18 @@ public class ParserTest {
     @BeforeAll
     static void setup(){
         ParserHDDL parser = new ParserHDDL(InputStream.nullInputStream());
+    }
+
+    @Test
+    public void testParser_basicInput_from_preliminaries_valid() throws FileNotFoundException, ParseException {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        File file = new File(classLoader.getResource(DOMAIN_BASIC_FROM_PRELIMINARIES).getFile());
+        InputStream targetStream = new FileInputStream(file);
+
+        parser.ReInit(targetStream);
+
+        Domain domain = parser.parseDomain();
+        assertEquals("domain_htn", domain.getName());
     }
 
     @Test

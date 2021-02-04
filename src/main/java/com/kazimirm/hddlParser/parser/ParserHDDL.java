@@ -93,7 +93,11 @@
     jj_consume_token(DOMAIN);
     domainName = getAttribute();
     jj_consume_token(RPAR);
-    requirements = getRequirements();
+    if (jj_2_1(3)) {
+      requirements = getRequirements();
+    } else {
+      ;
+    }
     types = getTypes();
     predicates = getPredicates();
     tasks = getTasks();
@@ -122,7 +126,7 @@ List<Requirement> getRequirements() throws ParseException {List<Requirement> req
     jj_consume_token(REQUIREMENTS);
     label_1:
     while (true) {
-      if (jj_2_1(3)) {
+      if (jj_2_2(3)) {
         ;
       } else {
         break label_1;
@@ -155,7 +159,7 @@ requirement.setValue(value);
     jj_consume_token(TYPES);
     label_2:
     while (true) {
-      if (jj_2_2(3)) {
+      if (jj_2_3(3)) {
         ;
       } else {
         break label_2;
@@ -191,7 +195,7 @@ type.setName(name);
     jj_consume_token(PREDICATES);
     label_3:
     while (true) {
-      if (jj_2_3(3)) {
+      if (jj_2_4(3)) {
         ;
       } else {
         break label_3;
@@ -222,7 +226,7 @@ Argument argument = new Argument();
                             argument.setName(argumentName);
                             argument.setType(argumentType);
                             arguments.add(argument);
-      if (jj_2_4(3)) {
+      if (jj_2_5(3)) {
         ;
       } else {
         break label_4;
@@ -249,7 +253,7 @@ List<Parameter> getParameters() throws ParseException {List<Parameter> parameter
     jj_consume_token(LPAR);
     label_5:
     while (true) {
-      if (jj_2_5(3)) {
+      if (jj_2_6(3)) {
         ;
       } else {
         break label_5;
@@ -290,7 +294,7 @@ task.setName(name);
      String name;
     label_6:
     while (true) {
-      if (jj_2_6(3)) {
+      if (jj_2_7(3)) {
         ;
       } else {
         break label_6;
@@ -314,7 +318,7 @@ tasks.add(task);
     Method method;
     label_7:
     while (true) {
-      if (jj_2_7(3)) {
+      if (jj_2_8(3)) {
         ;
       } else {
         break label_7;
@@ -345,7 +349,7 @@ methods.add(method);
     subtasks = getSubtasksDefinition();
     label_8:
     while (true) {
-      if (jj_2_8(3)) {
+      if (jj_2_9(3)) {
         ;
       } else {
         break label_8;
@@ -371,7 +375,7 @@ method.setName(methodName);
     taskName = getAttribute();
     label_9:
     while (true) {
-      if (jj_2_9(3)) {
+      if (jj_2_10(3)) {
         ;
       } else {
         break label_9;
@@ -402,7 +406,7 @@ task.setName(taskName);
     jj_consume_token(AND);
     label_10:
     while (true) {
-      if (jj_2_10(3)) {
+      if (jj_2_11(3)) {
         ;
       } else {
         break label_10;
@@ -413,7 +417,7 @@ task.setName(taskName);
       taskName = getAttribute();
       label_11:
       while (true) {
-        if (jj_2_11(3)) {
+        if (jj_2_12(3)) {
           ;
         } else {
           break label_11;
@@ -449,7 +453,7 @@ Subtask subtask = new Subtask();
     jj_consume_token(AND);
     label_12:
     while (true) {
-      if (jj_2_12(3)) {
+      if (jj_2_13(3)) {
         ;
       } else {
         break label_12;
@@ -477,7 +481,7 @@ List<Action> getActions() throws ParseException {List<Action> actions = new Arra
     Action action = new Action();
     label_13:
     while (true) {
-      if (jj_2_13(3)) {
+      if (jj_2_14(3)) {
         ;
       } else {
         break label_13;
@@ -521,7 +525,7 @@ action.setName(actionName);
     jj_consume_token(LPAR);
     label_14:
     while (true) {
-      if (jj_2_14(3)) {
+      if (jj_2_15(3)) {
         ;
       } else {
         break label_14;
@@ -529,17 +533,17 @@ action.setName(actionName);
       jj_consume_token(AND);
       label_15:
       while (true) {
-        if (jj_2_15(3)) {
+        if (jj_2_16(3)) {
           ;
         } else {
           break label_15;
         }
-        if (jj_2_18(3)) {
+        if (jj_2_19(3)) {
           jj_consume_token(LPAR);
           name = getAttribute();
           label_16:
           while (true) {
-            if (jj_2_16(3)) {
+            if (jj_2_17(3)) {
               ;
             } else {
               break label_16;
@@ -557,14 +561,14 @@ Predicate predicate = new Predicate();
                 predicate.setValue(true);
                 predicates.add(predicate);
                 arguments = new ArrayList<>();
-        } else if (jj_2_19(3)) {
+        } else if (jj_2_20(3)) {
           jj_consume_token(LPAR);
           jj_consume_token(NOT);
           jj_consume_token(LPAR);
           name = getAttribute();
           label_17:
           while (true) {
-            if (jj_2_17(3)) {
+            if (jj_2_18(3)) {
               ;
             } else {
               break label_17;
@@ -639,7 +643,7 @@ List<Argument> getObjects() throws ParseException {List<Argument> objects = new 
     jj_consume_token(OBJECTS);
     label_18:
     while (true) {
-      if (jj_2_20(3)) {
+      if (jj_2_21(3)) {
         ;
       } else {
         break label_18;
@@ -694,7 +698,7 @@ List<Subtask> getSubtasks() throws ParseException {List<Subtask> subtasks = new 
     jj_consume_token(AND);
     label_19:
     while (true) {
-      if (jj_2_21(3)) {
+      if (jj_2_22(3)) {
         ;
       } else {
         break label_19;
@@ -705,7 +709,7 @@ List<Subtask> getSubtasks() throws ParseException {List<Subtask> subtasks = new 
       taskName = getAttribute();
       label_20:
       while (true) {
-        if (jj_2_22(3)) {
+        if (jj_2_23(3)) {
           ;
         } else {
           break label_20;
@@ -746,7 +750,7 @@ List<Predicate> getInit() throws ParseException {List<Predicate> init = new Arra
     jj_consume_token(INIT);
     label_21:
     while (true) {
-      if (jj_2_23(3)) {
+      if (jj_2_24(3)) {
         ;
       } else {
         break label_21;
@@ -756,7 +760,7 @@ arguments = new ArrayList<>();
       name = getAttribute();
       label_22:
       while (true) {
-        if (jj_2_24(3)) {
+        if (jj_2_25(3)) {
           ;
         } else {
           break label_22;
@@ -970,28 +974,36 @@ predicate = new Predicate();
     finally { jj_save(23, xla); }
   }
 
-  static private boolean jj_3_21()
+  static private boolean jj_2_25(int xla)
+ {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return (!jj_3_25()); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(24, xla); }
+  }
+
+  static private boolean jj_3_22()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
     if (jj_scan_token(LPAR)) return true;
     return false;
   }
 
-  static private boolean jj_3_23()
+  static private boolean jj_3_24()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
-      if (jj_3_24()) { jj_scanpos = xsp; break; }
+      if (jj_3_25()) { jj_scanpos = xsp; break; }
     }
     if (jj_scan_token(RPAR)) return true;
     return false;
   }
 
-  static private boolean jj_3_7()
+  static private boolean jj_3_8()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_scan_token(COLON)) return true;
@@ -999,110 +1011,116 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3_9()
+  static private boolean jj_3_10()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getPredicate_270_6_25()
+  static private boolean jj_3R_getPredicate_270_6_26()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
     Token xsp;
-    if (jj_3_4()) return true;
+    if (jj_3_5()) return true;
     while (true) {
       xsp = jj_scanpos;
-      if (jj_3_4()) { jj_scanpos = xsp; break; }
+      if (jj_3_5()) { jj_scanpos = xsp; break; }
     }
     return false;
   }
 
-  static private boolean jj_3_18()
+  static private boolean jj_3_19()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
-      if (jj_3_16()) { jj_scanpos = xsp; break; }
+      if (jj_3_17()) { jj_scanpos = xsp; break; }
     }
     if (jj_scan_token(RPAR)) return true;
     return false;
   }
 
-  static private boolean jj_3_15()
+  static private boolean jj_3_16()
  {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3_18()) {
+    if (jj_3_19()) {
     jj_scanpos = xsp;
-    if (jj_3_19()) return true;
+    if (jj_3_20()) return true;
+    }
+    return false;
+  }
+
+  static private boolean jj_3_2()
+ {
+    if (jj_3R_getRequirement_203_6_24()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_21()
+ {
+    if (jj_3R_getAttribute_141_5_27()) return true;
+    if (jj_scan_token(DASH)) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_12()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_14()
+ {
+    if (jj_3R_getAction_514_5_29()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_15()
+ {
+    if (jj_scan_token(AND)) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_16()) { jj_scanpos = xsp; break; }
     }
     return false;
   }
 
   static private boolean jj_3_1()
  {
-    if (jj_3R_getRequirement_203_6_23()) return true;
+    if (jj_3R_getRequirements_191_5_23()) return true;
     return false;
   }
 
-  static private boolean jj_3_20()
+  static private boolean jj_3_18()
  {
-    if (jj_3R_getAttribute_141_5_26()) return true;
-    if (jj_scan_token(DASH)) return true;
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
+    return false;
+  }
+
+  static private boolean jj_3_9()
+ {
+    if (jj_3R_getOrdering_474_5_28()) return true;
     return false;
   }
 
   static private boolean jj_3_11()
  {
-    if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_141_5_26()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_13()
- {
-    if (jj_3R_getAction_514_5_28()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_14()
- {
-    if (jj_scan_token(AND)) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_15()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  static private boolean jj_3_8()
- {
-    if (jj_3R_getOrdering_474_5_27()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_10()
- {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
     if (jj_scan_token(LPAR)) return true;
     return false;
   }
 
-  static private boolean jj_3_17()
- {
-    if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_141_5_26()) return true;
-    return false;
-  }
-
-  static private boolean jj_3_6()
+  static private boolean jj_3_7()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_scan_token(COLON)) return true;
@@ -1110,14 +1128,14 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3R_getRequirement_203_6_23()
+  static private boolean jj_3R_getRequirement_203_6_24()
  {
     if (jj_scan_token(COLON)) return true;
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
     return false;
   }
 
-  static private boolean jj_3_19()
+  static private boolean jj_3_20()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_scan_token(NOT)) return true;
@@ -1125,29 +1143,29 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3_2()
+  static private boolean jj_3_3()
  {
-    if (jj_3R_getType_233_6_24()) return true;
+    if (jj_3R_getType_233_6_25()) return true;
     return false;
   }
 
-  static private boolean jj_3_4()
+  static private boolean jj_3_5()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
     if (jj_scan_token(DASH)) return true;
     return false;
   }
 
-  static private boolean jj_3_12()
+  static private boolean jj_3_13()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_scan_token(LT)) return true;
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getOrdering_474_5_27()
+  static private boolean jj_3R_getOrdering_474_5_28()
  {
     if (jj_scan_token(COLON)) return true;
     if (jj_scan_token(ORDERING)) return true;
@@ -1155,47 +1173,55 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3_22()
+  static private boolean jj_3R_getRequirements_191_5_23()
  {
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(COLON)) return true;
+    if (jj_scan_token(REQUIREMENTS)) return true;
     return false;
   }
 
-  static private boolean jj_3_24()
+  static private boolean jj_3_23()
  {
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getAttribute_141_5_26()
+  static private boolean jj_3_25()
+ {
+    if (jj_3R_getAttribute_141_5_27()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_getAttribute_141_5_27()
  {
     if (jj_scan_token(VAR)) return true;
     return false;
   }
 
-  static private boolean jj_3_5()
+  static private boolean jj_3_6()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
     if (jj_scan_token(DASH)) return true;
     return false;
   }
 
-  static private boolean jj_3R_getType_233_6_24()
+  static private boolean jj_3R_getType_233_6_25()
  {
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
     if (jj_scan_token(DASH)) return true;
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
     return false;
   }
 
-  static private boolean jj_3_3()
+  static private boolean jj_3_4()
  {
-    if (jj_3R_getPredicate_270_6_25()) return true;
+    if (jj_3R_getPredicate_270_6_26()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getAction_514_5_28()
+  static private boolean jj_3R_getAction_514_5_29()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_scan_token(COLON)) return true;
@@ -1203,10 +1229,10 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3_16()
+  static private boolean jj_3_17()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_141_5_26()) return true;
+    if (jj_3R_getAttribute_141_5_27()) return true;
     return false;
   }
 
@@ -1235,7 +1261,7 @@ predicate = new Predicate();
 	private static void jj_la1_init_1() {
 	   jj_la1_1 = new int[] {};
 	}
-  static final private JJCalls[] jj_2_rtns = new JJCalls[24];
+  static final private JJCalls[] jj_2_rtns = new JJCalls[25];
   static private boolean jj_rescan = false;
   static private int jj_gc = 0;
 
@@ -1513,7 +1539,7 @@ predicate = new Predicate();
 
   static private void jj_rescan_token() {
 	 jj_rescan = true;
-	 for (int i = 0; i < 24; i++) {
+	 for (int i = 0; i < 25; i++) {
 	   try {
 		 JJCalls p = jj_2_rtns[i];
 
@@ -1545,6 +1571,7 @@ predicate = new Predicate();
 			   case 21: jj_3_22(); break;
 			   case 22: jj_3_23(); break;
 			   case 23: jj_3_24(); break;
+			   case 24: jj_3_25(); break;
 			 }
 		   }
 		   p = p.next;

@@ -160,7 +160,7 @@
   }
   {
     <LPAR> <DEFINE> <LPAR> <DOMAIN> domainName = getAttribute() <RPAR>
-    requirements = getRequirements()
+    (requirements = getRequirements())?
     types = getTypes()
     predicates = getPredicates()
     tasks = getTasks()
