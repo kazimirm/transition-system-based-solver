@@ -703,8 +703,8 @@ Htn getHtn():
 {
     <LPAR> <COLON> <HTN>
     parameters = getParameters()
-    subtasks = getSubtasks()
-    ordering = getOrdering()
+    (subtasks = getSubtasks() | subtasks = getSubtask())
+    (ordering = getOrdering())?
     <RPAR>
     {
         htn.setParameters(parameters);
@@ -718,6 +718,44 @@ Htn getHtn():
 ////////////////////////////////////////////////////////////////////////
 ////////////////    subtasks - in HTN///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
+List<Subtask> getSubtask():
+{
+    List<Subtask> subtasks = new ArrayList<>();
+    List<Parameter> subtaskParameters = new ArrayList<>();
+    String subtaskName;
+    String taskName;
+    String param;
+}
+{
+    <COLON> <SUBTASKS> <LPAR>
+        (subtaskName = getAttribute() <LPAR> taskName = getAttribute()
+            (
+                param = getAttribute()
+                    {
+                        Parameter parameter = new Parameter();
+                        parameter.setName(param);
+                        subtaskParameters.add(parameter);
+                    }
+            )* <RPAR>
+
+        {
+            Subtask subtask = new Subtask();
+            Task task = new Task();
+            subtask.setName(subtaskName);
+            task.setName(taskName);
+            task.setParameters(subtaskParameters);
+            subtask.setTask(task);
+            subtasks.add(subtask);
+            subtaskParameters = new ArrayList<>();
+        }
+        )*
+        <RPAR>
+
+    {
+        return subtasks;
+    }
+}
+
 
 List<Subtask> getSubtasks():
 {

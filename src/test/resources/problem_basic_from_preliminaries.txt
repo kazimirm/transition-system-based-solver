@@ -1,0 +1,20 @@
+(define
+    (problem pfile01)
+    (:domain domain_htn)
+    (:objects
+        c0 - location
+        c1 - location
+        t0 - vehicle
+    )
+    (:htn
+        :parameters ()
+        :subtasks (
+            task0 (get_to t0 c1)
+        )
+    )
+    (:init
+        (road c0 c1)
+        (road c1 c0)
+        (at t0 c0)
+    )
+)

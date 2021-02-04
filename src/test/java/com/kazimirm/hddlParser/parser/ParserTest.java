@@ -22,6 +22,7 @@ public class ParserTest {
     private final String DOMAIN_INPUT_INVALID_1 = "domain_input_invalid_2.txt"; // unexpected text after requirements
     private final String DOMAIN_INPUT_INVALID_2 = "domain_input_invalid_1.txt"; // wrong space
     private final String PROBLEM_INPUT_BASIC_1 = "problem_input_basic_1.txt";
+    private final String PROBLEM_BASIC_FROM_PRELIMINARIES = "problem_basic_from_preliminaries.txt";
 
     @BeforeAll
     static void setup(){
@@ -29,7 +30,7 @@ public class ParserTest {
     }
 
     @Test
-    public void testParser_basicInput_from_preliminaries_valid() throws FileNotFoundException, ParseException {
+    public void testParser_domain_basicInput_from_preliminaries_valid() throws FileNotFoundException, ParseException {
         ClassLoader classLoader = this.getClass().getClassLoader();
         File file = new File(classLoader.getResource(DOMAIN_BASIC_FROM_PRELIMINARIES).getFile());
         InputStream targetStream = new FileInputStream(file);
@@ -88,6 +89,17 @@ public class ParserTest {
         assertEquals(8, problem.getObjects().size());
         assertEquals(2, problem.getHtn().getSubtasks().size());
         assertEquals(9, problem.getInit().size());
+    }
+
+    @Test
+    public void testParser_problem_basicInput_from_preliminaries_valid() throws FileNotFoundException, ParseException {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        File file = new File(Objects.requireNonNull(classLoader.getResource(PROBLEM_BASIC_FROM_PRELIMINARIES)).getFile());
+        InputStream targetStream = new FileInputStream(file);
+
+        parser.ReInit(targetStream);
+        Problem problem = parser.parseProblem();
+        assertEquals("pfile01", problem.getName());
     }
 
 }
