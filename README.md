@@ -1,2 +1,2 @@
-# This is currently the HDDL2.1 parser in progress
+# This is currently the Transition-system-based HTN planning solver in progress
 
