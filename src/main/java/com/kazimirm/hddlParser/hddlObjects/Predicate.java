@@ -39,6 +39,28 @@ public class Predicate {
     public void setArguments(List<Argument> arguments) {
         this.arguments = arguments;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Predicate p = (Predicate) o;
+        if (!this.getName().equals(p.getName())){
+            return false;
+        }
+
+        for (Argument a: this.getArguments()){
+            if (!a.getName().equals(p.getArguments().get(arguments.indexOf(a)).getName())){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }
 
 
