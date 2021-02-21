@@ -7,8 +7,9 @@ import java.util.*;
 public class ProblemEnricher {
     private Domain domain;
     private Problem problem;
+    private HashMap<String, List<Argument>> objectsToTypedListsMap = new HashMap<>();
     private List<Predicate> predicates = new ArrayList<>();;
-    private List<String> result = new ArrayList<>();
+    private HashMap<String, Type> nameToTypeMap = new HashMap<>();
 
     public ProblemEnricher(Domain domain, Problem problem) {
         this.domain = domain;
@@ -37,12 +38,8 @@ public class ProblemEnricher {
     }
 
     private void enrichPredicates(){
-        List<Type> types = domain.getTypes();
-        HashMap<String, List<Argument>> objectsToTypedListsMap = new HashMap<>();
-        HashMap<String, Type> nameToTypeMap = new HashMap<>();
 
-
-        for (Type t: types) {
+        for (Type t: domain.getTypes()) {
             objectsToTypedListsMap.put(t.getName(), new ArrayList<Argument>());
             nameToTypeMap.put(t.getName(), t);
         }
@@ -57,8 +54,6 @@ public class ProblemEnricher {
                 objectsToTypedListsMap.get(baseType).add(a);
             }
         }
-
-
 
         for (Predicate p: domain.getPredicates()) {
             List<List<Argument>> lists = new ArrayList<>();
@@ -89,7 +84,7 @@ public class ProblemEnricher {
      * @param lists - list of List<Argument>. The size of list is equal to number of arguments to predicate.
      * @param result - the final List where all predicates are stored (All permutations with correct values).
      * @param depth - field for recursion
-     * @param current - field recursion
+     * @param current - field for recursion
      */
     private void generatePermutationsForPredicate(Predicate p, List<List<Argument>> lists, List<Predicate> result, int depth, String current) {
         if (depth == lists.size()) {
