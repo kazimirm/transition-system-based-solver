@@ -3,6 +3,7 @@ package com.kazimirm.hddlParser.dataEnricher;
 import com.kazimirm.hddlParser.hddlObjects.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProblemEnricher {
     private Domain domain;
@@ -62,6 +63,9 @@ public class ProblemEnricher {
             }
             generatePermutationsForPredicate(p, lists);
         }
+//        System.out.println(predicates.stream().map(Object::toString)
+//                .collect(Collectors.joining(", ")));
+
     }
 
     /**

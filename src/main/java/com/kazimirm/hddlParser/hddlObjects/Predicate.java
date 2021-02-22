@@ -1,6 +1,7 @@
 package com.kazimirm.hddlParser.hddlObjects;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Predicate {
     private String name;
@@ -59,6 +60,12 @@ public class Predicate {
         }
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(getName() +"(" + arguments.stream().map(Argument::getName)
+                .collect(Collectors.joining(", ")) + ")");
     }
 
 }
