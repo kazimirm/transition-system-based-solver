@@ -1,5 +1,7 @@
 package com.kazimirm.hddlParser.hddlObjects;
 
+import java.util.stream.Collectors;
+
 public class Subtask {
     private String name;
     private Task task;
@@ -27,4 +29,6 @@ public class Subtask {
     public void setTask(Task task) {
         this.task = task;
     }
+
+
 }

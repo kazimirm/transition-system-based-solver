@@ -3,6 +3,7 @@ package com.kazimirm.hddlParser.hddlObjects;
 public class Argument {
     private String name;
     private String type;
+    private int value;
 
     public Argument() {
     }
@@ -28,4 +29,11 @@ public class Argument {
         this.type = type;
     }
 
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
 }

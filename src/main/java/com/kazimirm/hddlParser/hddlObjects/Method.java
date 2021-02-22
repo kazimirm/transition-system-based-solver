@@ -51,4 +51,5 @@ public class Method {
     public void setOrdering(List<Ordering> ordering) {
         this.ordering = ordering;
     }
+
 }

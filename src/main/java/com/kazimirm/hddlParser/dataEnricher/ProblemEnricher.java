@@ -35,6 +35,7 @@ public class ProblemEnricher {
 
     public Problem enrichProblem(){
         enrichPredicates();
+        enrichAbstractTasks();
         return problem;
     }
 
@@ -63,8 +64,10 @@ public class ProblemEnricher {
             }
             generatePermutationsForPredicate(p, lists);
         }
-//        System.out.println(predicates.stream().map(Object::toString)
-//                .collect(Collectors.joining(", ")));
+        System.out.println("PREDICATES");
+        System.out.println();
+        System.out.println(predicates.stream().map(Object::toString)
+                .collect(Collectors.joining(", ")));
 
     }
 
@@ -118,4 +121,40 @@ public class ProblemEnricher {
             generatePermutationsForPredicate(p, lists, predicates, depth + 1, current + lists.get(depth).get(i).getName() + ";");
         }
     }
+
+    private void enrichAbstractTasks() {
+        System.out.println();
+        System.out.println("ABSTRACT TASKS:");
+        System.out.println();
+        // New predicates variables preparation
+        List<Predicate> predicatesVariables = new ArrayList<>(predicates);
+        for (Predicate p: predicatesVariables){
+            p.setValue(null);
+        }
+
+        for (Method m: domain.getMethods()){
+            Task t = m.getTask();
+            List<Predicate> preConditions = new ArrayList<>(predicatesVariables);
+            List<Predicate> postConditions = new ArrayList<>(predicatesVariables);
+            t.setPreConditions(preConditions);
+            t.setPostConditions(postConditions);
+            String task = t.toString();
+            List <String> subtasks = new ArrayList<>();
+
+            for (Subtask s: m.getSubtasks()){
+                Task st = s.getTask();
+                List<Predicate> subTaskPreConditions = new ArrayList<>(predicatesVariables);
+                List<Predicate> subTaskPostConditions = new ArrayList<>(predicatesVariables);
+                st.setPreConditions(subTaskPreConditions);
+                st.setPostConditions(subTaskPostConditions);
+                subtasks.add(st.toString());
+            }
+            String abstractTask = (task + ":= " + System.getProperty("line.separator") + subtasks.stream().map(Object::toString).
+                    collect(Collectors.joining(", " + System.getProperty("line.separator"))));
+            System.out.println(abstractTask);
+            System.out.println();
+            System.out.println();
+        }
+    }
+
 }
