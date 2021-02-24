@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.sosy-lab:java-smt:3.7.0-61-gea80187e">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/sosy-lab/java-smt/3.7.0-61-gea80187e/java-smt-3.7.0-61-gea80187e.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/sosy-lab/java-smt/3.7.0-61-gea80187e/java-smt-3.7.0-61-gea80187e-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/sosy-lab/java-smt/3.7.0-61-gea80187e/java-smt-3.7.0-61-gea80187e-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

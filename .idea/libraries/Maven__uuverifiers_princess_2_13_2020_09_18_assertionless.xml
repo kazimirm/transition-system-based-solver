@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: uuverifiers:princess_2.13:2020-09-18-assertionless">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/uuverifiers/princess_2.13/2020-09-18-assertionless/princess_2.13-2020-09-18-assertionless.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/uuverifiers/princess_2.13/2020-09-18-assertionless/princess_2.13-2020-09-18-assertionless-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/uuverifiers/princess_2.13/2020-09-18-assertionless/princess_2.13-2020-09-18-assertionless-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

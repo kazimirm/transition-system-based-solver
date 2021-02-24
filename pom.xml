@@ -8,12 +8,22 @@
     <artifactId>HDDLParser</artifactId>
     <version>1.0-SNAPSHOT</version>
     <dependencies>
+
+        <!-- JUNIT for unit tests-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- https://github.com/sosy-lab/java-smt unified SMT solver API-->
+        <dependency>
+            <groupId>org.sosy-lab</groupId>
+            <artifactId>java-smt</artifactId>
+            <version>3.7.0-61-gea80187e</version>
+        </dependency>
+
     </dependencies>
     <properties>
         <!-- OpenJDK 15 was used -->
