@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class ProblemEnricher {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     private Domain domain;
     private Problem problem;
@@ -92,8 +92,6 @@ public class ProblemEnricher {
         generatePermutationsForPredicate(p, lists, predicates, 0, "");
     }
 
-
-
     /**
      *
      * @param p - predicate
@@ -141,8 +139,10 @@ public class ProblemEnricher {
 
         for (Method m: domain.getMethods()){
             Task t = m.getTask();
-            List<Predicate> preConditions = new ArrayList<>(predicatesVariables);
-            List<Predicate> postConditions = new ArrayList<>(predicatesVariables);
+            List<Predicate> preConditions = cloneList(predicatesVariables);
+            preConditions.forEach(p -> p.setIndex(0));
+            List<Predicate> postConditions = cloneList(predicatesVariables);
+            postConditions.forEach(p -> p.setIndex(m.getSubtasks().size()));
             t.setPreConditions(preConditions);
             t.setPostConditions(postConditions);
             String task = t.toString();
@@ -150,8 +150,10 @@ public class ProblemEnricher {
 
             for (Subtask s: m.getSubtasks()){
                 Task st = s.getTask();
-                List<Predicate> subTaskPreConditions = new ArrayList<>(predicatesVariables);
-                List<Predicate> subTaskPostConditions = new ArrayList<>(predicatesVariables);
+                List<Predicate> subTaskPreConditions = cloneList(predicatesVariables);
+                subTaskPreConditions.forEach(p -> p.setIndex(m.getSubtasks().indexOf(s)));
+                List<Predicate> subTaskPostConditions = cloneList(predicatesVariables);
+                subTaskPostConditions.forEach(p -> p.setIndex(m.getSubtasks().indexOf(s) + 1));
                 st.setPreConditions(subTaskPreConditions);
                 st.setPostConditions(subTaskPostConditions);
                 subtasks.add(st.toString());
@@ -162,4 +164,21 @@ public class ProblemEnricher {
         }
     }
 
+    private void enrichPrimitiveTasks(){
+        for (Action action: domain.getActions()){
+
+        }
+    }
+
+    public List<Predicate> cloneList(List<Predicate> list) {
+        try {
+            List<Predicate> clone = new ArrayList<Predicate>(list.size());
+            for (Predicate item : list) clone.add(item.clone());
+            return clone;
+        }
+        catch (CloneNotSupportedException e){
+            logger.error("List {} cannot be cloned", list);
+            return null;
+        }
+    }
 }
