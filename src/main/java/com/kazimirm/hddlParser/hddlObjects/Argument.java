@@ -4,6 +4,7 @@ public class Argument {
     private String name;
     private String type;
     private int value;
+    private int id; // Z3 does not like String, we'll set unique int id according to order in declaration
 
     public Argument() {
     }
@@ -35,5 +36,13 @@ public class Argument {
 
     public void setValue(int value) {
         this.value = value;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

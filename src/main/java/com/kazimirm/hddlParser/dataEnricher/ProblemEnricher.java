@@ -41,6 +41,7 @@ public class ProblemEnricher {
     }
 
     public Problem enrichProblem(){
+        enrichProblemObjects();
         enrichPredicates();
         enrichAbstractTasks();
         return problem;
@@ -168,6 +169,12 @@ public class ProblemEnricher {
     private void enrichPrimitiveTasks(){
         for (Action action: domain.getActions()){
 
+        }
+    }
+
+    private void enrichProblemObjects(){
+        for (Argument a: problem.getObjects()){
+            a.setId(problem.getObjects().indexOf(a));
         }
     }
 
