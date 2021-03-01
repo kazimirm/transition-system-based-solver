@@ -130,7 +130,6 @@ public class ProblemEnricher {
     }
 
     private void enrichAbstractTasks() {
-        logger.debug("ABSTRACT TASKS:");
         // New predicates variables preparation
         List<Predicate> predicatesVariables = new ArrayList<>(predicates);
         for (Predicate p: predicatesVariables){
@@ -158,8 +157,10 @@ public class ProblemEnricher {
                 st.setPostConditions(subTaskPostConditions);
                 subtasks.add(st.toString());
             }
-            String abstractTask = (task + ":= " + System.getProperty("line.separator") + subtasks.stream().map(Object::toString).
-                    collect(Collectors.joining(", " + System.getProperty("line.separator"))));
+
+            logger.debug("ABSTRACT TASKS:");
+            String abstractTask = (task + ":- " + System.getProperty("line.separator") + subtasks.stream().map(Object::toString).
+                    collect(Collectors.joining(" & " + System.getProperty("line.separator"))));
             logger.debug(abstractTask);
         }
     }
