@@ -1,11 +1,17 @@
 package com.kazimirm.hddlParser.dataEnricher;
 
 import com.kazimirm.hddlParser.hddlObjects.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ProblemEnricher {
+
+    Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+
     private Domain domain;
     private Problem problem;
     private HashMap<String, List<Argument>> objectsToTypedListsMap = new HashMap<>();
@@ -15,6 +21,7 @@ public class ProblemEnricher {
     public ProblemEnricher(Domain domain, Problem problem) {
         this.domain = domain;
         this.problem = problem;
+
     }
 
     public Domain getDomain() {
@@ -39,6 +46,9 @@ public class ProblemEnricher {
         return problem;
     }
 
+    /**
+     *  This method takes given domain and problem nad creates variable for all ground instances of predicate
+     */
     private void enrichPredicates(){
 
         for (Type t: domain.getTypes()) {
@@ -64,9 +74,8 @@ public class ProblemEnricher {
             }
             generatePermutationsForPredicate(p, lists);
         }
-        System.out.println("PREDICATES");
-        System.out.println();
-        System.out.println(predicates.stream().map(Object::toString)
+        logger.debug("PREDICATES: ");
+        logger.debug(predicates.stream().map(Object::toString)
                 .collect(Collectors.joining(", ")));
 
     }
@@ -123,9 +132,7 @@ public class ProblemEnricher {
     }
 
     private void enrichAbstractTasks() {
-        System.out.println();
-        System.out.println("ABSTRACT TASKS:");
-        System.out.println();
+        logger.debug("ABSTRACT TASKS:");
         // New predicates variables preparation
         List<Predicate> predicatesVariables = new ArrayList<>(predicates);
         for (Predicate p: predicatesVariables){
@@ -151,9 +158,7 @@ public class ProblemEnricher {
             }
             String abstractTask = (task + ":= " + System.getProperty("line.separator") + subtasks.stream().map(Object::toString).
                     collect(Collectors.joining(", " + System.getProperty("line.separator"))));
-            System.out.println(abstractTask);
-            System.out.println();
-            System.out.println();
+            logger.debug(abstractTask);
         }
     }
 
