@@ -75,7 +75,7 @@ public class ProblemEnricher {
             generatePermutationsForPredicate(p, lists);
         }
         logger.debug("PREDICATES: ");
-        logger.debug(predicates.stream().map(Object::toString)
+        logger.debug(predicates.stream().map(Predicate::toStringWithoutIndex)
                 .collect(Collectors.joining(", ")));
 
     }
@@ -131,6 +131,7 @@ public class ProblemEnricher {
 
     private void enrichAbstractTasks() {
         // New predicates variables preparation
+        logger.debug("ABSTRACT TASKS:");
         List<Predicate> predicatesVariables = new ArrayList<>(predicates);
         for (Predicate p: predicatesVariables){
             p.setValue(null);
@@ -158,7 +159,6 @@ public class ProblemEnricher {
                 subtasks.add(st.toString());
             }
 
-            logger.debug("ABSTRACT TASKS:");
             String abstractTask = (task + ":- " + System.getProperty("line.separator") + subtasks.stream().map(Object::toString).
                     collect(Collectors.joining(" & " + System.getProperty("line.separator"))));
             logger.debug(abstractTask);

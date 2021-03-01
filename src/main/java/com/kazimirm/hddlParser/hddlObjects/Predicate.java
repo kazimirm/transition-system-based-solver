@@ -78,6 +78,12 @@ public class Predicate implements Cloneable{
                 .collect(Collectors.joining(", ")) + ")" + "{" + index + "}");
     }
 
+    public String toStringWithoutIndex() {
+        return String.format(getName() +"(" + arguments.stream().map(Argument::getName)
+                .collect(Collectors.joining(", ")) + ")");
+    }
+
+
     @Override
     public Predicate clone() throws CloneNotSupportedException {
         Predicate clone = new Predicate();
