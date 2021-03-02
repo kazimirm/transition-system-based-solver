@@ -44,6 +44,7 @@ public class ProblemEnricher {
         enrichProblemObjects();
         enrichPredicates();
         enrichAbstractTasks();
+        enrichPrimitiveTasks();
         return problem;
     }
 
@@ -110,6 +111,7 @@ public class ProblemEnricher {
             for (int i = 0; i < p.getArguments().size(); i++){
                 Argument a = new Argument();
                 a.setName(argsNames.get(i));
+                a.setId(p.getArguments().get(i).getId());
                 a.setType(p.getArguments().get(i).getType());
                 args.add(a);
             }
@@ -167,8 +169,42 @@ public class ProblemEnricher {
     }
 
     private void enrichPrimitiveTasks(){
-        for (Action action: domain.getActions()){
 
+
+        for (Action action: domain.getActions()){
+            List<List<Argument>> lists = new ArrayList<>();
+            for (Parameter p: action.getParameters()) {
+                lists.add(objectsToTypedListsMap.get(p.getType()));
+            }
+            generatePermutationsForActionParameters(action, lists, 0, "");
+        }
+    }
+
+    /**
+     *
+     * @param a - Action
+     * @param lists - list of List<Argument>. The size of list is equal to number of arguments to predicate.
+     * @param depth - field for recursion
+     * @param current - field for recursion
+     */
+    private void generatePermutationsForActionParameters(Action a, List<List<Argument>> lists, int depth, String current) {
+        if (depth == lists.size()) {
+            List<String> argsNames = Arrays.asList(current.split(";"));
+            List<Parameter> params = new ArrayList<>();
+            for (int i = 0; i < a.getParameters().size(); i++){
+                Parameter p = new Parameter();
+                p.setName(argsNames.get(i));
+                p.setId(a.getParameters().get(i).getId());
+                p.setType(a.getParameters().get(i).getType());
+                params.add(p);
+            }
+
+            a.getParameterPermutations().add(params);
+            return;
+        }
+
+        for (int i = 0; i < lists.get(depth).size(); i++) {
+            generatePermutationsForActionParameters(a, lists, depth + 1, current + lists.get(depth).get(i).getName() + ";");
         }
     }
 

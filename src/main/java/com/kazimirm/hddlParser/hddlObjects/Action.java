@@ -1,5 +1,6 @@
 package com.kazimirm.hddlParser.hddlObjects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Action {
@@ -7,6 +8,9 @@ public class Action {
     List<Parameter> parameters;
     List<Predicate> preconditions;
     List<Predicate> effects;
+
+    //enriched in enricher
+    List<List<Parameter>> parameterPermutations = new ArrayList<>();
 
     public Action() {
     }
@@ -48,5 +52,13 @@ public class Action {
 
     public void setEffects(List<Predicate> effects) {
         this.effects = effects;
+    }
+
+    public List<List<Parameter>> getParameterPermutations() {
+        return parameterPermutations;
+    }
+
+    public void setParameterPermutations(List<List<Parameter>> parameterPermutations) {
+        this.parameterPermutations = parameterPermutations;
     }
 }
