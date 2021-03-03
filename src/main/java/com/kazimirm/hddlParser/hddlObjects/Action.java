@@ -1,6 +1,9 @@
 package com.kazimirm.hddlParser.hddlObjects;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Action {
@@ -60,5 +63,30 @@ public class Action {
 
     public void setParameterPermutations(List<List<Parameter>> parameterPermutations) {
         this.parameterPermutations = parameterPermutations;
+    }
+
+    public List<Predicate> getConcretePredicates(List<Predicate> list, List<Parameter> permutation){
+        HashMap<String, String> parameterToObjectName = new HashMap<>();
+
+        for (Parameter p: this.parameters){
+            parameterToObjectName.put(p.getName(), permutation.get(this.parameters.indexOf(p)).getName());
+        }
+
+        List<Predicate> predicates = new ArrayList<>();
+        for (Predicate predicate: list){
+            Predicate p = new Predicate();
+            p.setName(predicate.getName());
+            List<Argument> args = new ArrayList<>();
+            for (Argument a: predicate.getArguments()){
+                Argument arg = new Argument();
+                arg.setName(parameterToObjectName.get(a.getName()));
+                args.add(arg);
+            }
+            p.setValue(predicate.getValue());
+            p.setIndex(predicate.getIndex());
+            p.setArguments(args);
+            predicates.add(p);
+        }
+        return predicates;
     }
 }

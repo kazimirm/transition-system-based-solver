@@ -1,6 +1,7 @@
 package com.kazimirm.hddlParser.hddlObjects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,10 @@ public class Predicate implements Cloneable{
 
     public String getName() {
         return name;
+    }
+
+    public String getNameWithOptionalNegation() {
+        return (value) ? name : "¬" + name;
     }
 
     public void setName(String name) {
@@ -77,6 +82,12 @@ public class Predicate implements Cloneable{
         return String.format(getName() +"(" + arguments.stream().map(Argument::getName)
                 .collect(Collectors.joining(", ")) + ")" + "{" + index + "}");
     }
+
+    public String toStringWithOptionalNegation() {
+        return String.format(getNameWithOptionalNegation() +"(" + arguments.stream().map(Argument::getName)
+                .collect(Collectors.joining(", ")) + ")" + "{" + index + "}");
+    }
+
 
     public String toStringWithoutIndex() {
         return String.format(getName() +"(" + arguments.stream().map(Argument::getName)

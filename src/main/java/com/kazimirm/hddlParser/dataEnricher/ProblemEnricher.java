@@ -14,10 +14,10 @@ public class ProblemEnricher {
 
     private Domain domain;
     private Problem problem;
-    private HashMap<String, List<Argument>> objectsToTypedListsMap = new HashMap<>();
-    private List<Predicate> predicates = new ArrayList<>();;
-    private HashMap<String, Type> nameToTypeMap = new HashMap<>();
-    private HashMap<Argument, Integer> objectToInt = new HashMap<>();
+    private List<Predicate> predicates = new ArrayList<>();
+    private HashMap<String, List<Argument>> objectsToTypedLists = new HashMap<>(); // for each type creates list with such objects
+    private HashMap<String, Type> typeNameToType = new HashMap<>();
+    private HashMap<String, Integer> objectToInt = new HashMap<>();
 
     public ProblemEnricher(Domain domain, Problem problem) {
         this.domain = domain;
@@ -50,33 +50,34 @@ public class ProblemEnricher {
     }
 
     /**
-     *  This method takes given domain and problem nad creates variable for all ground instances of predicate
+     *  This method takes given domain and problem and creates variables for all ground instances of predicate
      */
     private void enrichPredicates(){
 
         for (Type t: domain.getTypes()) {
-            objectsToTypedListsMap.put(t.getName(), new ArrayList<Argument>());
-            nameToTypeMap.put(t.getName(), t);
+            objectsToTypedLists.put(t.getName(), new ArrayList<>());
+            typeNameToType.put(t.getName(), t);
         }
 
         for (Argument a: problem.getObjects()){
 
             String type = a.getType();
-            objectsToTypedListsMap.get(type).add(a);
-            String baseType = nameToTypeMap.get(type).getBaseType();
+            objectsToTypedLists.get(type).add(a);
+            String baseType = typeNameToType.get(type).getBaseType();
 
-            if (objectsToTypedListsMap.containsKey(baseType)){
-                objectsToTypedListsMap.get(baseType).add(a);
+            if (objectsToTypedLists.containsKey(baseType)){
+                objectsToTypedLists.get(baseType).add(a);
             }
         }
 
         for (Predicate p: domain.getPredicates()) {
             List<List<Argument>> lists = new ArrayList<>();
             for (Argument a: p.getArguments()) {
-                lists.add(objectsToTypedListsMap.get(a.getType()));
+                lists.add(objectsToTypedLists.get(a.getType()));
             }
             generatePermutationsForPredicate(p, lists);
         }
+
         logger.debug("PREDICATES: ");
         logger.debug(predicates.stream().map(Predicate::toStringWithoutIndex)
                 .collect(Collectors.joining(", ")));
@@ -92,18 +93,17 @@ public class ProblemEnricher {
      * @param lists - list of List<Argument>. The size of list is equal to number of arguments to predicate.
      */
     private void generatePermutationsForPredicate(Predicate p, List<List<Argument>> lists) {
-        generatePermutationsForPredicate(p, lists, predicates, 0, "");
+        generatePermutationsForPredicate(p, lists, 0, "");
     }
 
     /**
      *
      * @param p - predicate
      * @param lists - list of List<Argument>. The size of list is equal to number of arguments to predicate.
-     * @param result - the final List where all predicates are stored (All permutations with correct values).
      * @param depth - field for recursion
      * @param current - field for recursion
      */
-    private void generatePermutationsForPredicate(Predicate p, List<List<Argument>> lists, List<Predicate> result, int depth, String current) {
+    private void generatePermutationsForPredicate(Predicate p, List<List<Argument>> lists, int depth, String current) {
         if (depth == lists.size()) {
             Predicate predicate = new Predicate();
             predicate.setName(p.getName());
@@ -128,7 +128,7 @@ public class ProblemEnricher {
         }
 
         for (int i = 0; i < lists.get(depth).size(); i++) {
-            generatePermutationsForPredicate(p, lists, predicates, depth + 1, current + lists.get(depth).get(i).getName() + ";");
+            generatePermutationsForPredicate(p, lists, depth + 1, current + lists.get(depth).get(i).getName() + ";");
         }
     }
 
@@ -168,16 +168,54 @@ public class ProblemEnricher {
         }
     }
 
+    /**
+     *
+     */
     private void enrichPrimitiveTasks(){
 
+        logger.debug("PRIMITIVE TASKS:");
+
+        List<Predicate> preConditions = cloneList(predicates);
+        preConditions.forEach(p -> p.setIndex(0));
+        List<Predicate> postConditions = cloneList(predicates);
+        postConditions.forEach(p -> p.setIndex(1));
 
         for (Action action: domain.getActions()){
+
+            for (Predicate p: action.getPreconditions()){
+                p.setIndex(0);
+            }
+
+            for (Predicate p: action.getEffects()){
+                p.setIndex(1);
+            }
+
             List<List<Argument>> lists = new ArrayList<>();
             for (Parameter p: action.getParameters()) {
-                lists.add(objectsToTypedListsMap.get(p.getType()));
+                lists.add(objectsToTypedLists.get(p.getType()));
             }
             generatePermutationsForActionParameters(action, lists, 0, "");
+
+            for (List<Parameter> permutation: action.getParameterPermutations()){
+                List<Integer> params = permutation.stream().map(p -> objectToInt.get(p.getName())).collect(Collectors.toList());
+
+                logger.debug(action.getName() + "(" + params.stream().map(Object::toString).collect(Collectors.joining(", ")) + ", " +
+                        preConditions.stream().map(Predicate::toString)
+                        .collect(Collectors.joining(", ")) + ", " +
+                        postConditions.stream().map(Predicate::toString)
+                        .collect(Collectors.joining(", ")) + ") :-"
+                );
+                logger.debug(action.getConcretePredicates(action.getPreconditions(), permutation).stream().map(Predicate::toStringWithOptionalNegation).
+                        collect(Collectors.joining(" & ")) + " & ");
+                logger.debug(action.getConcretePredicates(action.getEffects(), permutation).stream().map(Predicate::toStringWithOptionalNegation).
+                        collect(Collectors.joining(" & ")));
+            }
+
         }
+
+
+
+
     }
 
     /**
@@ -213,7 +251,7 @@ public class ProblemEnricher {
     private void enrichProblemObjects(){
         int i = 0;
         for (Argument a: problem.getObjects()){
-            objectToInt.put(a, i);
+            objectToInt.put(a.getName(), i);
             i++;
         }
     }
