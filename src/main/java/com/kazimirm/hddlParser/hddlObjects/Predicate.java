@@ -95,7 +95,6 @@ public class Predicate implements Cloneable{
             Argument a = new Argument();
             a.setName(argument.getName());
             a.setType(argument.getType());
-            a.setValue(argument.getValue());
             args.add(a);
         }
         clone.setArguments(args);

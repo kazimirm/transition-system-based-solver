@@ -17,6 +17,7 @@ public class ProblemEnricher {
     private HashMap<String, List<Argument>> objectsToTypedListsMap = new HashMap<>();
     private List<Predicate> predicates = new ArrayList<>();;
     private HashMap<String, Type> nameToTypeMap = new HashMap<>();
+    private HashMap<Argument, Integer> objectToInt = new HashMap<>();
 
     public ProblemEnricher(Domain domain, Problem problem) {
         this.domain = domain;
@@ -111,7 +112,6 @@ public class ProblemEnricher {
             for (int i = 0; i < p.getArguments().size(); i++){
                 Argument a = new Argument();
                 a.setName(argsNames.get(i));
-                a.setId(p.getArguments().get(i).getId());
                 a.setType(p.getArguments().get(i).getType());
                 args.add(a);
             }
@@ -194,7 +194,6 @@ public class ProblemEnricher {
             for (int i = 0; i < a.getParameters().size(); i++){
                 Parameter p = new Parameter();
                 p.setName(argsNames.get(i));
-                p.setId(a.getParameters().get(i).getId());
                 p.setType(a.getParameters().get(i).getType());
                 params.add(p);
             }
@@ -208,9 +207,14 @@ public class ProblemEnricher {
         }
     }
 
+    /**
+     *  Encoding of all problem object into an unique integer representation, because of need to use num in Z3.
+     */
     private void enrichProblemObjects(){
+        int i = 0;
         for (Argument a: problem.getObjects()){
-            a.setId(problem.getObjects().indexOf(a));
+            objectToInt.put(a, i);
+            i++;
         }
     }
 
