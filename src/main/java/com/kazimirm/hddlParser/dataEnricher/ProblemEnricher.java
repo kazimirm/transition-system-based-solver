@@ -164,7 +164,7 @@ public class ProblemEnricher {
             }
 
             String abstractTask = (task + ":- " + System.getProperty("line.separator") + subtasks.stream().map(Object::toString).
-                    collect(Collectors.joining(" & " + System.getProperty("line.separator"))));
+                    collect(Collectors.joining(" ∧ " + System.getProperty("line.separator"))));
             logger.debug(abstractTask);
         }
     }
@@ -207,9 +207,9 @@ public class ProblemEnricher {
                         .collect(Collectors.joining(", ")) + ") :-"
                 );
                 logger.debug(action.getConcretePredicates(action.getPreconditions(), permutation).stream().map(Predicate::toStringWithOptionalNegation).
-                        collect(Collectors.joining(" & ")) + " & ");
+                        collect(Collectors.joining(" ∧ ")) + " ∧ ");
                 logger.debug(action.getConcretePredicates(action.getEffects(), permutation).stream().map(Predicate::toStringWithOptionalNegation).
-                        collect(Collectors.joining(" & ")));
+                        collect(Collectors.joining(" ∧ ")));
             }
 
         }
@@ -272,16 +272,24 @@ public class ProblemEnricher {
     private void enrichInitialTask(){
         logger.debug("INITIAL TASKS:");
 
-        logger.debug(predicates.stream().map(Predicate::toStringWithOptionalNegation)
-                .collect(Collectors.joining(" & ")) + " &");
+        logger.debug("⊥ :- " + predicates.stream().map(Predicate::toStringWithOptionalNegation)
+                .collect(Collectors.joining(" ∧ ")) + " ∧");
 
         for (Subtask subtask: problem.getHtn().getSubtasks()){
-//            logger.debug(subtask.getName() + "(" + subtask.getTask().getParameters().stream().map(Object::toString).collect(Collectors.joining(", ")) + ", " +
-//                    subtask.getTask().getPreConditions().stream().map(Predicate::toString)
-//                            .collect(Collectors.joining(", ")) + ", " +
-//                    subtask.getTask().getPostConditions().stream().map(Predicate::toString)
-//                            .collect(Collectors.joining(", ")) + ") :-"
-//            );
+
+            List<Predicate> preConditions = cloneList(predicates);
+            preConditions.forEach(p -> p.setIndex(0));
+            List<Predicate> postConditions = cloneList(predicates);
+            postConditions.forEach(p -> p.setIndex(1));
+
+            List<Integer> params = subtask.getTask().getParameters().stream().map(p -> objectToInt.get(p.getName())).collect(Collectors.toList());
+
+            logger.debug(subtask.getName() + "(" + params.stream().map(Object::toString).collect(Collectors.joining(", ")) + ", " +
+                    preConditions.stream().map(Predicate::toString)
+                            .collect(Collectors.joining(", ")) + ", " +
+                    postConditions.stream().map(Predicate::toString)
+                            .collect(Collectors.joining(", ")) + ")"
+            );
         }
     }
 }
