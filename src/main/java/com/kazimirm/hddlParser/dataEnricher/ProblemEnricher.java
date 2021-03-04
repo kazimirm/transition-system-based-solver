@@ -46,6 +46,7 @@ public class ProblemEnricher {
         enrichPredicates();
         enrichAbstractTasks();
         enrichPrimitiveTasks();
+        enrichInitialTask();
         return problem;
     }
 
@@ -135,7 +136,7 @@ public class ProblemEnricher {
     private void enrichAbstractTasks() {
         // New predicates variables preparation
         logger.debug("ABSTRACT TASKS:");
-        List<Predicate> predicatesVariables = new ArrayList<>(predicates);
+        List<Predicate> predicatesVariables = cloneList(predicates);
         for (Predicate p: predicatesVariables){
             p.setValue(null);
         }
@@ -265,6 +266,22 @@ public class ProblemEnricher {
         catch (CloneNotSupportedException e){
             logger.error("List {} cannot be cloned", list);
             return null;
+        }
+    }
+
+    private void enrichInitialTask(){
+        logger.debug("INITIAL TASKS:");
+
+        logger.debug(predicates.stream().map(Predicate::toStringWithOptionalNegation)
+                .collect(Collectors.joining(" & ")) + " &");
+
+        for (Subtask subtask: problem.getHtn().getSubtasks()){
+//            logger.debug(subtask.getName() + "(" + subtask.getTask().getParameters().stream().map(Object::toString).collect(Collectors.joining(", ")) + ", " +
+//                    subtask.getTask().getPreConditions().stream().map(Predicate::toString)
+//                            .collect(Collectors.joining(", ")) + ", " +
+//                    subtask.getTask().getPostConditions().stream().map(Predicate::toString)
+//                            .collect(Collectors.joining(", ")) + ") :-"
+//            );
         }
     }
 }

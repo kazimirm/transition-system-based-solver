@@ -80,12 +80,12 @@ public class Predicate implements Cloneable{
     @Override
     public String toString() {
         return String.format(getName() +"(" + arguments.stream().map(Argument::getName)
-                .collect(Collectors.joining(", ")) + ")" + "{" + index + "}");
+                .collect(Collectors.joining(", ")) + ")" + "[" + index + "]");
     }
 
     public String toStringWithOptionalNegation() {
         return String.format(getNameWithOptionalNegation() +"(" + arguments.stream().map(Argument::getName)
-                .collect(Collectors.joining(", ")) + ")" + "{" + index + "}");
+                .collect(Collectors.joining(", ")) + ")" + "[" + index + "]");
     }
 
 
