@@ -18,21 +18,22 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProblemEnricherTest {
     private final String DOMAIN_BASIC_FROM_PRELIMINARIES = "domain_basic_from_preliminaries.txt";
     private final String PROBLEM_BASIC_FROM_PRELIMINARIES = "problem_basic_from_preliminaries.txt";
+    private final String domain_htn = "domain-htn.hddl";
+    private final String domain_htn_pfile01 = "pfile01.hddl";
     private Domain domain;
     private Problem problem;
 
-    @BeforeEach
-    void setUp() throws FileNotFoundException, ParseException {
+    void setUp(String d, String p) throws FileNotFoundException, ParseException {
         ParserHDDL parser = new ParserHDDL(InputStream.nullInputStream());
         ClassLoader classLoader = this.getClass().getClassLoader();
-        File file = new File(classLoader.getResource(DOMAIN_BASIC_FROM_PRELIMINARIES).getFile());
+        File file = new File(classLoader.getResource(d).getFile());
         InputStream targetStream = new FileInputStream(file);
 
         parser.ReInit(targetStream);
         domain = parser.parseDomain();
 
 
-        file = new File(Objects.requireNonNull(classLoader.getResource(PROBLEM_BASIC_FROM_PRELIMINARIES)).getFile());
+        file = new File(Objects.requireNonNull(classLoader.getResource(p)).getFile());
         targetStream = new FileInputStream(file);
 
         parser.ReInit(targetStream);
@@ -40,7 +41,15 @@ class ProblemEnricherTest {
     }
 
     @Test
-    void enrichProblem() {
+    void enrichProblemPreliminaries() throws FileNotFoundException, ParseException {
+        setUp(DOMAIN_BASIC_FROM_PRELIMINARIES, PROBLEM_BASIC_FROM_PRELIMINARIES);
+        ProblemEnricher pE = new ProblemEnricher(domain, problem);
+        pE.enrichProblem();
+    }
+
+    @Test
+    void enrichProblemPfile01() throws FileNotFoundException, ParseException {
+        setUp(domain_htn, domain_htn_pfile01);
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
         pE.enrichProblem();
     }
