@@ -17,13 +17,23 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- https://github.com/sosy-lab/java-smt unified SMT solver API-->
+        <!-- https://github.com/sosy-lab/java-smt unified SMT solver API - not USED-->
         <dependency>
             <groupId>org.sosy-lab</groupId>
             <artifactId>java-smt</artifactId>
             <version>3.7.0-61-gea80187e</version>
         </dependency>
 
+        <!-- Z3 local dependency located in libs directory-->
+        <dependency>
+            <groupId>com.microsoft</groupId>
+            <artifactId>z3</artifactId>
+            <version>4.8.10</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/com.microsoft.z3-4.8.10.jar</systemPath>
+        </dependency>
+
+        <!-- Logger dependencies -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
