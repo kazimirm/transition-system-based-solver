@@ -4,13 +4,20 @@ import com.kazimirm.hddlParser.hddlObjects.Domain;
 import com.kazimirm.hddlParser.hddlObjects.Problem;
 import com.kazimirm.hddlParser.parser.ParseException;
 import com.kazimirm.hddlParser.parser.ParserHDDL;
+import com.microsoft.z3.BoolExpr;
+import com.microsoft.z3.Context;
+import com.microsoft.z3.Solver;
+import com.microsoft.z3.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,4 +60,21 @@ class ProblemEnricherTest {
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
         pE.enrichProblem();
     }
+
+    @Test
+    void testZ3() throws URISyntaxException, IOException {
+        Context ctx = new Context();
+        URL res = getClass().getClassLoader().getResource("test.smt2");
+        File file = Paths.get(res.toURI()).toFile();
+        String absolutePath = file.getAbsolutePath();
+        String input = Files.readString(Path.of(absolutePath), StandardCharsets.UTF_8);
+        BoolExpr[] expr = ctx.parseSMTLIB2String(input, null, null, null, null);
+
+        Solver s = ctx.mkSolver();
+        s.add(expr);
+        System.out.println(s.toString());
+        Status q = s.check();
+        System.out.println("done");
+    }
+
 }
