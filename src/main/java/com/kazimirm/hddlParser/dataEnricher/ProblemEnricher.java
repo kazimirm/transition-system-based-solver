@@ -1,7 +1,8 @@
 package com.kazimirm.hddlParser.dataEnricher;
 
 import com.kazimirm.hddlParser.hddlObjects.*;
-import com.microsoft.z3.Context;
+import com.microsoft.z3.*;
+import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,8 @@ public class ProblemEnricher {
     private HashMap<String, List<Argument>> objectsToTypedLists = new HashMap<>(); // for each type creates list with such objects
     private HashMap<String, Type> typeNameToType = new HashMap<>();
     private HashMap<String, Integer> objectToInt = new HashMap<>();
+    Context ctx = new Context();
+    Fixedpoint fix;
 
     public ProblemEnricher(Domain domain, Problem problem) {
         this.domain = domain;
@@ -43,6 +46,7 @@ public class ProblemEnricher {
     }
 
     public Problem enrichProblem(){
+        fix = ctx.mkFixedpoint();
         enrichProblemObjects();
         enrichPredicates();
         enrichAbstractTasks();
@@ -136,7 +140,7 @@ public class ProblemEnricher {
 
     private void enrichAbstractTasks() {
         // New predicates variables preparation
-        logger.debug("ABSTRACT TASKS:");
+        logger.debug("ABSTRACT TASKS(TASKS):");
         List<Predicate> predicatesVariables = cloneList(predicates);
         for (Predicate p: predicatesVariables){
             p.setValue(null);
@@ -164,6 +168,32 @@ public class ProblemEnricher {
                 subtasks.add(st.toString());
             }
 
+
+            List<Sort> params = new ArrayList<>();
+
+            for (Parameter p:t.getParameters()){
+                IntSort param = ctx.mkIntSort();
+                logger.debug("IntSort: " + param);
+                params.add(param);
+            }
+
+            for (Predicate p:predicates){
+                BoolSort param = ctx.mkBoolSort();
+                logger.debug("IntSort: " + param);
+                params.add(param);
+            }
+
+            Sort[] sort =  params.toArray(new Sort[0]);
+
+            BoolSort returnValue = ctx.mkBoolSort();
+
+            FuncDecl f = ctx.mkFuncDecl(t.getName(), sort, returnValue);
+            //fix.registerRelation();
+
+            //FuncDecl f = ctx.mkConstDecl(t.getName(), ctx.mkBoolSort());
+            fix.registerRelation(f);
+            logger.debug(f.getSExpr());
+            //logger.debug(fix.getRules());
             String abstractTask = (task + ":- " + System.getProperty("line.separator") + subtasks.stream().map(Object::toString).
                     collect(Collectors.joining(" ∧ " + System.getProperty("line.separator"))));
             logger.debug(abstractTask);
@@ -175,7 +205,7 @@ public class ProblemEnricher {
      */
     private void enrichPrimitiveTasks(){
 
-        logger.debug("PRIMITIVE TASKS:");
+        logger.debug("PRIMITIVE TASKS(ACTIONS):");
 
         List<Predicate> preConditions = cloneList(predicates);
         preConditions.forEach(p -> p.setIndex(0));
