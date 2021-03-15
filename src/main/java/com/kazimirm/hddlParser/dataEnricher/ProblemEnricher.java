@@ -45,40 +45,42 @@ public class ProblemEnricher {
         this.problem = problem;
     }
 
-    public Problem enrichProblem(){
+    public Problem enrichProblem() {
         fix = ctx.mkFixedpoint();
         enrichProblemObjects();
         enrichPredicates();
         enrichAbstractTasks();
         enrichPrimitiveTasks();
         enrichInitialTask();
+        encodeTasks();
+        encodeActions();
         return problem;
     }
 
     /**
-     *  This method takes given domain and problem and creates variables for all ground instances of predicate
+     * This method takes given domain and problem and creates variables for all ground instances of predicate
      */
-    private void enrichPredicates(){
+    private void enrichPredicates() {
 
-        for (Type t: domain.getTypes()) {
+        for (Type t : domain.getTypes()) {
             objectsToTypedLists.put(t.getName(), new ArrayList<>());
             typeNameToType.put(t.getName(), t);
         }
 
-        for (Argument a: problem.getObjects()){
+        for (Argument a : problem.getObjects()) {
 
             String type = a.getType();
             objectsToTypedLists.get(type).add(a);
             String baseType = typeNameToType.get(type).getBaseType();
 
-            if (objectsToTypedLists.containsKey(baseType)){
+            if (objectsToTypedLists.containsKey(baseType)) {
                 objectsToTypedLists.get(baseType).add(a);
             }
         }
 
-        for (Predicate p: domain.getPredicates()) {
+        for (Predicate p : domain.getPredicates()) {
             List<List<Argument>> lists = new ArrayList<>();
-            for (Argument a: p.getArguments()) {
+            for (Argument a : p.getArguments()) {
                 lists.add(objectsToTypedLists.get(a.getType()));
             }
             generatePermutationsForPredicate(p, lists);
@@ -95,7 +97,7 @@ public class ProblemEnricher {
      * predicates from init block of problem (problem.getInit() which returns all predicates from problem -
      * all these predicates are true.) If the predicate is not there -> is false.
      *
-     * @param p - predicate
+     * @param p     - predicate
      * @param lists - list of List<Argument>. The size of list is equal to number of arguments to predicate.
      */
     private void generatePermutationsForPredicate(Predicate p, List<List<Argument>> lists) {
@@ -103,10 +105,9 @@ public class ProblemEnricher {
     }
 
     /**
-     *
-     * @param p - predicate
-     * @param lists - list of List<Argument>. The size of list is equal to number of arguments to predicate.
-     * @param depth - field for recursion
+     * @param p       - predicate
+     * @param lists   - list of List<Argument>. The size of list is equal to number of arguments to predicate.
+     * @param depth   - field for recursion
      * @param current - field for recursion
      */
     private void generatePermutationsForPredicate(Predicate p, List<List<Argument>> lists, int depth, String current) {
@@ -115,7 +116,7 @@ public class ProblemEnricher {
             predicate.setName(p.getName());
             List<String> argsNames = Arrays.asList(current.split(";"));
             List<Argument> args = new ArrayList<>();
-            for (int i = 0; i < p.getArguments().size(); i++){
+            for (int i = 0; i < p.getArguments().size(); i++) {
                 Argument a = new Argument();
                 a.setName(argsNames.get(i));
                 a.setType(p.getArguments().get(i).getType());
@@ -123,7 +124,7 @@ public class ProblemEnricher {
             }
             predicate.setArguments(args);
 
-            if (problem.getInit().contains(predicate)){
+            if (problem.getInit().contains(predicate)) {
                 predicate.setValue(true);
             } else {
                 predicate.setValue(false);
@@ -138,15 +139,75 @@ public class ProblemEnricher {
         }
     }
 
+    private void encodeTasks() {
+        for (Task t : domain.getTasks()) {
+            List<Sort> params = new ArrayList<>();
+
+            for (Parameter p : t.getParameters()) {
+                IntSort param = ctx.mkIntSort();
+                logger.debug("IntSort: " + param);
+                params.add(param);
+            }
+
+            for (Predicate p : predicates) {
+                BoolSort param = ctx.mkBoolSort();
+                logger.debug("IntSort: " + param);
+                params.add(param);
+            }
+
+            Sort[] sort = params.toArray(new Sort[0]);
+
+            BoolSort returnValue = ctx.mkBoolSort();
+
+            FuncDecl f = ctx.mkFuncDecl(t.getName(), sort, returnValue);
+            //fix.registerRelation();
+
+            //FuncDecl f = ctx.mkConstDecl(t.getName(), ctx.mkBoolSort());
+            fix.registerRelation(f);
+            logger.debug(f.getSExpr());
+            //logger.debug(fix.getRules());
+        }
+    }
+
+    private void encodeActions() {
+        for (Action a : domain.getActions()) {
+            List<Sort> params = new ArrayList<>();
+
+            for (Parameter p : a.getParameters()) {
+                IntSort param = ctx.mkIntSort();
+                logger.debug("IntSort: " + param);
+                params.add(param);
+            }
+
+            for (Predicate p : predicates) {
+                BoolSort param = ctx.mkBoolSort();
+                logger.debug("IntSort: " + param);
+                params.add(param);
+            }
+
+            Sort[] sort = params.toArray(new Sort[0]);
+
+            BoolSort returnValue = ctx.mkBoolSort();
+
+            FuncDecl f = ctx.mkFuncDecl(a.getName(), sort, returnValue);
+            //fix.registerRelation();
+
+            //FuncDecl f = ctx.mkConstDecl(t.getName(), ctx.mkBoolSort());
+            fix.registerRelation(f);
+            logger.debug(f.getSExpr());
+            //logger.debug(fix.getRules());
+        }
+    }
+
     private void enrichAbstractTasks() {
         // New predicates variables preparation
         logger.debug("ABSTRACT TASKS(TASKS):");
         List<Predicate> predicatesVariables = cloneList(predicates);
-        for (Predicate p: predicatesVariables){
+        for (Predicate p : predicatesVariables) {
             p.setValue(null);
         }
 
-        for (Method m: domain.getMethods()){
+        for (Method m : domain.getMethods()) {
             Task t = m.getTask();
             List<Predicate> preConditions = cloneList(predicatesVariables);
             preConditions.forEach(p -> p.setIndex(0));
@@ -155,9 +216,9 @@ public class ProblemEnricher {
             t.setPreConditions(preConditions);
             t.setPostConditions(postConditions);
             String task = t.toString();
-            List <String> subtasks = new ArrayList<>();
+            List<String> subtasks = new ArrayList<>();
 
-            for (Subtask s: m.getSubtasks()){
+            for (Subtask s : m.getSubtasks()) {
                 Task st = s.getTask();
                 List<Predicate> subTaskPreConditions = cloneList(predicatesVariables);
                 subTaskPreConditions.forEach(p -> p.setIndex(m.getSubtasks().indexOf(s)));
@@ -169,31 +230,31 @@ public class ProblemEnricher {
             }
 
 
-            List<Sort> params = new ArrayList<>();
-
-            for (Parameter p:t.getParameters()){
-                IntSort param = ctx.mkIntSort();
-                logger.debug("IntSort: " + param);
-                params.add(param);
-            }
-
-            for (Predicate p:predicates){
-                BoolSort param = ctx.mkBoolSort();
-                logger.debug("IntSort: " + param);
-                params.add(param);
-            }
-
-            Sort[] sort =  params.toArray(new Sort[0]);
-
-            BoolSort returnValue = ctx.mkBoolSort();
-
-            FuncDecl f = ctx.mkFuncDecl(t.getName(), sort, returnValue);
-            //fix.registerRelation();
-
-            //FuncDecl f = ctx.mkConstDecl(t.getName(), ctx.mkBoolSort());
-            fix.registerRelation(f);
-            logger.debug(f.getSExpr());
-            //logger.debug(fix.getRules());
+//            List<Sort> params = new ArrayList<>();
+//
+//            for (Parameter p:t.getParameters()){
+//                IntSort param = ctx.mkIntSort();
+//                logger.debug("IntSort: " + param);
+//                params.add(param);
+//            }
+//
+//            for (Predicate p:predicates){
+//                BoolSort param = ctx.mkBoolSort();
+//                logger.debug("IntSort: " + param);
+//                params.add(param);
+//            }
+//
+//            Sort[] sort =  params.toArray(new Sort[0]);
+//
+//            BoolSort returnValue = ctx.mkBoolSort();
+//
+//            FuncDecl f = ctx.mkFuncDecl(t.getName(), sort, returnValue);
+//            //fix.registerRelation();
+//
+//            //FuncDecl f = ctx.mkConstDecl(t.getName(), ctx.mkBoolSort());
+//            fix.registerRelation(f);
+//            logger.debug(f.getSExpr());
+//            //logger.debug(fix.getRules());
             String abstractTask = (task + ":- " + System.getProperty("line.separator") + subtasks.stream().map(Object::toString).
                     collect(Collectors.joining(" ∧ " + System.getProperty("line.separator"))));
             logger.debug(abstractTask);
@@ -203,7 +264,7 @@ public class ProblemEnricher {
     /**
      *
      */
-    private void enrichPrimitiveTasks(){
+    private void enrichPrimitiveTasks() {
 
         logger.debug("PRIMITIVE TASKS(ACTIONS):");
 
@@ -212,30 +273,30 @@ public class ProblemEnricher {
         List<Predicate> postConditions = cloneList(predicates);
         postConditions.forEach(p -> p.setIndex(1));
 
-        for (Action action: domain.getActions()){
+        for (Action action : domain.getActions()) {
 
-            for (Predicate p: action.getPreconditions()){
+            for (Predicate p : action.getPreconditions()) {
                 p.setIndex(0);
             }
 
-            for (Predicate p: action.getEffects()){
+            for (Predicate p : action.getEffects()) {
                 p.setIndex(1);
             }
 
             List<List<Argument>> lists = new ArrayList<>();
-            for (Parameter p: action.getParameters()) {
+            for (Parameter p : action.getParameters()) {
                 lists.add(objectsToTypedLists.get(p.getType()));
             }
             generatePermutationsForActionParameters(action, lists, 0, "");
 
-            for (List<Parameter> permutation: action.getParameterPermutations()){
+            for (List<Parameter> permutation : action.getParameterPermutations()) {
                 List<Integer> params = permutation.stream().map(p -> objectToInt.get(p.getName())).collect(Collectors.toList());
 
                 logger.debug(action.getName() + "(" + params.stream().map(Object::toString).collect(Collectors.joining(", ")) + ", " +
                         preConditions.stream().map(Predicate::toString)
-                        .collect(Collectors.joining(", ")) + ", " +
+                                .collect(Collectors.joining(", ")) + ", " +
                         postConditions.stream().map(Predicate::toString)
-                        .collect(Collectors.joining(", ")) + ") :-"
+                                .collect(Collectors.joining(", ")) + ") :-"
                 );
                 logger.debug(action.getConcretePredicates(action.getPreconditions(), permutation).stream().map(Predicate::toStringWithOptionalNegation).
                         collect(Collectors.joining(" ∧ ")) + " ∧ ");
@@ -247,17 +308,16 @@ public class ProblemEnricher {
     }
 
     /**
-     *
-     * @param a - Action
-     * @param lists - list of List<Argument>. The size of list is equal to number of arguments to predicate.
-     * @param depth - field for recursion
+     * @param a       - Action
+     * @param lists   - list of List<Argument>. The size of list is equal to number of arguments to predicate.
+     * @param depth   - field for recursion
      * @param current - field for recursion
      */
     private void generatePermutationsForActionParameters(Action a, List<List<Argument>> lists, int depth, String current) {
         if (depth == lists.size()) {
             List<String> argsNames = Arrays.asList(current.split(";"));
             List<Parameter> params = new ArrayList<>();
-            for (int i = 0; i < a.getParameters().size(); i++){
+            for (int i = 0; i < a.getParameters().size(); i++) {
                 Parameter p = new Parameter();
                 p.setName(argsNames.get(i));
                 p.setType(a.getParameters().get(i).getType());
@@ -274,11 +334,11 @@ public class ProblemEnricher {
     }
 
     /**
-     *  Encoding of all problem object into an unique integer representation, because of need to use num in Z3.
+     * Encoding of all problem object into an unique integer representation, because of need to use num in Z3.
      */
-    private void enrichProblemObjects(){
+    private void enrichProblemObjects() {
         int i = 0;
-        for (Argument a: problem.getObjects()){
+        for (Argument a : problem.getObjects()) {
             objectToInt.put(a.getName(), i);
             i++;
         }
@@ -289,20 +349,19 @@ public class ProblemEnricher {
             List<Predicate> clone = new ArrayList<Predicate>(list.size());
             for (Predicate item : list) clone.add(item.clone());
             return clone;
-        }
-        catch (CloneNotSupportedException e){
+        } catch (CloneNotSupportedException e) {
             logger.error("List {} cannot be cloned", list);
             return null;
         }
     }
 
-    private void enrichInitialTask(){
+    private void enrichInitialTask() {
         logger.debug("INITIAL TASKS:");
 
         logger.debug("⊥ :- " + predicates.stream().map(Predicate::toStringWithOptionalNegation)
                 .collect(Collectors.joining(" ∧ ")) + " ∧");
 
-        for (Subtask subtask: problem.getHtn().getSubtasks()){
+        for (Subtask subtask : problem.getHtn().getSubtasks()) {
 
             List<Predicate> preConditions = cloneList(predicates);
             preConditions.forEach(p -> p.setIndex(0));
