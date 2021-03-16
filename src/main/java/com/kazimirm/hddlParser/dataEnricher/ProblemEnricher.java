@@ -20,8 +20,10 @@ public class ProblemEnricher {
     private HashMap<String, List<Argument>> objectsToTypedLists = new HashMap<>(); // for each type creates list with such objects
     private HashMap<String, Type> typeNameToType = new HashMap<>();
     private HashMap<String, Integer> objectToInt = new HashMap<>();
+
     Context ctx = new Context();
     Fixedpoint fix;
+    List<List<BoolSort>> boolSortsList = new ArrayList<>();
 
     public ProblemEnricher(Domain domain, Problem problem) {
         this.domain = domain;
@@ -52,6 +54,7 @@ public class ProblemEnricher {
         enrichAbstractTasks();
         enrichPrimitiveTasks();
         enrichInitialTask();
+        encodeVariables();
         encodeTasks();
         encodeActions();
         return problem;
@@ -136,6 +139,28 @@ public class ProblemEnricher {
 
         for (int i = 0; i < lists.get(depth).size(); i++) {
             generatePermutationsForPredicate(p, lists, depth + 1, current + lists.get(depth).get(i).getName() + ";");
+        }
+    }
+
+    /**
+     * We need to create int variables for every ground variable. Number of each var instance must be equal to max + 1 number of
+     * maximum subtasks in method. Then we will create list of lists which will be used in tasks/methods/... encoding
+     */
+    private void encodeVariables(){
+        int max = 0;
+        for (Method m : domain.getMethods()){
+            if (m.getSubtasks().size() > max){
+                max = m.getSubtasks().size();
+            }
+        }
+
+        for (Predicate p : predicates) {
+            List<BoolSort> vars = new ArrayList<>();
+            for (int i = 0; i <= max; i++) {
+                BoolSort var = ctx.mkBoolSort();
+                vars.add(var);
+            }
+            boolSortsList.add(vars);
         }
     }
 
