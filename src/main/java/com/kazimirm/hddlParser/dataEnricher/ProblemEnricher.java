@@ -290,7 +290,7 @@ public class ProblemEnricher {
             }
 
             for (List<BoolExpr> boolExprList : predicatesExpressionsList) {
-                BoolExpr param = boolExprList.get(m.getSubtasks().size() - 1);
+                BoolExpr param = boolExprList.get(m.getSubtasks().size());
                 logger.debug("BoolExpression of postCondition: " + param);
                 params.add(param);
             }
