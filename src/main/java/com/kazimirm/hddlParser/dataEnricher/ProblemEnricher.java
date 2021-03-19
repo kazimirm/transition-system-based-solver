@@ -2,7 +2,6 @@ package com.kazimirm.hddlParser.dataEnricher;
 
 import com.kazimirm.hddlParser.hddlObjects.*;
 import com.microsoft.z3.*;
-import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,10 +19,13 @@ public class ProblemEnricher {
     private HashMap<String, List<Argument>> objectsToTypedLists = new HashMap<>(); // for each type creates list with such objects
     private HashMap<String, Type> typeNameToType = new HashMap<>();
     private HashMap<String, Integer> objectToInt = new HashMap<>();
+    //private List<FuncDecl> functions = new ArrayList<>();
+    private HashMap<String, FuncDecl> functions = new HashMap<>();
+
 
     Context ctx = new Context();
     Fixedpoint fix;
-    List<List<BoolSort>> boolSortsList = new ArrayList<>();
+    List<List<BoolExpr>> predicatesExpressionsList = new ArrayList<>();
 
     public ProblemEnricher(Domain domain, Problem problem) {
         this.domain = domain;
@@ -57,6 +59,7 @@ public class ProblemEnricher {
         encodeVariables();
         encodeTasks();
         encodeActions();
+        encodeMethods();
         return problem;
     }
 
@@ -155,28 +158,37 @@ public class ProblemEnricher {
         }
 
         for (Predicate p : predicates) {
-            List<BoolSort> vars = new ArrayList<>();
+            List<BoolExpr> vars = new ArrayList<>();
             for (int i = 0; i <= max; i++) {
-                BoolSort var = ctx.mkBoolSort();
+                BoolExpr var = ctx.mkBoolConst(p.toStringWithoutIndex() + "[" + i + "]");
                 vars.add(var);
             }
-            boolSortsList.add(vars);
+            predicatesExpressionsList.add(vars);
         }
     }
 
     private void encodeTasks() {
-        for (Task t : domain.getTasks()) {
+        for (Task t : domain.getTasks() ) {
             List<Sort> params = new ArrayList<>();
 
+            // objects
             for (Parameter p : t.getParameters()) {
                 IntSort param = ctx.mkIntSort();
                 logger.debug("IntSort: " + param);
                 params.add(param);
             }
 
+            // preConditions
             for (Predicate p : predicates) {
                 BoolSort param = ctx.mkBoolSort();
-                logger.debug("IntSort: " + param);
+                logger.debug("BoolSort: " + param);
+                params.add(param);
+            }
+
+            //postConditions
+            for (Predicate p : predicates) {
+                BoolSort param = ctx.mkBoolSort();
+                logger.debug("BoolSort: " + param);
                 params.add(param);
             }
 
@@ -185,12 +197,9 @@ public class ProblemEnricher {
             BoolSort returnValue = ctx.mkBoolSort();
 
             FuncDecl f = ctx.mkFuncDecl(t.getName(), sort, returnValue);
-            //fix.registerRelation();
-
-            //FuncDecl f = ctx.mkConstDecl(t.getName(), ctx.mkBoolSort());
+            functions.put(t.getName(), f);
             fix.registerRelation(f);
             logger.debug(f.getSExpr());
-            //logger.debug(fix.getRules());
         }
     }
 
@@ -198,15 +207,24 @@ public class ProblemEnricher {
         for (Action a : domain.getActions()) {
             List<Sort> params = new ArrayList<>();
 
+            // objects
             for (Parameter p : a.getParameters()) {
                 IntSort param = ctx.mkIntSort();
                 logger.debug("IntSort: " + param);
                 params.add(param);
             }
 
+            // preConditions
             for (Predicate p : predicates) {
                 BoolSort param = ctx.mkBoolSort();
-                logger.debug("IntSort: " + param);
+                logger.debug("BoolSort: " + param);
+                params.add(param);
+            }
+
+            // postConditions
+            for (Predicate p : predicates) {
+                BoolSort param = ctx.mkBoolSort();
+                logger.debug("BoolSort: " + param);
                 params.add(param);
             }
 
@@ -215,12 +233,75 @@ public class ProblemEnricher {
             BoolSort returnValue = ctx.mkBoolSort();
 
             FuncDecl f = ctx.mkFuncDecl(a.getName(), sort, returnValue);
-            //fix.registerRelation();
-
-            //FuncDecl f = ctx.mkConstDecl(t.getName(), ctx.mkBoolSort());
+            functions.put(a.getName(), f);
             fix.registerRelation(f);
             logger.debug(f.getSExpr());
-            //logger.debug(fix.getRules());
+        }
+    }
+
+    private void encodeMethods() {
+        for (Method m : domain.getMethods()) {
+            HashMap<String, IntExpr> intExpressions = new HashMap<>();
+            List<Expr> subtaskExpressions = new ArrayList<>();
+
+            for (Parameter p : m.getParameters()){
+                IntExpr intExpr = ctx.mkIntConst(p.getName());
+                intExpressions.put(p.getName(), intExpr);
+            }
+
+            for (Subtask subtask : m.getSubtasks()){
+                List<Expr> params = new ArrayList<>();
+
+                for (Parameter p : subtask.getTask().getParameters()) {
+                    IntExpr param = intExpressions.get(p.getName());
+                    logger.debug("IntExpression: " + param);
+                    params.add(param);
+                }
+
+                for (List<BoolExpr> boolExprList : predicatesExpressionsList) {
+                    BoolExpr param = boolExprList.get(m.getSubtasks().indexOf(subtask));
+                    logger.debug("BoolExpression of preCondition: " + param);
+                    params.add(param);
+                }
+
+                for (List<BoolExpr> boolExprList : predicatesExpressionsList) {
+                    BoolExpr param = boolExprList.get(m.getSubtasks().indexOf(subtask) + 1);
+                    logger.debug("BoolExpression of postCondition: " + param);
+                    params.add(param);
+                }
+
+                Expr[] expr = params.toArray(new Expr[0]);
+                logger.debug(expr.toString());
+                Expr subtaskExpr = ctx.mkApp(functions.get(subtask.getTask().getName()), expr);
+                subtaskExpressions.add(subtaskExpr);
+            }
+
+            List<Expr> params = new ArrayList<>();
+            for (Parameter p : m.getTask().getParameters()) {
+                IntExpr param = intExpressions.get(p.getName());
+                logger.debug("IntExpression: " + param);
+                params.add(param);
+            }
+
+            for (List<BoolExpr> boolExprList : predicatesExpressionsList) {
+                BoolExpr param = boolExprList.get(0);
+                logger.debug("BoolExpression of preCondition: " + param);
+                params.add(param);
+            }
+
+            for (List<BoolExpr> boolExprList : predicatesExpressionsList) {
+                BoolExpr param = boolExprList.get(m.getSubtasks().size() - 1);
+                logger.debug("BoolExpression of postCondition: " + param);
+                params.add(param);
+            }
+
+            Expr[] expr = params.toArray(new Expr[0]);
+            logger.debug(expr.toString());
+            Expr taskExpr = ctx.mkApp(functions.get(m.getTask().getName()), expr);
+
+            Expr[] subtasks = subtaskExpressions.toArray(new Expr[0]);
+            Expr methodImplication = ctx.mkImplies(ctx.mkAnd(subtasks), taskExpr);
+            logger.debug(methodImplication.toString());
         }
     }
 
