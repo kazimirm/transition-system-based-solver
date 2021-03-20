@@ -19,7 +19,6 @@ public class ProblemEnricher {
     private HashMap<String, List<Argument>> objectsToTypedLists = new HashMap<>(); // for each type creates list with such objects
     private HashMap<String, Type> typeNameToType = new HashMap<>();
     private HashMap<String, Integer> objectToInt = new HashMap<>();
-    //private List<FuncDecl> functions = new ArrayList<>();
     private HashMap<String, FuncDecl> functions = new HashMap<>();
 
 
@@ -30,7 +29,6 @@ public class ProblemEnricher {
     public ProblemEnricher(Domain domain, Problem problem) {
         this.domain = domain;
         this.problem = problem;
-
     }
 
     public Domain getDomain() {
@@ -92,10 +90,9 @@ public class ProblemEnricher {
             generatePermutationsForPredicate(p, lists);
         }
 
-        logger.debug("PREDICATES: ");
-        logger.debug(predicates.stream().map(Predicate::toStringWithoutIndex)
-                .collect(Collectors.joining(", ")));
-
+//        logger.debug("PREDICATES: ");
+//        logger.debug(predicates.stream().map(Predicate::toStringWithoutIndex)
+//                .collect(Collectors.joining(", ")));
     }
 
     /**
@@ -146,7 +143,7 @@ public class ProblemEnricher {
     }
 
     /**
-     * We need to create int variables for every ground variable. Number of each var instance must be equal to max + 1 number of
+     * We need to create bool variables for every ground variable. Number of each var instance must be equal to max + 1 number of
      * maximum subtasks in method. Then we will create list of lists which will be used in tasks/methods/... encoding
      */
     private void encodeVariables(){
@@ -156,6 +153,7 @@ public class ProblemEnricher {
                 max = m.getSubtasks().size();
             }
         }
+
 
         for (Predicate p : predicates) {
             List<BoolExpr> vars = new ArrayList<>();
@@ -168,146 +166,126 @@ public class ProblemEnricher {
     }
 
     private void encodeTasks() {
-        for (Task t : domain.getTasks() ) {
-            List<Sort> params = new ArrayList<>();
-
-            // objects
-            for (Parameter p : t.getParameters()) {
-                IntSort param = ctx.mkIntSort();
-                logger.debug("IntSort: " + param);
-                params.add(param);
-            }
-
-            // preConditions
-            for (Predicate p : predicates) {
-                BoolSort param = ctx.mkBoolSort();
-                logger.debug("BoolSort: " + param);
-                params.add(param);
-            }
-
-            //postConditions
-            for (Predicate p : predicates) {
-                BoolSort param = ctx.mkBoolSort();
-                logger.debug("BoolSort: " + param);
-                params.add(param);
-            }
-
-            Sort[] sort = params.toArray(new Sort[0]);
-
-            BoolSort returnValue = ctx.mkBoolSort();
-
-            FuncDecl f = ctx.mkFuncDecl(t.getName(), sort, returnValue);
-            functions.put(t.getName(), f);
-            fix.registerRelation(f);
-            logger.debug(f.getSExpr());
+        for (Task task : domain.getTasks() ) {
+            declareRelations(task.getName(), task.getParameters());
         }
     }
 
     private void encodeActions() {
-        for (Action a : domain.getActions()) {
-            List<Sort> params = new ArrayList<>();
-
-            // objects
-            for (Parameter p : a.getParameters()) {
-                IntSort param = ctx.mkIntSort();
-                logger.debug("IntSort: " + param);
-                params.add(param);
-            }
-
-            // preConditions
-            for (Predicate p : predicates) {
-                BoolSort param = ctx.mkBoolSort();
-                logger.debug("BoolSort: " + param);
-                params.add(param);
-            }
-
-            // postConditions
-            for (Predicate p : predicates) {
-                BoolSort param = ctx.mkBoolSort();
-                logger.debug("BoolSort: " + param);
-                params.add(param);
-            }
-
-            Sort[] sort = params.toArray(new Sort[0]);
-
-            BoolSort returnValue = ctx.mkBoolSort();
-
-            FuncDecl f = ctx.mkFuncDecl(a.getName(), sort, returnValue);
-            functions.put(a.getName(), f);
-            fix.registerRelation(f);
-            logger.debug(f.getSExpr());
+        for (Action action : domain.getActions()) {
+            declareRelations(action.getName(), action.getParameters());
         }
     }
 
+    /**
+     * This method is used to declare function signature for each task & action and stores into functions hashmap.
+     * (Two loops for preconditions and postconditions can be merged but are separated for better readability and understanding)
+     *
+     * @param name - action/task/... name
+     * @param arguments - int objects
+     */
+    private void declareRelations(String name, List<Parameter> arguments){
+
+        List<Sort> params = new ArrayList<>();
+
+        // objects
+        for (Parameter p : arguments) {
+            IntSort param = ctx.mkIntSort();
+            params.add(param);
+        }
+
+        // preConditions
+        for (Predicate p : predicates) {
+            BoolSort param = ctx.mkBoolSort();
+            params.add(param);
+        }
+
+        // postConditions
+        for (Predicate p : predicates) {
+            BoolSort param = ctx.mkBoolSort();
+            params.add(param);
+        }
+
+        Sort[] sort = params.toArray(new Sort[0]);
+
+        BoolSort returnValue = ctx.mkBoolSort();
+
+        FuncDecl f = ctx.mkFuncDecl(name, sort, returnValue);
+        functions.put(name, f);
+        fix.registerRelation(f);
+        logger.debug(f.getSExpr());
+    }
+
+    /**
+     * For each domain method - implication rule is created. If all method subtasks are satisfiable, method task is satisfiable.
+     * Firstly we create expression of conjunctions for each subtask, then using this expression implication for task is created.
+     */
     private void encodeMethods() {
         for (Method m : domain.getMethods()) {
             HashMap<String, IntExpr> intExpressions = new HashMap<>();
             List<Expr> subtaskExpressions = new ArrayList<>();
 
-            for (Parameter p : m.getParameters()){
-                IntExpr intExpr = ctx.mkIntConst(p.getName());
-                intExpressions.put(p.getName(), intExpr);
+            for (Parameter param : m.getParameters()){
+                IntExpr intExpr = ctx.mkIntConst(param.getName());
+                intExpressions.put(param.getName(), intExpr);
             }
 
-            for (Subtask subtask : m.getSubtasks()){
+            List<Subtask> subtasks = m.getSubtasks();
+            for (Subtask subtask : subtasks){
                 List<Expr> params = new ArrayList<>();
 
+                // int objects
                 for (Parameter p : subtask.getTask().getParameters()) {
                     IntExpr param = intExpressions.get(p.getName());
-                    logger.debug("IntExpression: " + param);
                     params.add(param);
                 }
 
+                // preConditions
                 for (List<BoolExpr> boolExprList : predicatesExpressionsList) {
-                    BoolExpr param = boolExprList.get(m.getSubtasks().indexOf(subtask));
-                    logger.debug("BoolExpression of preCondition: " + param);
+                    BoolExpr param = boolExprList.get(subtasks.indexOf(subtask));
                     params.add(param);
                 }
 
+                // postConditions
                 for (List<BoolExpr> boolExprList : predicatesExpressionsList) {
-                    BoolExpr param = boolExprList.get(m.getSubtasks().indexOf(subtask) + 1);
-                    logger.debug("BoolExpression of postCondition: " + param);
+                    BoolExpr param = boolExprList.get(subtasks.indexOf(subtask) + 1);
                     params.add(param);
                 }
 
                 Expr[] expr = params.toArray(new Expr[0]);
-                logger.debug(expr.toString());
                 Expr subtaskExpr = ctx.mkApp(functions.get(subtask.getTask().getName()), expr);
                 subtaskExpressions.add(subtaskExpr);
             }
 
             List<Expr> params = new ArrayList<>();
+
+            //
             for (Parameter p : m.getTask().getParameters()) {
                 IntExpr param = intExpressions.get(p.getName());
-                logger.debug("IntExpression: " + param);
                 params.add(param);
             }
 
             for (List<BoolExpr> boolExprList : predicatesExpressionsList) {
                 BoolExpr param = boolExprList.get(0);
-                logger.debug("BoolExpression of preCondition: " + param);
                 params.add(param);
             }
 
             for (List<BoolExpr> boolExprList : predicatesExpressionsList) {
-                BoolExpr param = boolExprList.get(m.getSubtasks().size());
-                logger.debug("BoolExpression of postCondition: " + param);
+                BoolExpr param = boolExprList.get(subtasks.size());
                 params.add(param);
             }
 
             Expr[] expr = params.toArray(new Expr[0]);
-            logger.debug(expr.toString());
             Expr taskExpr = ctx.mkApp(functions.get(m.getTask().getName()), expr);
 
-            Expr[] subtasks = subtaskExpressions.toArray(new Expr[0]);
-            Expr methodImplication = ctx.mkImplies(ctx.mkAnd(subtasks), taskExpr);
+            Expr subtasksConjunction = ctx.mkAnd(subtaskExpressions.toArray(new Expr[0]));
+            Expr methodImplication = ctx.mkImplies(subtasksConjunction, taskExpr);
             logger.debug(methodImplication.toString());
         }
     }
 
     private void enrichAbstractTasks() {
-        // New predicates variables preparation
-        logger.debug("ABSTRACT TASKS(TASKS):");
+
         List<Predicate> predicatesVariables = cloneList(predicates);
         for (Predicate p : predicatesVariables) {
             p.setValue(null);
@@ -315,55 +293,26 @@ public class ProblemEnricher {
 
         for (Method m : domain.getMethods()) {
             Task t = m.getTask();
+
             List<Predicate> preConditions = cloneList(predicatesVariables);
             preConditions.forEach(p -> p.setIndex(0));
+            t.setPreConditions(preConditions);
+
             List<Predicate> postConditions = cloneList(predicatesVariables);
             postConditions.forEach(p -> p.setIndex(m.getSubtasks().size()));
-            t.setPreConditions(preConditions);
             t.setPostConditions(postConditions);
-            String task = t.toString();
-            List<String> subtasks = new ArrayList<>();
 
             for (Subtask s : m.getSubtasks()) {
                 Task st = s.getTask();
+
                 List<Predicate> subTaskPreConditions = cloneList(predicatesVariables);
                 subTaskPreConditions.forEach(p -> p.setIndex(m.getSubtasks().indexOf(s)));
+                st.setPreConditions(subTaskPreConditions);
+
                 List<Predicate> subTaskPostConditions = cloneList(predicatesVariables);
                 subTaskPostConditions.forEach(p -> p.setIndex(m.getSubtasks().indexOf(s) + 1));
-                st.setPreConditions(subTaskPreConditions);
                 st.setPostConditions(subTaskPostConditions);
-                subtasks.add(st.toString());
             }
-
-
-//            List<Sort> params = new ArrayList<>();
-//
-//            for (Parameter p:t.getParameters()){
-//                IntSort param = ctx.mkIntSort();
-//                logger.debug("IntSort: " + param);
-//                params.add(param);
-//            }
-//
-//            for (Predicate p:predicates){
-//                BoolSort param = ctx.mkBoolSort();
-//                logger.debug("IntSort: " + param);
-//                params.add(param);
-//            }
-//
-//            Sort[] sort =  params.toArray(new Sort[0]);
-//
-//            BoolSort returnValue = ctx.mkBoolSort();
-//
-//            FuncDecl f = ctx.mkFuncDecl(t.getName(), sort, returnValue);
-//            //fix.registerRelation();
-//
-//            //FuncDecl f = ctx.mkConstDecl(t.getName(), ctx.mkBoolSort());
-//            fix.registerRelation(f);
-//            logger.debug(f.getSExpr());
-//            //logger.debug(fix.getRules());
-            String abstractTask = (task + ":- " + System.getProperty("line.separator") + subtasks.stream().map(Object::toString).
-                    collect(Collectors.joining(" ∧ " + System.getProperty("line.separator"))));
-            logger.debug(abstractTask);
         }
     }
 
@@ -371,8 +320,6 @@ public class ProblemEnricher {
      *
      */
     private void enrichPrimitiveTasks() {
-
-        logger.debug("PRIMITIVE TASKS(ACTIONS):");
 
         List<Predicate> preConditions = cloneList(predicates);
         preConditions.forEach(p -> p.setIndex(0));
@@ -395,20 +342,20 @@ public class ProblemEnricher {
             }
             generatePermutationsForActionParameters(action, lists, 0, "");
 
-            for (List<Parameter> permutation : action.getParameterPermutations()) {
-                List<Integer> params = permutation.stream().map(p -> objectToInt.get(p.getName())).collect(Collectors.toList());
-
-                logger.debug(action.getName() + "(" + params.stream().map(Object::toString).collect(Collectors.joining(", ")) + ", " +
-                        preConditions.stream().map(Predicate::toString)
-                                .collect(Collectors.joining(", ")) + ", " +
-                        postConditions.stream().map(Predicate::toString)
-                                .collect(Collectors.joining(", ")) + ") :-"
-                );
-                logger.debug(action.getConcretePredicates(action.getPreconditions(), permutation).stream().map(Predicate::toStringWithOptionalNegation).
-                        collect(Collectors.joining(" ∧ ")) + " ∧ ");
-                logger.debug(action.getConcretePredicates(action.getEffects(), permutation).stream().map(Predicate::toStringWithOptionalNegation).
-                        collect(Collectors.joining(" ∧ ")));
-            }
+//            for (List<Parameter> permutation : action.getParameterPermutations()) {
+//                List<Integer> params = permutation.stream().map(p -> objectToInt.get(p.getName())).collect(Collectors.toList());
+//
+//                logger.debug(action.getName() + "(" + params.stream().map(Object::toString).collect(Collectors.joining(", ")) + ", " +
+//                        preConditions.stream().map(Predicate::toString)
+//                                .collect(Collectors.joining(", ")) + ", " +
+//                        postConditions.stream().map(Predicate::toString)
+//                                .collect(Collectors.joining(", ")) + ") :-"
+//                );
+//                logger.debug(action.getConcretePredicates(action.getPreconditions(), permutation).stream().map(Predicate::toStringWithOptionalNegation).
+//                        collect(Collectors.joining(" ∧ ")) + " ∧ ");
+//                logger.debug(action.getConcretePredicates(action.getEffects(), permutation).stream().map(Predicate::toStringWithOptionalNegation).
+//                        collect(Collectors.joining(" ∧ ")));
+//            }
 
         }
     }
@@ -462,10 +409,9 @@ public class ProblemEnricher {
     }
 
     private void enrichInitialTask() {
-        logger.debug("INITIAL TASKS:");
 
-        logger.debug("⊥ :- " + predicates.stream().map(Predicate::toStringWithOptionalNegation)
-                .collect(Collectors.joining(" ∧ ")) + " ∧");
+//        logger.debug("⊥ :- " + predicates.stream().map(Predicate::toStringWithOptionalNegation)
+//                .collect(Collectors.joining(" ∧ ")) + " ∧");
 
         for (Subtask subtask : problem.getHtn().getSubtasks()) {
 
@@ -474,14 +420,14 @@ public class ProblemEnricher {
             List<Predicate> postConditions = cloneList(predicates);
             postConditions.forEach(p -> p.setIndex(1));
 
-            List<Integer> params = subtask.getTask().getParameters().stream().map(p -> objectToInt.get(p.getName())).collect(Collectors.toList());
-
-            logger.debug(subtask.getName() + "(" + params.stream().map(Object::toString).collect(Collectors.joining(", ")) + ", " +
-                    preConditions.stream().map(Predicate::toString)
-                            .collect(Collectors.joining(", ")) + ", " +
-                    postConditions.stream().map(Predicate::toString)
-                            .collect(Collectors.joining(", ")) + ")"
-            );
+//            List<Integer> params = subtask.getTask().getParameters().stream().map(p -> objectToInt.get(p.getName())).collect(Collectors.toList());
+//
+//            logger.debug(subtask.getName() + "(" + params.stream().map(Object::toString).collect(Collectors.joining(", ")) + ", " +
+//                    preConditions.stream().map(Predicate::toString)
+//                            .collect(Collectors.joining(", ")) + ", " +
+//                    postConditions.stream().map(Predicate::toString)
+//                            .collect(Collectors.joining(", ")) + ")"
+//            );
         }
     }
 }
