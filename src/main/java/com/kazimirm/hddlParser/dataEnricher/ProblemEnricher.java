@@ -24,7 +24,8 @@ public class ProblemEnricher {
 
     Context ctx = new Context();
     Fixedpoint fix;
-    List<List<BoolExpr>> predicatesExpressionsList = new ArrayList<>();
+    //List<List<BoolExpr>> predicatesExpressionsList = new ArrayList<>();
+    HashMap<Predicate, List<BoolExpr>> predicatesExpressionsList = new HashMap<>();
 
     public ProblemEnricher(Domain domain, Problem problem) {
         this.domain = domain;
@@ -55,9 +56,9 @@ public class ProblemEnricher {
         enrichPrimitiveTasks();
         enrichInitialTask();
         encodeVariables();
-        encodeTasks();
-        encodeActions();
+        encodeFunctionSignatures();
         encodeMethods();
+        encodeActions();
         return problem;
     }
 
@@ -161,21 +162,50 @@ public class ProblemEnricher {
                 BoolExpr var = ctx.mkBoolConst(p.toStringWithoutIndex() + "[" + i + "]");
                 vars.add(var);
             }
-            predicatesExpressionsList.add(vars);
+            predicatesExpressionsList.put(p, vars);
         }
     }
 
-    private void encodeTasks() {
+    private void encodeFunctionSignatures() {
         for (Task task : domain.getTasks() ) {
             declareRelations(task.getName(), task.getParameters());
         }
-    }
 
-    private void encodeActions() {
         for (Action action : domain.getActions()) {
             declareRelations(action.getName(), action.getParameters());
         }
     }
+
+    private void encodeActions() {
+//       for (Action a : domain.getActions()){
+//           List<Expr> rule = new ArrayList<>();
+//            for (List<Parameter> permutation : a.getParameterPermutations()){
+//
+//                for (Predicate p : a.getPreconditions()){
+//                    Expr expr = predicatesExpressionsList.get(p).get(0);
+//                    rule.add(expr);
+//                }
+//
+//                for (Predicate p : a.getEffects()){
+//                    Expr expr = predicatesExpressionsList.get(p).get(1);
+//                    rule.add(expr);
+//                }
+//
+//                System.out.println("ss");
+//            }
+//       }
+    }
+
+    private Expr getConcretePredicate (Predicate p, List<Parameter> permutation){
+        Predicate concretePredicate = new Predicate();
+        concretePredicate.setName(p.getName());
+        for (Argument a : p.getArguments()){
+
+        }
+
+        return null;
+    }
+
 
     /**
      * This method is used to declare function signature for each task & action and stores into functions hashmap.
@@ -241,13 +271,13 @@ public class ProblemEnricher {
                 }
 
                 // preConditions
-                for (List<BoolExpr> boolExprList : predicatesExpressionsList) {
+                for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
                     BoolExpr param = boolExprList.get(subtasks.indexOf(subtask));
                     params.add(param);
                 }
 
                 // postConditions
-                for (List<BoolExpr> boolExprList : predicatesExpressionsList) {
+                for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
                     BoolExpr param = boolExprList.get(subtasks.indexOf(subtask) + 1);
                     params.add(param);
                 }
@@ -265,12 +295,12 @@ public class ProblemEnricher {
                 params.add(param);
             }
 
-            for (List<BoolExpr> boolExprList : predicatesExpressionsList) {
+            for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
                 BoolExpr param = boolExprList.get(0);
                 params.add(param);
             }
 
-            for (List<BoolExpr> boolExprList : predicatesExpressionsList) {
+            for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
                 BoolExpr param = boolExprList.get(subtasks.size());
                 params.add(param);
             }
