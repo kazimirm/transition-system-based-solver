@@ -178,25 +178,50 @@ public class ProblemEnricher {
 
     private void encodeActions() {
        for (Action a : domain.getActions()){
+           List<String> allUnchangedPredicates = new ArrayList<>(predicatesExpressionsList.keySet());
+           List<String> preconditions = new ArrayList<>();
            List<Expr> rule = new ArrayList<>();
+
             for (HashMap<String, Parameter> permutation : a.getParameterPermutations()){
 
                 for (Predicate p : a.getPreconditions()){
-                    BoolExpr expr = getConcretePredicate(a, p, permutation, 0);
-                    rule.add(expr);
+                    String predicate = getConcretePredicate(p, permutation);
+                    BoolExpr expr = predicatesExpressionsList.get(predicate).get(0);
+                    if (p.getValue() == true) {
+                        rule.add(expr);
+                    } else {
+                        rule.add(ctx.mkNot(expr));
+                    }
+                    preconditions.add(predicate);
                 }
 
                 for (Predicate p : a.getEffects()){
-                    BoolExpr expr = getConcretePredicate(a, p, permutation, 1);
+                    String predicate = getConcretePredicate(p, permutation);
+                    BoolExpr expr = predicatesExpressionsList.get(predicate).get(1);
+                    if (p.getValue() == true) {
+                        rule.add(expr);
+                    } else {
+                        rule.add(ctx.mkNot(expr));
+                    }
+                    if (preconditions.contains(predicate)){
+                        allUnchangedPredicates.remove(predicate);
+                    }
+                }
+
+                for (String predicate : allUnchangedPredicates){
+                    BoolExpr exprPrecondition = predicatesExpressionsList.get(predicate).get(0);
+                    BoolExpr exprEffect = predicatesExpressionsList.get(predicate).get(1);
+                    Expr expr = ctx.mkAnd(exprPrecondition, exprEffect);
                     rule.add(expr);
                 }
 
+                logger.debug(a.getName() + ":   " + rule.toString());
 
             }
        }
     }
 
-    private BoolExpr getConcretePredicate (Action a, Predicate p, HashMap<String, Parameter> permutation, int index){
+    private String getConcretePredicate (Predicate p, HashMap<String, Parameter> permutation){
         Predicate concretePredicate = new Predicate();
         concretePredicate.setName(p.getName());
         List<Argument> args = new ArrayList<>();
@@ -206,14 +231,8 @@ public class ProblemEnricher {
         }
         concretePredicate.setArguments(args);
 
-        BoolExpr expr = predicatesExpressionsList.get(concretePredicate.toString()).get(index);
-
-        if (p.getValue() == true){
-            return expr;
-        }
-        else {
-            return ctx.mkNot(expr);
-        }
+        String predicate = concretePredicate.toString();
+        return predicate;
     }
 
 
