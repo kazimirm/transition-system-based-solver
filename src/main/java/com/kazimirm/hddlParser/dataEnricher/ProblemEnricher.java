@@ -179,7 +179,6 @@ public class ProblemEnricher {
     private void encodeActions() {
        for (Action a : domain.getActions()){
            List<String> allUnchangedPredicates = new ArrayList<>(predicatesExpressionsList.keySet());
-           List<String> preconditions = new ArrayList<>();
            List<Expr> rule = new ArrayList<>();
 
             for (HashMap<String, Parameter> permutation : a.getParameterPermutations()){
@@ -192,7 +191,6 @@ public class ProblemEnricher {
                     } else {
                         rule.add(ctx.mkNot(expr));
                     }
-                    preconditions.add(predicate);
                 }
 
                 for (Predicate p : a.getEffects()){
@@ -203,9 +201,7 @@ public class ProblemEnricher {
                     } else {
                         rule.add(ctx.mkNot(expr));
                     }
-                    if (preconditions.contains(predicate)){
-                        allUnchangedPredicates.remove(predicate);
-                    }
+                    allUnchangedPredicates.remove(predicate);
                 }
 
                 for (String predicate : allUnchangedPredicates){
