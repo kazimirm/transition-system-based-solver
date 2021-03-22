@@ -10,4 +10,19 @@ public class Parameter extends Argument {
     public String toString() {
         return this.getName();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) {
+            return false;
+        }
+
+        Parameter p = (Parameter) o;
+        if (!this.getName().equals(p.getName())){
+            return false;
+        }
+
+        return true;
+    }
 }

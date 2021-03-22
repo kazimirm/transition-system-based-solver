@@ -13,7 +13,7 @@ public class Action {
     List<Predicate> effects;
 
     //enriched in enricher
-    List<List<Parameter>> parameterPermutations = new ArrayList<>();
+    List<HashMap<String, Parameter>> parameterPermutations = new ArrayList<>();
 
     public Action() {
     }
@@ -57,11 +57,11 @@ public class Action {
         this.effects = effects;
     }
 
-    public List<List<Parameter>> getParameterPermutations() {
+    public List<HashMap<String, Parameter>> getParameterPermutations() {
         return parameterPermutations;
     }
 
-    public void setParameterPermutations(List<List<Parameter>> parameterPermutations) {
+    public void setParameterPermutations(List<HashMap<String, Parameter>> parameterPermutations) {
         this.parameterPermutations = parameterPermutations;
     }
 

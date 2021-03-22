@@ -27,4 +27,19 @@ public class Argument {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) {
+            return false;
+        }
+
+        Argument a = (Argument) o;
+        if (!this.getName().equals(a.getName())){
+            return false;
+        }
+
+        return true;
+    }
 }

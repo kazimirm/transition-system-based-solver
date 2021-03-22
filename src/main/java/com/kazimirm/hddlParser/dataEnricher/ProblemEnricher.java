@@ -25,7 +25,7 @@ public class ProblemEnricher {
     Context ctx = new Context();
     Fixedpoint fix;
     //List<List<BoolExpr>> predicatesExpressionsList = new ArrayList<>();
-    HashMap<Predicate, List<BoolExpr>> predicatesExpressionsList = new HashMap<>();
+    HashMap<String, List<BoolExpr>> predicatesExpressionsList = new HashMap<>();
 
     public ProblemEnricher(Domain domain, Problem problem) {
         this.domain = domain;
@@ -162,7 +162,7 @@ public class ProblemEnricher {
                 BoolExpr var = ctx.mkBoolConst(p.toStringWithoutIndex() + "[" + i + "]");
                 vars.add(var);
             }
-            predicatesExpressionsList.put(p, vars);
+            predicatesExpressionsList.put(p.toString(), vars);
         }
     }
 
@@ -177,33 +177,43 @@ public class ProblemEnricher {
     }
 
     private void encodeActions() {
-//       for (Action a : domain.getActions()){
-//           List<Expr> rule = new ArrayList<>();
-//            for (List<Parameter> permutation : a.getParameterPermutations()){
-//
-//                for (Predicate p : a.getPreconditions()){
-//                    Expr expr = predicatesExpressionsList.get(p).get(0);
-//                    rule.add(expr);
-//                }
-//
-//                for (Predicate p : a.getEffects()){
-//                    Expr expr = predicatesExpressionsList.get(p).get(1);
-//                    rule.add(expr);
-//                }
-//
-//                System.out.println("ss");
-//            }
-//       }
+       for (Action a : domain.getActions()){
+           List<Expr> rule = new ArrayList<>();
+            for (HashMap<String, Parameter> permutation : a.getParameterPermutations()){
+
+                for (Predicate p : a.getPreconditions()){
+                    BoolExpr expr = getConcretePredicate(a, p, permutation, 0);
+                    rule.add(expr);
+                }
+
+                for (Predicate p : a.getEffects()){
+                    BoolExpr expr = getConcretePredicate(a, p, permutation, 1);
+                    rule.add(expr);
+                }
+
+
+            }
+       }
     }
 
-    private Expr getConcretePredicate (Predicate p, List<Parameter> permutation){
+    private BoolExpr getConcretePredicate (Action a, Predicate p, HashMap<String, Parameter> permutation, int index){
         Predicate concretePredicate = new Predicate();
         concretePredicate.setName(p.getName());
-        for (Argument a : p.getArguments()){
-
+        List<Argument> args = new ArrayList<>();
+        for (Argument arg : p.getArguments()){
+            Argument concreteArg = permutation.get(arg.getName());
+            args.add(concreteArg);
         }
+        concretePredicate.setArguments(args);
 
-        return null;
+        BoolExpr expr = predicatesExpressionsList.get(concretePredicate.toString()).get(index);
+
+        if (p.getValue() == true){
+            return expr;
+        }
+        else {
+            return ctx.mkNot(expr);
+        }
     }
 
 
@@ -399,12 +409,12 @@ public class ProblemEnricher {
     private void generatePermutationsForActionParameters(Action a, List<List<Argument>> lists, int depth, String current) {
         if (depth == lists.size()) {
             List<String> argsNames = Arrays.asList(current.split(";"));
-            List<Parameter> params = new ArrayList<>();
+            HashMap<String, Parameter> params = new HashMap<>();
             for (int i = 0; i < a.getParameters().size(); i++) {
                 Parameter p = new Parameter();
                 p.setName(argsNames.get(i));
                 p.setType(a.getParameters().get(i).getType());
-                params.add(p);
+                params.put(a.getParameters().get(i).getName(), p);
             }
 
             a.getParameterPermutations().add(params);
