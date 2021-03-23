@@ -207,7 +207,7 @@ public class ProblemEnricher {
                 for (String predicate : allUnchangedPredicates){
                     BoolExpr exprPrecondition = predicatesExpressionsList.get(predicate).get(0);
                     BoolExpr exprEffect = predicatesExpressionsList.get(predicate).get(1);
-                    Expr expr = ctx.mkAnd(exprPrecondition, exprEffect);
+                    Expr expr = ctx.mkEq(exprPrecondition, exprEffect);
                     rule.add(expr);
                 }
 
