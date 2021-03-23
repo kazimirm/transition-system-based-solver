@@ -178,18 +178,27 @@ public class ProblemEnricher {
 
     private void encodeActions() {
        for (Action a : domain.getActions()){
+
            List<String> allUnchangedPredicates = new ArrayList<>(predicatesExpressionsList.keySet());
-           List<Expr> rule = new ArrayList<>();
+           HashMap<String, IntExpr> intExpressions = new HashMap<>();
+
+//           for (Parameter param : a.getParameters()){
+//               IntExpr intExpr = ctx.mkIntConst(param.getName());
+//               intExpressions.put(param.getName(), intExpr);
+//           }
 
             for (HashMap<String, Parameter> permutation : a.getParameterPermutations()){
+
+                List<BoolExpr> ruleAParams = new ArrayList<>();
+                List<Expr> ruleBParams = new ArrayList<>();
 
                 for (Predicate p : a.getPreconditions()){
                     String predicate = getConcretePredicate(p, permutation);
                     BoolExpr expr = predicatesExpressionsList.get(predicate).get(0);
                     if (p.getValue() == true) {
-                        rule.add(expr);
+                        ruleAParams.add(expr);
                     } else {
-                        rule.add(ctx.mkNot(expr));
+                        ruleAParams.add(ctx.mkNot(expr));
                     }
                 }
 
@@ -197,9 +206,9 @@ public class ProblemEnricher {
                     String predicate = getConcretePredicate(p, permutation);
                     BoolExpr expr = predicatesExpressionsList.get(predicate).get(1);
                     if (p.getValue() == true) {
-                        rule.add(expr);
+                        ruleAParams.add(expr);
                     } else {
-                        rule.add(ctx.mkNot(expr));
+                        ruleAParams.add(ctx.mkNot(expr));
                     }
                     allUnchangedPredicates.remove(predicate);
                 }
@@ -207,12 +216,35 @@ public class ProblemEnricher {
                 for (String predicate : allUnchangedPredicates){
                     BoolExpr exprPrecondition = predicatesExpressionsList.get(predicate).get(0);
                     BoolExpr exprEffect = predicatesExpressionsList.get(predicate).get(1);
-                    Expr expr = ctx.mkEq(exprPrecondition, exprEffect);
-                    rule.add(expr);
+                    BoolExpr expr = ctx.mkEq(exprPrecondition, exprEffect);
+                    ruleAParams.add(expr);
                 }
 
-                logger.debug(a.getName() + ":   " + rule.toString());
 
+                for (Parameter p : permutation.values()) {
+                    // TODO: can it be this way as it is?
+                    //IntExpr param = intExpressions.get(objectToInt.get(p));
+                    //IntExpr param = ctx.mkIntConst(objectToInt.get(p.getName()).toString());
+                    IntExpr param = intExpressions.get(objectToInt.get(p));
+                    ruleBParams.add(param);
+                }
+
+                for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
+                    BoolExpr param = boolExprList.get(0);
+                    ruleBParams.add(param);
+                }
+
+                for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
+                    BoolExpr param = boolExprList.get(1);
+                    ruleBParams.add(param);
+                }
+
+                Expr[] ruleAExpr = ruleAParams.toArray(new Expr[0]);
+                Expr ruleA = ctx.mkAnd(ruleAExpr);
+                Expr[] ruleBExpr = ruleBParams.toArray(new Expr[0]);
+                Expr ruleB = ctx.mkApp(functions.get(a.getName()), ruleBExpr);
+                Expr expr = ctx.mkImplies(ruleA, ruleB);
+                logger.debug(a.getName() + ":   " + expr.toString());
             }
        }
     }
