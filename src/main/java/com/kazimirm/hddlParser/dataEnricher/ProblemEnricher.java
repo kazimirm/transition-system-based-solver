@@ -225,7 +225,7 @@ public class ProblemEnricher {
                     // TODO: can it be this way as it is?
                     //IntExpr param = intExpressions.get(objectToInt.get(p));
                     //IntExpr param = ctx.mkIntConst(objectToInt.get(p.getName()).toString());
-                    IntExpr param = intExpressions.get(objectToInt.get(p));
+                    IntExpr param = ctx.mkIntConst(p.getName());
                     ruleBParams.add(param);
                 }
 
