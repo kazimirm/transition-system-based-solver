@@ -24,7 +24,6 @@ public class ProblemEnricher {
 
     Context ctx = new Context();
     Fixedpoint fix;
-    //List<List<BoolExpr>> predicatesExpressionsList = new ArrayList<>();
     HashMap<String, List<BoolExpr>> predicatesExpressionsList = new HashMap<>();
 
     public ProblemEnricher(Domain domain, Problem problem) {
@@ -59,6 +58,7 @@ public class ProblemEnricher {
         encodeFunctionSignatures();
         encodeMethods();
         encodeActions();
+        encodeHtnAndInit();
         return problem;
     }
 
@@ -244,6 +244,55 @@ public class ProblemEnricher {
                 logger.debug(a.getName() + ":   " + expr.toString());
             }
        }
+    }
+
+    private void encodeHtnAndInit() {
+        List<Expr> subtaskExpressions = new ArrayList<>();
+        List<Subtask> subtasks = problem.getHtn().getSubtasks();
+        List<String> allPredicates = new ArrayList<>(predicatesExpressionsList.keySet());
+
+        for (Subtask subtask : subtasks) {
+            List<Expr> params = new ArrayList<>();
+
+            // int objects
+            for (Parameter p : subtask.getTask().getParameters()) {
+                IntNum intNum = ctx.mkInt(objectToInt.get(p.getName()));
+                params.add(intNum);
+            }
+
+            // preConditions
+            for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
+                BoolExpr param = boolExprList.get(subtasks.indexOf(subtask));
+                params.add(param);
+            }
+
+            // postConditions
+            for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
+                BoolExpr param = boolExprList.get(subtasks.indexOf(subtask) + 1);
+                params.add(param);
+            }
+
+            Expr[] expr = params.toArray(new Expr[0]);
+            Expr subtaskExpr = ctx.mkApp(functions.get(subtask.getTask().getName()), expr);
+            subtaskExpressions.add(subtaskExpr);
+        }
+
+        for (Predicate p : problem.getInit()){
+            String name = p.toStringWithoutIndex() + "[0]";
+            BoolExpr var = predicatesExpressionsList.get(name).get(0);
+            subtaskExpressions.add(var);
+            allPredicates.remove(name);
+        }
+
+        for (String p : allPredicates){
+            BoolExpr var = predicatesExpressionsList.get(p).get(0);
+            var = ctx.mkNot(var);
+            subtaskExpressions.add(var);
+        }
+
+        Expr[] rule = subtaskExpressions.toArray(new Expr[0]);
+        Expr init = ctx.mkAnd(rule);
+        logger.debug("INIT:   " + init.toString());
     }
 
     private String getConcretePredicate (Predicate p, HashMap<String, Parameter> permutation){
