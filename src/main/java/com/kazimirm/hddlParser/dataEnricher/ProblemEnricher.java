@@ -222,11 +222,8 @@ public class ProblemEnricher {
 
 
                 for (Parameter p : permutation.values()) {
-                    // TODO: can it be this way as it is?
-                    //IntExpr param = intExpressions.get(objectToInt.get(p));
-                    //IntExpr param = ctx.mkIntConst(objectToInt.get(p.getName()).toString());
-                    IntExpr param = ctx.mkIntConst(p.getName());
-                    ruleBParams.add(param);
+                    IntNum intNum = ctx.mkInt(objectToInt.get(p.getName()));
+                    ruleBParams.add(intNum);
                 }
 
                 for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
