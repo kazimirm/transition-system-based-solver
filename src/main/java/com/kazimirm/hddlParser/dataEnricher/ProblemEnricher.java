@@ -20,6 +20,7 @@ public class ProblemEnricher {
     private HashMap<String, Type> typeNameToType = new HashMap<>();
     private HashMap<String, Integer> objectToInt = new HashMap<>();
     private HashMap<String, FuncDecl> functions = new HashMap<>();
+    private List<Expr> allExpressions = new ArrayList<>();
 
 
     Context ctx = new Context();
@@ -241,6 +242,7 @@ public class ProblemEnricher {
                 Expr[] ruleBExpr = ruleBParams.toArray(new Expr[0]);
                 Expr ruleB = ctx.mkApp(functions.get(a.getName()), ruleBExpr);
                 Expr expr = ctx.mkImplies(ruleA, ruleB);
+                allExpressions.add(expr);
                 logger.debug(a.getName() + ":   " + expr.toString());
             }
        }
@@ -292,6 +294,7 @@ public class ProblemEnricher {
 
         Expr[] rule = subtaskExpressions.toArray(new Expr[0]);
         Expr init = ctx.mkAnd(rule);
+        allExpressions.add(init);
         logger.debug("INIT:   " + init.toString());
     }
 
@@ -413,6 +416,7 @@ public class ProblemEnricher {
 
             Expr subtasksConjunction = ctx.mkAnd(subtaskExpressions.toArray(new Expr[0]));
             Expr methodImplication = ctx.mkImplies(subtasksConjunction, taskExpr);
+            allExpressions.add(methodImplication);
             logger.debug(methodImplication.toString());
         }
     }
