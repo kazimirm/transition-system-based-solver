@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ProblemEnricher {
 
@@ -60,6 +59,9 @@ public class ProblemEnricher {
         encodeMethods();
         encodeActions();
         encodeHtnAndInit();
+        //fix.getAnswer();
+        System.out.println("RULES: ");
+        System.out.println(Arrays.stream(fix.getRules()).map(BoolExpr::toString));
         return problem;
     }
 
@@ -242,6 +244,8 @@ public class ProblemEnricher {
                 Expr[] ruleBExpr = ruleBParams.toArray(new Expr[0]);
                 Expr ruleB = ctx.mkApp(functions.get(a.getName()), ruleBExpr);
                 Expr expr = ctx.mkImplies(ruleA, ruleB);
+                Symbol symbol = ctx.mkSymbol(a.getName() + permutation.toString());
+                fix.addRule(expr, symbol);
                 allExpressions.add(expr);
                 logger.debug(a.getName() + ":   " + expr.toString());
             }
@@ -295,6 +299,7 @@ public class ProblemEnricher {
         Expr[] rule = subtaskExpressions.toArray(new Expr[0]);
         Expr init = ctx.mkAnd(rule);
         allExpressions.add(init);
+        fix.query(init);
         logger.debug("INIT:   " + init.toString());
     }
 
@@ -416,6 +421,8 @@ public class ProblemEnricher {
 
             Expr subtasksConjunction = ctx.mkAnd(subtaskExpressions.toArray(new Expr[0]));
             Expr methodImplication = ctx.mkImplies(subtasksConjunction, taskExpr);
+            Symbol symbol = ctx.mkSymbol(m.toString());
+            //fix.addRule(methodImplication, symbol);
             allExpressions.add(methodImplication);
             logger.debug(methodImplication.toString());
         }
