@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ProblemEnricher {
 
@@ -193,6 +195,7 @@ public class ProblemEnricher {
             for (HashMap<String, Parameter> permutation : a.getParameterPermutations()){
 
                 List<BoolExpr> ruleAParams = new ArrayList<>();
+                List<Expr> intConsts = new ArrayList<>();
                 List<Expr> ruleBParams = new ArrayList<>();
 
                 for (Predicate p : a.getPreconditions()){
@@ -226,7 +229,7 @@ public class ProblemEnricher {
 
                 for (Parameter p : permutation.values()) {
                     IntNum intNum = ctx.mkInt(objectToInt.get(p.getName()));
-                    ruleBParams.add(intNum);
+                    intConsts.add(intNum);
                 }
 
                 for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
@@ -241,11 +244,15 @@ public class ProblemEnricher {
 
                 Expr[] ruleAExpr = ruleAParams.toArray(new Expr[0]);
                 Expr ruleA = ctx.mkAnd(ruleAExpr);
-                Expr[] ruleBExpr = ruleBParams.toArray(new Expr[0]);
+                Expr[] ruleBExpr = Stream.concat(intConsts.stream(), ruleBParams.stream())
+                        .collect(Collectors.toList()).toArray(new Expr[0]);
                 Expr ruleB = ctx.mkApp(functions.get(a.getName()), ruleBExpr);
                 Expr expr = ctx.mkImplies(ruleA, ruleB);
                 Symbol symbol = ctx.mkSymbol(a.getName() + permutation.toString());
-                fix.addRule(expr, symbol);
+                //ctx.mkForall()
+                //Quantifier quant = ctx.mkForall(ruleBParams.toArray(new Expr[0]), expr, 0, null, null, null, null);
+                Quantifier quant = ctx.mkForall(ruleBParams.toArray(new Expr[0]), expr, 0, null, null, null, null);
+                fix.addRule(quant, symbol);
                 allExpressions.add(expr);
                 logger.debug(a.getName() + ":   " + expr.toString());
             }
@@ -256,6 +263,7 @@ public class ProblemEnricher {
         List<Expr> subtaskExpressions = new ArrayList<>();
         List<Subtask> subtasks = problem.getHtn().getSubtasks();
         List<String> allPredicates = new ArrayList<>(predicatesExpressionsList.keySet());
+        List<Expr> boolPredicates = new ArrayList<>();
 
         for (Subtask subtask : subtasks) {
             List<Expr> params = new ArrayList<>();
@@ -269,12 +277,14 @@ public class ProblemEnricher {
             // preConditions
             for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
                 BoolExpr param = boolExprList.get(subtasks.indexOf(subtask));
+                boolPredicates.add(param);
                 params.add(param);
             }
 
             // postConditions
             for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
                 BoolExpr param = boolExprList.get(subtasks.indexOf(subtask) + 1);
+                boolPredicates.add(param);
                 params.add(param);
             }
 
@@ -299,6 +309,9 @@ public class ProblemEnricher {
         Expr[] rule = subtaskExpressions.toArray(new Expr[0]);
         Expr init = ctx.mkAnd(rule);
         allExpressions.add(init);
+        System.out.println("RULLLLLLLLLLLLLLLLLES");
+        //System.out.println(fix.toString());
+        //Quantifier quant = ctx.mkForall(boolPredicates.toArray(new Expr[0]), init, 0, null, null, null, null);
         fix.query(init);
         logger.debug("INIT:   " + init.toString());
     }
@@ -372,24 +385,28 @@ public class ProblemEnricher {
             }
 
             List<Subtask> subtasks = m.getSubtasks();
+            List<Expr> boolPredicates = new ArrayList<>();
             for (Subtask subtask : subtasks){
                 List<Expr> params = new ArrayList<>();
 
                 // int objects
                 for (Parameter p : subtask.getTask().getParameters()) {
                     IntExpr param = intExpressions.get(p.getName());
+                    boolPredicates.add(param);
                     params.add(param);
                 }
 
                 // preConditions
                 for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
                     BoolExpr param = boolExprList.get(subtasks.indexOf(subtask));
+                    boolPredicates.add(param);
                     params.add(param);
                 }
 
                 // postConditions
                 for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
                     BoolExpr param = boolExprList.get(subtasks.indexOf(subtask) + 1);
+                    boolPredicates.add(param);
                     params.add(param);
                 }
 
@@ -422,6 +439,8 @@ public class ProblemEnricher {
             Expr subtasksConjunction = ctx.mkAnd(subtaskExpressions.toArray(new Expr[0]));
             Expr methodImplication = ctx.mkImplies(subtasksConjunction, taskExpr);
             Symbol symbol = ctx.mkSymbol(m.toString());
+            Quantifier quant = ctx.mkForall(boolPredicates.toArray(new Expr[0]), methodImplication, 0, null, null, null, null);
+            fix.addRule(quant, symbol);
             //fix.addRule(methodImplication, symbol);
             allExpressions.add(methodImplication);
             logger.debug(methodImplication.toString());
