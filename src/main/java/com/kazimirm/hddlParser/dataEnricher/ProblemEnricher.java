@@ -54,16 +54,13 @@ public class ProblemEnricher {
         enrichProblemObjects();
         enrichPredicates();
         enrichAbstractTasks();
-        enrichPrimitiveTasks();
+        enrichActions();
         enrichInitialTask();
         encodeVariables();
         encodeFunctionSignatures();
         encodeMethods();
         encodeActions();
         encodeHtnAndInit();
-        //fix.getAnswer();
-        System.out.println("RULES: ");
-        System.out.println(Arrays.stream(fix.getRules()).map(BoolExpr::toString));
         return problem;
     }
 
@@ -171,6 +168,9 @@ public class ProblemEnricher {
         }
     }
 
+    /**
+     * Foreach task & action we need to declare function signature with all its parameters
+     */
     private void encodeFunctionSignatures() {
         for (Task task : domain.getTasks() ) {
             declareRelations(task.getName(), task.getParameters());
@@ -181,16 +181,13 @@ public class ProblemEnricher {
         }
     }
 
+    /**
+     * Encoding actions into Z3 rules and adding them to FixedPoint - fix object
+     */
     private void encodeActions() {
        for (Action a : domain.getActions()){
 
            List<String> allUnchangedPredicates = new ArrayList<>(predicatesExpressionsList.keySet());
-           HashMap<String, IntExpr> intExpressions = new HashMap<>();
-
-//           for (Parameter param : a.getParameters()){
-//               IntExpr intExpr = ctx.mkIntConst(param.getName());
-//               intExpressions.put(param.getName(), intExpr);
-//           }
 
             for (HashMap<String, Parameter> permutation : a.getParameterPermutations()){
 
@@ -198,6 +195,7 @@ public class ProblemEnricher {
                 List<Expr> intConsts = new ArrayList<>();
                 List<Expr> ruleBParams = new ArrayList<>();
 
+                // Preconditions
                 for (Predicate p : a.getPreconditions()){
                     String predicate = getConcretePredicate(p, permutation);
                     BoolExpr expr = predicatesExpressionsList.get(predicate).get(0);
@@ -208,6 +206,7 @@ public class ProblemEnricher {
                     }
                 }
 
+                // Effects
                 for (Predicate p : a.getEffects()){
                     String predicate = getConcretePredicate(p, permutation);
                     BoolExpr expr = predicatesExpressionsList.get(predicate).get(1);
@@ -219,6 +218,7 @@ public class ProblemEnricher {
                     allUnchangedPredicates.remove(predicate);
                 }
 
+                // Predicates which are not affected by the actions should have same value ([0] == [1])
                 for (String predicate : allUnchangedPredicates){
                     BoolExpr exprPrecondition = predicatesExpressionsList.get(predicate).get(0);
                     BoolExpr exprEffect = predicatesExpressionsList.get(predicate).get(1);
@@ -226,44 +226,68 @@ public class ProblemEnricher {
                     ruleAParams.add(expr);
                 }
 
-
+                // Adding int constants (concrete objects)
                 for (Parameter p : permutation.values()) {
                     IntNum intNum = ctx.mkInt(objectToInt.get(p.getName()));
                     intConsts.add(intNum);
                 }
 
+                // All predicates before action
                 for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
                     BoolExpr param = boolExprList.get(0);
                     ruleBParams.add(param);
                 }
 
+                // All predicates after action
                 for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
                     BoolExpr param = boolExprList.get(1);
                     ruleBParams.add(param);
                 }
 
-                Expr[] ruleAExpr = ruleAParams.toArray(new Expr[0]);
-                Expr ruleA = ctx.mkAnd(ruleAExpr);
-                Expr[] ruleBExpr = Stream.concat(intConsts.stream(), ruleBParams.stream())
-                        .collect(Collectors.toList()).toArray(new Expr[0]);
+                Expr[] ruleBExpr = Stream.concat(intConsts.stream(), ruleBParams.stream()).collect(Collectors.toList()).toArray(new Expr[0]);
+
+                Expr ruleA = ctx.mkAnd(ruleAParams.toArray(new Expr[0]));
                 Expr ruleB = ctx.mkApp(functions.get(a.getName()), ruleBExpr);
+
                 Expr expr = ctx.mkImplies(ruleA, ruleB);
                 Symbol symbol = ctx.mkSymbol(a.getName() + permutation.toString());
-                //ctx.mkForall()
-                //Quantifier quant = ctx.mkForall(ruleBParams.toArray(new Expr[0]), expr, 0, null, null, null, null);
-                Quantifier quant = ctx.mkForall(ruleBParams.toArray(new Expr[0]), expr, 0, null, null, null, null);
-                fix.addRule(quant, symbol);
+                Quantifier quantifier = ctx.mkForall(ruleBParams.toArray(new Expr[0]), expr, 0, null, null, null, null);
+                fix.addRule(quantifier, symbol);
                 allExpressions.add(expr);
-                logger.debug(a.getName() + ":   " + expr.toString());
+                //logger.debug(a.getName() + ":   " + expr.toString());
             }
        }
     }
 
+    /**
+     *
+     * @param p - predicate
+     * @param permutation - permutation of parameters
+     * @return String representation of concrete predicate with concrete parameters
+     */
+    private String getConcretePredicate (Predicate p, HashMap<String, Parameter> permutation){
+        Predicate concretePredicate = new Predicate();
+        concretePredicate.setName(p.getName());
+        List<Argument> args = new ArrayList<>();
+        for (Argument arg : p.getArguments()){
+            Argument concreteArg = permutation.get(arg.getName());
+            args.add(concreteArg);
+        }
+        concretePredicate.setArguments(args);
+
+        String predicate = concretePredicate.toString();
+        return predicate;
+    }
+
+    /**
+     * Encoding HTN and INIT state into Z3 rule and adding it to FixedPoint - fix object
+     */
     private void encodeHtnAndInit() {
         List<Expr> subtaskExpressions = new ArrayList<>();
-        List<Subtask> subtasks = problem.getHtn().getSubtasks();
-        List<String> allPredicates = new ArrayList<>(predicatesExpressionsList.keySet());
         List<Expr> boolPredicates = new ArrayList<>();
+
+        List<String> allPredicates = new ArrayList<>(predicatesExpressionsList.keySet());
+        List<Subtask> subtasks = problem.getHtn().getSubtasks();
 
         for (Subtask subtask : subtasks) {
             List<Expr> params = new ArrayList<>();
@@ -309,7 +333,6 @@ public class ProblemEnricher {
         Expr[] rule = subtaskExpressions.toArray(new Expr[0]);
         Expr init = ctx.mkAnd(rule);
         allExpressions.add(init);
-        //System.out.println(fix.toString());
 
         Goal goal = ctx.mkGoal(true, true, false);
         //boolPredicates.add(goal);
@@ -321,23 +344,8 @@ public class ProblemEnricher {
         //fix.addRule(quant, ctx.mkSymbol("Init"));
 
         fix.query(goal.AsBoolExpr());
-        logger.debug("INIT:   " + init.toString());
+        //logger.debug("INIT:   " + init.toString());
     }
-
-    private String getConcretePredicate (Predicate p, HashMap<String, Parameter> permutation){
-        Predicate concretePredicate = new Predicate();
-        concretePredicate.setName(p.getName());
-        List<Argument> args = new ArrayList<>();
-        for (Argument arg : p.getArguments()){
-            Argument concreteArg = permutation.get(arg.getName());
-            args.add(concreteArg);
-        }
-        concretePredicate.setArguments(args);
-
-        String predicate = concretePredicate.toString();
-        return predicate;
-    }
-
 
     /**
      * This method is used to declare function signature for each task & action and stores into functions hashmap.
@@ -375,7 +383,7 @@ public class ProblemEnricher {
         FuncDecl f = ctx.mkFuncDecl(name, sort, returnValue);
         functions.put(name, f);
         fix.registerRelation(f);
-        logger.debug(f.getSExpr());
+        //logger.debug(f.getSExpr());
     }
 
     /**
@@ -397,21 +405,21 @@ public class ProblemEnricher {
             for (Subtask subtask : subtasks){
                 List<Expr> params = new ArrayList<>();
 
-                // int objects
+                // Int objects
                 for (Parameter p : subtask.getTask().getParameters()) {
                     IntExpr param = intExpressions.get(p.getName());
                     boolPredicates.add(param);
                     params.add(param);
                 }
 
-                // preConditions
+                // Preconditions
                 for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
                     BoolExpr param = boolExprList.get(subtasks.indexOf(subtask));
                     boolPredicates.add(param);
                     params.add(param);
                 }
 
-                // postConditions
+                // Effects
                 for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
                     BoolExpr param = boolExprList.get(subtasks.indexOf(subtask) + 1);
                     boolPredicates.add(param);
@@ -425,36 +433,40 @@ public class ProblemEnricher {
 
             List<Expr> params = new ArrayList<>();
 
-            //
+            // Int objects
             for (Parameter p : m.getTask().getParameters()) {
                 IntExpr param = intExpressions.get(p.getName());
                 params.add(param);
             }
 
+            // Preconditions
             for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
                 BoolExpr param = boolExprList.get(0);
                 params.add(param);
             }
 
+            // Effects
             for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
                 BoolExpr param = boolExprList.get(subtasks.size());
                 params.add(param);
             }
 
-            Expr[] expr = params.toArray(new Expr[0]);
-            Expr taskExpr = ctx.mkApp(functions.get(m.getTask().getName()), expr);
-
             Expr subtasksConjunction = ctx.mkAnd(subtaskExpressions.toArray(new Expr[0]));
+            Expr taskExpr = ctx.mkApp(functions.get(m.getTask().getName()), params.toArray(new Expr[0]));
             Expr methodImplication = ctx.mkImplies(subtasksConjunction, taskExpr);
+
             Symbol symbol = ctx.mkSymbol(m.toString());
-            Quantifier quant = ctx.mkForall(boolPredicates.toArray(new Expr[0]), methodImplication, 0, null, null, null, null);
-            fix.addRule(quant, symbol);
-            //fix.addRule(methodImplication, symbol);
+            Quantifier quantifier = ctx.mkForall(boolPredicates.toArray(new Expr[0]), methodImplication, 0, null, null, null, null);
+            fix.addRule(quantifier, symbol);
             allExpressions.add(methodImplication);
-            logger.debug(methodImplication.toString());
+            //logger.debug(methodImplication.toString());
         }
     }
 
+    /**
+     * Enriching abstract tasks - setting value of all predicates to null (safety reasons) and adding
+     * indexes to subtasks predicates and method predicates
+     */
     private void enrichAbstractTasks() {
 
         List<Predicate> predicatesVariables = cloneList(predicates);
@@ -488,9 +500,9 @@ public class ProblemEnricher {
     }
 
     /**
-     *
+     * for each action all possible permutations of parameters are generated, adding indexes to predicates (precondition & effects)
      */
-    private void enrichPrimitiveTasks() {
+    private void enrichActions() {
 
         List<Predicate> preConditions = cloneList(predicates);
         preConditions.forEach(p -> p.setIndex(0));
