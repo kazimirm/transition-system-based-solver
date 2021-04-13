@@ -51,11 +51,13 @@ public class ProblemEnricher {
 
     public Problem enrichProblem() {
         fix = ctx.mkFixedpoint();
+
         enrichProblemObjects();
         enrichPredicates();
         enrichAbstractTasks();
         enrichActions();
         enrichInitialTask();
+
         encodeVariables();
         encodeFunctionSignatures();
         encodeMethods();
@@ -334,17 +336,17 @@ public class ProblemEnricher {
         Expr init = ctx.mkAnd(rule);
         allExpressions.add(init);
 
-        Goal goal = ctx.mkGoal(true, true, false);
-        //boolPredicates.add(goal);
+        FuncDecl goal = ctx.mkFuncDecl("Goal", new Sort[0], ctx.mkBoolSort());
+        fix.registerRelation(goal);
 
-        Expr impl = ctx.mkImplies(init, goal.AsBoolExpr());
+        Expr mainGoal = ctx.mkApp(goal);
+        Expr impl = ctx.mkImplies(init, mainGoal);
 
         Quantifier quant = ctx.mkForall(boolPredicates.toArray(new Expr[0]), impl, 0, null, null, null, null);
-        //goal.add(impl);
-        //fix.addRule(quant, ctx.mkSymbol("Init"));
 
-        fix.query(goal.AsBoolExpr());
-        //logger.debug("INIT:   " + init.toString());
+        fix.addRule(quant, ctx.mkSymbol("INIT"));
+        fix.query(mainGoal);
+        logger.debug("INIT:   " + init.toString());
     }
 
     /**
