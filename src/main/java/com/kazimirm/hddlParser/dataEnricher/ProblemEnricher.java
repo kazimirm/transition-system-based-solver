@@ -309,10 +309,18 @@ public class ProblemEnricher {
         Expr[] rule = subtaskExpressions.toArray(new Expr[0]);
         Expr init = ctx.mkAnd(rule);
         allExpressions.add(init);
-        System.out.println("RULLLLLLLLLLLLLLLLLES");
         //System.out.println(fix.toString());
-        //Quantifier quant = ctx.mkForall(boolPredicates.toArray(new Expr[0]), init, 0, null, null, null, null);
-        fix.query(init);
+
+        Goal goal = ctx.mkGoal(true, true, false);
+        //boolPredicates.add(goal);
+
+        Expr impl = ctx.mkImplies(init, goal.AsBoolExpr());
+
+        Quantifier quant = ctx.mkForall(boolPredicates.toArray(new Expr[0]), impl, 0, null, null, null, null);
+        //goal.add(impl);
+        //fix.addRule(quant, ctx.mkSymbol("Init"));
+
+        fix.query(goal.AsBoolExpr());
         logger.debug("INIT:   " + init.toString());
     }
 
