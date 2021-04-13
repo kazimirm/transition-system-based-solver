@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="HDDLParser" />
+        <module name="Transition-system-based_HTN_planning_solver" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="HDDLParser" target="15" />
+      <module name="Transition-system-based_HTN_planning_solver" target="15" />
     </bytecodeTargetLevel>
   </component>
 </project>
