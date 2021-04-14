@@ -52,6 +52,12 @@ public class ProblemEnricher {
     public Problem enrichProblem() {
         fix = ctx.mkFixedpoint();
 
+        Params params = ctx.mkParams();
+        params.add("xform.slice", false);
+        params.add("xform.inline_linear", false);
+        params.add("xform.inline_eager", false);
+        fix.setParameters(params);
+
         enrichProblemObjects();
         enrichPredicates();
         enrichAbstractTasks();
@@ -346,6 +352,8 @@ public class ProblemEnricher {
 
         fix.addRule(quant, ctx.mkSymbol("INIT"));
         fix.query(mainGoal);
+        fix.getAnswer();
+        //fix.getHelp();
         logger.debug("INIT:   " + init.toString());
     }
 
