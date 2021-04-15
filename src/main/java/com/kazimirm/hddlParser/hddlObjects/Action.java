@@ -4,6 +4,7 @@ import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Action {
@@ -13,7 +14,7 @@ public class Action {
     List<Predicate> effects;
 
     //enriched in enricher
-    List<HashMap<String, Parameter>> parameterPermutations = new ArrayList<>();
+    List<LinkedHashMap<String, Parameter>> parameterPermutations = new ArrayList<>();
 
     public Action() {
     }
@@ -57,11 +58,11 @@ public class Action {
         this.effects = effects;
     }
 
-    public List<HashMap<String, Parameter>> getParameterPermutations() {
+    public List<LinkedHashMap<String, Parameter>> getParameterPermutations() {
         return parameterPermutations;
     }
 
-    public void setParameterPermutations(List<HashMap<String, Parameter>> parameterPermutations) {
+    public void setParameterPermutations(List<LinkedHashMap<String, Parameter>> parameterPermutations) {
         this.parameterPermutations = parameterPermutations;
     }
 

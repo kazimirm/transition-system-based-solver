@@ -262,7 +262,7 @@ public class ProblemEnricher {
                 Quantifier quantifier = ctx.mkForall(ruleBParams.toArray(new Expr[0]), expr, 0, null, null, null, null);
                 fix.addRule(quantifier, symbol);
                 allExpressions.add(expr);
-                //logger.debug(a.getName() + ":   " + expr.toString());
+                logger.debug("Action - " + a.getName() + ":   " + expr.toString());
             }
        }
     }
@@ -353,8 +353,8 @@ public class ProblemEnricher {
         fix.addRule(quant, ctx.mkSymbol("INIT"));
         fix.query(mainGoal);
         fix.getAnswer();
-        //fix.getHelp();
-        logger.debug("INIT:   " + init.toString());
+        fix.getHelp();
+        logger.debug("INIT:   " + impl.toString());
     }
 
     /**
@@ -469,7 +469,7 @@ public class ProblemEnricher {
             Quantifier quantifier = ctx.mkForall(boolPredicates.toArray(new Expr[0]), methodImplication, 0, null, null, null, null);
             fix.addRule(quantifier, symbol);
             allExpressions.add(methodImplication);
-            //logger.debug(methodImplication.toString());
+            logger.debug("Method: " + methodImplication.toString());
         }
     }
 
@@ -562,7 +562,7 @@ public class ProblemEnricher {
     private void generatePermutationsForActionParameters(Action a, List<List<Argument>> lists, int depth, String current) {
         if (depth == lists.size()) {
             List<String> argsNames = Arrays.asList(current.split(";"));
-            HashMap<String, Parameter> params = new HashMap<>();
+            LinkedHashMap<String, Parameter> params = new LinkedHashMap<>();
             for (int i = 0; i < a.getParameters().size(); i++) {
                 Parameter p = new Parameter();
                 p.setName(argsNames.get(i));
