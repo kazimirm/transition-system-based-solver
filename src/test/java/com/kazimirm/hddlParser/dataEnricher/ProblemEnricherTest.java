@@ -1,5 +1,6 @@
 package com.kazimirm.hddlParser.dataEnricher;
 
+import com.kazimirm.hddlParser.encoder.Z3Encoder;
 import com.kazimirm.hddlParser.hddlObjects.Domain;
 import com.kazimirm.hddlParser.hddlObjects.Problem;
 import com.kazimirm.hddlParser.parser.ParseException;
@@ -59,6 +60,15 @@ class ProblemEnricherTest {
         setUp(domain_htn, domain_htn_pfile01);
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
         pE.enrichProblem();
+    }
+
+    @Test
+    void encodeProblemPfile01() throws FileNotFoundException, ParseException {
+        setUp(domain_htn, domain_htn_pfile01);
+        ProblemEnricher pE = new ProblemEnricher(domain, problem);
+        pE.enrichProblem();
+        Z3Encoder encoder = new Z3Encoder(domain, problem);
+        encoder.encodeToZ3Expressions();
     }
 
     @Test
