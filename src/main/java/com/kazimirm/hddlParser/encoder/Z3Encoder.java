@@ -405,9 +405,7 @@ public class Z3Encoder {
 
                     for (Expr arg : e.getArgs()){
                          exprHashMap.put(arg.hashCode(), arg);
-                        if (!(arg instanceof Quantifier) && !(arg instanceof BoolExpr)) {
-                            System.out.println(e.hashCode() + " -> " + arg.hashCode() + ";");
-                        }
+                         System.out.println(e.hashCode() + " -> " + arg.hashCode() + ";");
                     }
 
                 }
