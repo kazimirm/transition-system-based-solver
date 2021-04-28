@@ -5,9 +5,7 @@ import com.microsoft.z3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,8 +26,9 @@ public class Z3Encoder {
 
     private Context ctx = new Context();
     private Fixedpoint fix;
+    private Expr answer;
 
-    public Z3Encoder(Domain domain, Problem problem){
+    public Z3Encoder(Domain domain, Problem problem) {
         this.domain = domain;
         this.problem = problem;
         objectsToTypedLists = problem.getObjectsToTypedLists();
@@ -38,7 +37,7 @@ public class Z3Encoder {
         predicates = problem.getPredicates();
     }
 
-    public void encodeToZ3Expressions(){
+    public void encodeToZ3Expressions() {
         fix = ctx.mkFixedpoint();
 
         Params params = ctx.mkParams();
@@ -52,6 +51,9 @@ public class Z3Encoder {
         encodeMethods();
         encodeActions();
         encodeHtnAndInit();
+
+        visualizeGraph();
+
         System.out.println();
     }
 
@@ -59,10 +61,10 @@ public class Z3Encoder {
      * We need to create bool variables for every ground variable. Number of each var instance must be equal to max + 1 number of
      * maximum subtasks in method. Then we will create list of lists which will be used in tasks/methods/... encoding
      */
-    private void encodeVariables(){
+    private void encodeVariables() {
         int max = 0;
-        for (Method m : domain.getMethods()){
-            if (m.getSubtasks().size() > max){
+        for (Method m : domain.getMethods()) {
+            if (m.getSubtasks().size() > max) {
                 max = m.getSubtasks().size();
             }
         }
@@ -82,7 +84,7 @@ public class Z3Encoder {
      * Foreach task & action we need to declare function signature with all its parameters
      */
     private void encodeFunctionSignatures() {
-        for (Task task : domain.getTasks() ) {
+        for (Task task : domain.getTasks()) {
             declareRelations(task.getName(), task.getParameters());
         }
 
@@ -95,18 +97,18 @@ public class Z3Encoder {
      * Encoding actions into Z3 rules and adding them to FixedPoint - fix object
      */
     private void encodeActions() {
-        for (Action a : domain.getActions()){
+        for (Action a : domain.getActions()) {
 
             List<String> allUnchangedPredicates = new ArrayList<>(predicatesExpressionsList.keySet());
 
-            for (HashMap<String, Parameter> permutation : a.getParameterPermutations()){
+            for (HashMap<String, Parameter> permutation : a.getParameterPermutations()) {
 
                 List<BoolExpr> ruleAParams = new ArrayList<>();
                 List<Expr> intConsts = new ArrayList<>();
                 List<Expr> ruleBParams = new ArrayList<>();
 
                 // Preconditions
-                for (Predicate p : a.getPreconditions()){
+                for (Predicate p : a.getPreconditions()) {
                     String predicate = getConcretePredicate(p, permutation);
                     BoolExpr expr = predicatesExpressionsList.get(predicate).get(0);
                     if (p.getValue() == true) {
@@ -117,7 +119,7 @@ public class Z3Encoder {
                 }
 
                 // Effects
-                for (Predicate p : a.getEffects()){
+                for (Predicate p : a.getEffects()) {
                     String predicate = getConcretePredicate(p, permutation);
                     BoolExpr expr = predicatesExpressionsList.get(predicate).get(1);
                     if (p.getValue() == true) {
@@ -129,7 +131,7 @@ public class Z3Encoder {
                 }
 
                 // Predicates which are not affected by the actions should have same value ([0] == [1])
-                for (String predicate : allUnchangedPredicates){
+                for (String predicate : allUnchangedPredicates) {
                     BoolExpr exprPrecondition = predicatesExpressionsList.get(predicate).get(0);
                     BoolExpr exprEffect = predicatesExpressionsList.get(predicate).get(1);
                     BoolExpr expr = ctx.mkEq(exprPrecondition, exprEffect);
@@ -170,16 +172,15 @@ public class Z3Encoder {
     }
 
     /**
-     *
-     * @param p - predicate
+     * @param p           - predicate
      * @param permutation - permutation of parameters
      * @return String representation of concrete predicate with concrete parameters
      */
-    private String getConcretePredicate (Predicate p, HashMap<String, Parameter> permutation){
+    private String getConcretePredicate(Predicate p, HashMap<String, Parameter> permutation) {
         Predicate concretePredicate = new Predicate();
         concretePredicate.setName(p.getName());
         List<Argument> args = new ArrayList<>();
-        for (Argument arg : p.getArguments()){
+        for (Argument arg : p.getArguments()) {
             Argument concreteArg = permutation.get(arg.getName());
             args.add(concreteArg);
         }
@@ -227,14 +228,14 @@ public class Z3Encoder {
             subtaskExpressions.add(subtaskExpr);
         }
 
-        for (Predicate p : problem.getInit()){
+        for (Predicate p : problem.getInit()) {
             String name = p.toStringWithoutIndex() + "[0]";
             BoolExpr var = predicatesExpressionsList.get(name).get(0);
             subtaskExpressions.add(var);
             allPredicates.remove(name);
         }
 
-        for (String p : allPredicates){
+        for (String p : allPredicates) {
             BoolExpr var = predicatesExpressionsList.get(p).get(0);
             var = ctx.mkNot(var);
             subtaskExpressions.add(var);
@@ -254,9 +255,7 @@ public class Z3Encoder {
 
         fix.addRule(quant, ctx.mkSymbol("INIT"));
         fix.query(mainGoal);
-        Expr answer = fix.getAnswer();
-        Expr answerPath = answer.getArgs()[0];
-        fix.getHelp();
+        answer = fix.getAnswer();
         logger.debug("INIT:   " + impl.toString());
     }
 
@@ -264,10 +263,10 @@ public class Z3Encoder {
      * This method is used to declare function signature for each task & action and stores into functions hashmap.
      * (Two loops for preconditions and postconditions can be merged but are separated for better readability and understanding)
      *
-     * @param name - action/task/... name
+     * @param name      - action/task/... name
      * @param arguments - int objects
      */
-    private void declareRelations(String name, List<Parameter> arguments){
+    private void declareRelations(String name, List<Parameter> arguments) {
 
         List<Sort> params = new ArrayList<>();
 
@@ -308,14 +307,14 @@ public class Z3Encoder {
             HashMap<String, IntExpr> intExpressions = new HashMap<>();
             List<Expr> subtaskExpressions = new ArrayList<>();
 
-            for (Parameter param : m.getParameters()){
+            for (Parameter param : m.getParameters()) {
                 IntExpr intExpr = ctx.mkIntConst(param.getName());
                 intExpressions.put(param.getName(), intExpr);
             }
 
             List<Subtask> subtasks = m.getSubtasks();
             List<Expr> boolPredicates = new ArrayList<>();
-            for (Subtask subtask : subtasks){
+            for (Subtask subtask : subtasks) {
                 List<Expr> params = new ArrayList<>();
 
                 // Int objects
@@ -374,6 +373,54 @@ public class Z3Encoder {
             allExpressions.add(methodImplication);
             logger.debug("Method: " + methodImplication.toString());
         }
+    }
+
+    private void visualizeGraph() {
+        Expr root = answer.getArgs()[0];
+        List<List<Expr>> expressions = new ArrayList<>();
+        expressions.add(Arrays.asList(root));
+        int i = 0;
+        HashMap<Integer, Expr> exprHashMap = new HashMap<>();
+        exprHashMap.put(root.hashCode(), root);
+
+        while (expressions.get(i) != null && !expressions.get(i).isEmpty()) {
+            List<Expr> newLevel = new ArrayList<>();
+            for (Expr e : expressions.get(i)) {
+                if (!(e instanceof Quantifier) && !(e instanceof BoolExpr)){
+                    String color;
+                    String label = "";
+                    if ("Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
+                        color = "red";
+                    } else if ("Z3_OP_PR_ASSERTED".equals(e.getFuncDecl().getDeclKind().name())){
+                        color = "green";
+                    } else {
+                        color = "black";
+                        label = ",xlabel=" + e.getFuncDecl().getDeclKind().name();
+                    }
+                    System.out.println(e.hashCode() + "[color=" + color + label +"] ");
+                }
+
+                if (e.getNumArgs() >= 1) {
+                    Arrays.stream(e.getArgs()).filter(arg -> !(arg instanceof Quantifier) && !(arg instanceof BoolExpr)).collect(Collectors.toCollection(() -> newLevel));
+
+                    for (Expr arg : e.getArgs()){
+                         exprHashMap.put(arg.hashCode(), arg);
+                        if (!(arg instanceof Quantifier) && !(arg instanceof BoolExpr)) {
+                            System.out.println(e.hashCode() + " -> " + arg.hashCode() + ";");
+                        }
+                    }
+
+                }
+            }
+            expressions.add(newLevel);
+            i++;
+        }
+        for (Integer key: exprHashMap.keySet()){
+            System.out.println("KEY: " + key);
+            System.out.println("VALUE: " + exprHashMap.get(key));
+        }
+        System.out.println();
+
     }
 
 }
