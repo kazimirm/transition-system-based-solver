@@ -28,6 +28,7 @@ class ProblemEnricherTest {
     private final String PROBLEM_BASIC_FROM_PRELIMINARIES = "problem_basic_from_preliminaries.txt";
     private final String domain_htn = "domain-htn.hddl";
     private final String domain_htn_pfile01 = "pfile01.hddl";
+    private final String domain_htn_pfile02 = "pfile02.hddl";
     private Domain domain;
     private Problem problem;
 
@@ -65,6 +66,15 @@ class ProblemEnricherTest {
     @Test
     void encodeProblemPfile01() throws FileNotFoundException, ParseException {
         setUp(domain_htn, domain_htn_pfile01);
+        ProblemEnricher pE = new ProblemEnricher(domain, problem);
+        pE.enrichProblem();
+        Z3Encoder encoder = new Z3Encoder(domain, problem);
+        encoder.encodeToZ3Expressions();
+    }
+
+    @Test
+    void encodeProblemPfile02() throws FileNotFoundException, ParseException {
+        setUp(domain_htn, domain_htn_pfile02);
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
         pE.enrichProblem();
         Z3Encoder encoder = new Z3Encoder(domain, problem);

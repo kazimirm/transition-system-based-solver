@@ -166,7 +166,7 @@ public class Z3Encoder {
                 Quantifier quantifier = ctx.mkForall(ruleBParams.toArray(new Expr[0]), expr, 0, null, null, null, null);
                 fix.addRule(quantifier, symbol);
                 allExpressions.add(expr);
-                logger.debug("Action - " + a.getName() + ":   " + expr.toString());
+                //logger.debug("Action - " + a.getName() + ":   " + expr.toString());
             }
         }
     }
@@ -256,7 +256,7 @@ public class Z3Encoder {
         fix.addRule(quant, ctx.mkSymbol("INIT"));
         fix.query(mainGoal);
         answer = fix.getAnswer();
-        logger.debug("INIT:   " + impl.toString());
+        //logger.debug("INIT:   " + impl.toString());
     }
 
     /**
@@ -371,7 +371,7 @@ public class Z3Encoder {
             Quantifier quantifier = ctx.mkForall(boolPredicates.toArray(new Expr[0]), methodImplication, 0, null, null, null, null);
             fix.addRule(quantifier, symbol);
             allExpressions.add(methodImplication);
-            logger.debug("Method: " + methodImplication.toString());
+            //logger.debug("Method: " + methodImplication.toString());
         }
     }
 
@@ -386,26 +386,33 @@ public class Z3Encoder {
         while (expressions.get(i) != null && !expressions.get(i).isEmpty()) {
             List<Expr> newLevel = new ArrayList<>();
             for (Expr e : expressions.get(i)) {
-                if (!(e instanceof Quantifier) && !(e instanceof BoolExpr)){
+                if (!(e instanceof BoolExpr)){
                     String color;
                     String label = "";
                     if ("Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
                         color = "red";
+                        label = ",xlabel=\"" + (e.getArgs()[e.getNumArgs() - 1]).toString()
+                                .replace("true", "").replace("false", "")
+                                .replace("\n", "").replace("\r", "").trim().replaceAll(" +", " ") + "\"";
+                        System.out.println(e.hashCode() + "[color=" + color + label +"] ");
                     } else if ("Z3_OP_PR_ASSERTED".equals(e.getFuncDecl().getDeclKind().name())){
                         color = "green";
                     } else {
                         color = "black";
                         label = ",xlabel=" + e.getFuncDecl().getDeclKind().name();
                     }
-                    System.out.println(e.hashCode() + "[color=" + color + label +"] ");
+//                    System.out.println(e.hashCode() + "[color=" + color + label +"] ");
                 }
 
                 if (e.getNumArgs() >= 1) {
-                    Arrays.stream(e.getArgs()).filter(arg -> !(arg instanceof Quantifier) && !(arg instanceof BoolExpr)).collect(Collectors.toCollection(() -> newLevel));
+                    Arrays.stream(e.getArgs()).filter(arg -> !(arg instanceof BoolExpr)).collect(Collectors.toCollection(() -> newLevel));
 
                     for (Expr arg : e.getArgs()){
                          exprHashMap.put(arg.hashCode(), arg);
-                         System.out.println(e.hashCode() + " -> " + arg.hashCode() + ";");
+                        if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name()))) {
+//                        if (!(arg instanceof BoolExpr)) {
+                            System.out.println(e.hashCode() + " -> " + arg.hashCode() + ";");
+                        }
                     }
 
                 }
