@@ -388,13 +388,16 @@ public class Z3Encoder {
             for (Expr e : expressions.get(i)) {
                 if (!(e instanceof BoolExpr)){
                     String color;
+                    String name = "";
                     String label = "";
                     if ("Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
                         color = "red";
-                        label = ",xlabel=\"" + (e.getArgs()[e.getNumArgs() - 1]).toString()
-                                .replace("true", "").replace("false", "")
-                                .replace("\n", "").replace("\r", "").trim().replaceAll(" +", " ") + "\"";
-                        System.out.println(e.hashCode() + "[color=" + color + label +"] ");
+//                        name = "\"" + (e.getArgs()[e.getNumArgs() - 1]).toString()
+//                                .replace("true", "").replace("false", "")
+//                                .replace("\n", "").replace("\r", "").trim().replaceAll(" +", " ") + "\"";
+//                        label = ",xlabel=" + name;
+//                        System.out.println(name + "\n"+ e.hashCode() + "[color=" + color + label +"] ");
+                        System.out.println(getExpressionName(e) + "[color=" + color + "] ");
                     } else if ("Z3_OP_PR_ASSERTED".equals(e.getFuncDecl().getDeclKind().name())){
                         color = "green";
                     } else {
@@ -411,7 +414,7 @@ public class Z3Encoder {
                          exprHashMap.put(arg.hashCode(), arg);
                         if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name()))) {
 //                        if (!(arg instanceof BoolExpr)) {
-                            System.out.println(e.hashCode() + " -> " + arg.hashCode() + ";");
+                            System.out.println(getExpressionName(e) + " -> " + getExpressionName(arg) + ";");
                         }
                     }
 
@@ -426,6 +429,16 @@ public class Z3Encoder {
         }
         System.out.println();
 
+    }
+
+    private String getExpressionName(Expr e){
+        String name = "";
+        if (!(e instanceof BoolExpr) && "Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
+        name =  (e.getArgs()[e.getNumArgs() - 1]).toString()
+                .replace("true", "").replace("false", "")
+                .replace("\n", "").replace("\r", "").trim().replaceAll(" +", " ");
+        }
+        return "\"" + name + "\\n" + e.hashCode() + "\"";
     }
 
 }
