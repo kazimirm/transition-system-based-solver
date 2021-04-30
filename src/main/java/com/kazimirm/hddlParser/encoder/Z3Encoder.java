@@ -423,10 +423,10 @@ public class Z3Encoder {
             expressions.add(newLevel);
             i++;
         }
-        for (Integer key: exprHashMap.keySet()){
-            System.out.println("KEY: " + key);
-            System.out.println("VALUE: " + exprHashMap.get(key));
-        }
+//        for (Integer key: exprHashMap.keySet()){
+//            System.out.println("KEY: " + key);
+//            System.out.println("VALUE: " + exprHashMap.get(key));
+//        }
         System.out.println();
 
     }
