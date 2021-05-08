@@ -27,6 +27,7 @@ public class Z3Encoder {
     private Context ctx = new Context();
     private Fixedpoint fix;
     private Expr answer;
+    private int MAX_NUMBER_OF_SUBTASKS;
 
     public Z3Encoder(Domain domain, Problem problem) {
         this.domain = domain;
@@ -48,8 +49,8 @@ public class Z3Encoder {
 
         encodeVariables();
         encodeFunctionSignatures();
-        encodeMethods();
         encodeActions();
+        encodeMethods();
         encodeHtnAndInit();
 
         visualizeGraph();
@@ -69,10 +70,15 @@ public class Z3Encoder {
             }
         }
 
+        if (problem.getHtn().getSubtasks().size() > max) {
+            max = problem.getHtn().getSubtasks().size();
+        }
+
+        MAX_NUMBER_OF_SUBTASKS = max;
 
         for (Predicate p : predicates) {
             List<BoolExpr> vars = new ArrayList<>();
-            for (int i = 0; i <= max; i++) {
+            for (int i = 0; i <= MAX_NUMBER_OF_SUBTASKS; i++) {
                 BoolExpr var = ctx.mkBoolConst(p.toStringWithoutIndex() + "[" + i + "]");
                 vars.add(var);
             }
@@ -85,11 +91,15 @@ public class Z3Encoder {
      */
     private void encodeFunctionSignatures() {
         for (Task task : domain.getTasks()) {
-            declareRelations(task.getName(), task.getParameters());
+            for (int i = 0; i < MAX_NUMBER_OF_SUBTASKS; i++) {
+                declareRelations(task.getName() + "#" + i, task.getParameters());
+            }
         }
 
         for (Action action : domain.getActions()) {
-            declareRelations(action.getName(), action.getParameters());
+            for (int i = 0; i < MAX_NUMBER_OF_SUBTASKS; i++) {
+                declareRelations(action.getName() + "#" + i, action.getParameters());
+            }
         }
     }
 
@@ -158,14 +168,18 @@ public class Z3Encoder {
 
                 Expr[] ruleBExpr = Stream.concat(intConsts.stream(), ruleBParams.stream()).collect(Collectors.toList()).toArray(new Expr[0]);
 
-                Expr ruleA = ctx.mkAnd(ruleAParams.toArray(new Expr[0]));
-                Expr ruleB = ctx.mkApp(functions.get(a.getName()), ruleBExpr);
 
-                Expr expr = ctx.mkImplies(ruleA, ruleB);
-                Symbol symbol = ctx.mkSymbol(a.getName() + permutation.toString());
-                Quantifier quantifier = ctx.mkForall(ruleBParams.toArray(new Expr[0]), expr, 0, null, null, null, null);
-                fix.addRule(quantifier, symbol);
-                allExpressions.add(expr);
+                for (int i = 0; i < MAX_NUMBER_OF_SUBTASKS; i++) {
+                    Expr ruleA = ctx.mkAnd(ruleAParams.toArray(new Expr[0]));
+                    Expr ruleB = ctx.mkApp(functions.get(a.getName() + "#" + i), ruleBExpr);
+
+                    Expr expr = ctx.mkImplies(ruleA, ruleB);
+                    allExpressions.add(expr);
+                    Quantifier quantifier = ctx.mkForall(ruleBParams.toArray(new Expr[0]), expr, 0, null, null, null, null);
+
+                    Symbol symbol = ctx.mkSymbol(a.getName() + "#" + i + permutation.toString());
+                    fix.addRule(quantifier, symbol);
+                }
                 //logger.debug("Action - " + a.getName() + ":   " + expr.toString());
             }
         }
@@ -224,7 +238,7 @@ public class Z3Encoder {
             }
 
             Expr[] expr = params.toArray(new Expr[0]);
-            Expr subtaskExpr = ctx.mkApp(functions.get(subtask.getTask().getName()), expr);
+            Expr subtaskExpr = ctx.mkApp(functions.get(subtask.getTask().getName() + "#" + subtasks.indexOf(subtask)), expr);
             subtaskExpressions.add(subtaskExpr);
         }
 
@@ -290,11 +304,12 @@ public class Z3Encoder {
 
         Sort[] sort = params.toArray(new Sort[0]);
 
-        BoolSort returnValue = ctx.mkBoolSort();
-
-        FuncDecl f = ctx.mkFuncDecl(name, sort, returnValue);
-        functions.put(name, f);
-        fix.registerRelation(f);
+        for (int i = 0; i < MAX_NUMBER_OF_SUBTASKS; i++) {
+            BoolSort returnValue = ctx.mkBoolSort();
+            FuncDecl f = ctx.mkFuncDecl(name, sort, returnValue);
+            functions.put(name, f);
+            fix.registerRelation(f);
+        }
         //logger.debug(f.getSExpr());
     }
 
@@ -339,7 +354,7 @@ public class Z3Encoder {
                 }
 
                 Expr[] expr = params.toArray(new Expr[0]);
-                Expr subtaskExpr = ctx.mkApp(functions.get(subtask.getTask().getName()), expr);
+                Expr subtaskExpr = ctx.mkApp(functions.get(subtask.getTask().getName() + "#" + subtasks.indexOf(subtask)), expr);
                 subtaskExpressions.add(subtaskExpr);
             }
 
@@ -363,14 +378,17 @@ public class Z3Encoder {
                 params.add(param);
             }
 
-            Expr subtasksConjunction = ctx.mkAnd(subtaskExpressions.toArray(new Expr[0]));
-            Expr taskExpr = ctx.mkApp(functions.get(m.getTask().getName()), params.toArray(new Expr[0]));
-            Expr methodImplication = ctx.mkImplies(subtasksConjunction, taskExpr);
 
-            Symbol symbol = ctx.mkSymbol(m.toString());
-            Quantifier quantifier = ctx.mkForall(boolPredicates.toArray(new Expr[0]), methodImplication, 0, null, null, null, null);
-            fix.addRule(quantifier, symbol);
-            allExpressions.add(methodImplication);
+            for (int i = 0; i < MAX_NUMBER_OF_SUBTASKS; i++){
+                Expr subtasksConjunction = ctx.mkAnd(subtaskExpressions.toArray(new Expr[0]));
+                Expr taskExpr = ctx.mkApp(functions.get(m.getTask().getName() + "#" + i), params.toArray(new Expr[0]));
+                Expr methodImplication = ctx.mkImplies(subtasksConjunction, taskExpr);
+                Quantifier quantifier = ctx.mkForall(boolPredicates.toArray(new Expr[0]), methodImplication, 0, null, null, null, null);
+
+                Symbol symbol = ctx.mkSymbol(m.toString() + "#" + i);
+                fix.addRule(quantifier, symbol);
+                allExpressions.add(methodImplication);
+            }
             //logger.debug("Method: " + methodImplication.toString());
         }
     }
