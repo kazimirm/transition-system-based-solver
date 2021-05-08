@@ -26,13 +26,6 @@
             (task1 (drive ?v ?l2 ?l3))
         )
     )
-    (:method m_i_am_there_ordering_0
-        :parameters (?l - location ?v - vehicle)
-        :task (get_to ?v ?l)
-        :subtasks (and
-            (task0 (noop ?v ?l))
-        )
-    )
     (:action drive
         :parameters (?v - vehicle ?l1 - location ?l2 - location)
         :precondition
@@ -45,13 +38,5 @@
             (not (at ?v ?l1))
             (at ?v ?l2)
         )
-    )
-    (:action noop
-        :parameters (?v - vehicle ?l2 - location)
-        :precondition
-            (and
-            (at ?v ?l2)
-        )
-        :effect ()
     )
 )

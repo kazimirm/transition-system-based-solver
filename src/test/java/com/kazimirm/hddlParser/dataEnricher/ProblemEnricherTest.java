@@ -82,6 +82,15 @@ class ProblemEnricherTest {
     }
 
     @Test
+    void encodeProblemPreliminaries() throws FileNotFoundException, ParseException {
+        setUp(DOMAIN_BASIC_FROM_PRELIMINARIES, PROBLEM_BASIC_FROM_PRELIMINARIES);
+        ProblemEnricher pE = new ProblemEnricher(domain, problem);
+        pE.enrichProblem();
+        Z3Encoder encoder = new Z3Encoder(domain, problem);
+        encoder.encodeToZ3Expressions();
+    }
+
+    @Test
     void testZ3() throws URISyntaxException, IOException {
         Context ctx = new Context();
         URL res = getClass().getClassLoader().getResource("test.smt2");

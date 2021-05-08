@@ -414,7 +414,7 @@ public class Z3Encoder {
                          exprHashMap.put(arg.hashCode(), arg);
                         if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name()))) {
 //                        if (!(arg instanceof BoolExpr)) {
-                            System.out.println(getExpressionName(e) + " -> " + getExpressionName(arg) + ";");
+                            System.out.println(e.hashCode() + " -> " + arg.hashCode() + ";");
                         }
                     }
 
@@ -438,7 +438,8 @@ public class Z3Encoder {
                 .replace("true", "").replace("false", "")
                 .replace("\n", "").replace("\r", "").trim().replaceAll(" +", " ");
         }
-        return "\"" + name + "\\n" + e.hashCode() + "\"";
+        //return "\"" + name + "\\n" + e.hashCode() + "\"";
+        return e.hashCode() + " [label=\"" + name + "\"]";
     }
 
 }
