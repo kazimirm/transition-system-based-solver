@@ -7,7 +7,6 @@
         t0 - vehicle
     )
     (:htn
-        :parameters ()
         :subtasks (
             task0 (get_to t0 c1)
             task1 (get_to t0 c0)

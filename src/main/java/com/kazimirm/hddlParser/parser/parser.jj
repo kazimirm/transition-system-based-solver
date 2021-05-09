@@ -66,6 +66,7 @@
     | <OBJECTS:  		    "objects">								    /* objects */
     | <TASK:  		        "task">								        /* tasks */
     | <SUBTASKS:  		    "subtasks">								    /* subtasks */
+    | <TASKS:  		        "tasks">								    /* tasks */
     | <ORDERING:  		    "ordering">								    /* ordering */
     | <METHOD:  		    "method">								    /* method */
     | <ACTION:  		    "action">								    /* action */
@@ -702,7 +703,7 @@ Htn getHtn():
 }
 {
     <LPAR> <COLON> <HTN>
-    parameters = getParameters()
+    (parameters = getParameters())?
     (subtasks = getSubtasks() | subtasks = getSubtask())
     (ordering = getOrdering())?
     <RPAR>
@@ -727,7 +728,7 @@ List<Subtask> getSubtask():
     String param;
 }
 {
-    <COLON> <SUBTASKS> <LPAR>
+    <COLON> (<SUBTASKS> | <TASKS>) <LPAR>
         (subtaskName = getAttribute() <LPAR> taskName = getAttribute()
             (
                 param = getAttribute()
@@ -766,7 +767,7 @@ List<Subtask> getSubtasks():
     String param;
 }
 {
-    <COLON> <SUBTASKS> <LPAR> <AND>
+    <COLON> (<SUBTASKS> | <TASKS>) <LPAR> <AND>
         (<LPAR> subtaskName = getAttribute() <LPAR> taskName = getAttribute()
             (
                 param = getAttribute()
