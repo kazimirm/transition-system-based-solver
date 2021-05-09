@@ -271,6 +271,8 @@ public class ProblemEnricher {
 
         for (Subtask subtask : problem.getHtn().getSubtasks()) {
 
+            subtask.setName(subtask.getName() + "#" + problem.getHtn().getSubtasks().indexOf(subtask));
+
             List<Predicate> preConditions = cloneList(predicates);
             preConditions.forEach(p -> p.setIndex(0));
             List<Predicate> postConditions = cloneList(predicates);
