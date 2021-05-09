@@ -401,6 +401,8 @@ public class Z3Encoder {
         HashMap<Integer, Expr> exprHashMap = new HashMap<>();
         exprHashMap.put(root.hashCode(), root);
 
+        System.out.println("digraph " + problem.getName() + " {");
+
         while (expressions.get(i) != null && !expressions.get(i).isEmpty()) {
             List<Expr> newLevel = new ArrayList<>();
             for (Expr e : expressions.get(i)) {
@@ -445,7 +447,7 @@ public class Z3Encoder {
 //            System.out.println("KEY: " + key);
 //            System.out.println("VALUE: " + exprHashMap.get(key));
 //        }
-        System.out.println();
+        System.out.println("}");
 
     }
 
