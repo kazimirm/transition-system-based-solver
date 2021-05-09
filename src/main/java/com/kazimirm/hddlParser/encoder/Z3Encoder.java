@@ -109,10 +109,9 @@ public class Z3Encoder {
     private void encodeActions() {
         for (Action a : domain.getActions()) {
 
-            List<String> allUnchangedPredicates = new ArrayList<>(predicatesExpressionsList.keySet());
-
             for (HashMap<String, Parameter> permutation : a.getParameterPermutations()) {
 
+                List<String> allUnchangedPredicates = new ArrayList<>(predicatesExpressionsList.keySet());
                 List<BoolExpr> ruleAParams = new ArrayList<>();
                 List<Expr> intConsts = new ArrayList<>();
                 List<Expr> ruleBParams = new ArrayList<>();
@@ -140,7 +139,7 @@ public class Z3Encoder {
                     allUnchangedPredicates.remove(predicate);
                 }
 
-                // Predicates which are not affected by the actions should have same value ([0] == [1])
+                // Predicates which are not affected by the actions should have the same value ([0] == [1])
                 for (String predicate : allUnchangedPredicates) {
                     BoolExpr exprPrecondition = predicatesExpressionsList.get(predicate).get(0);
                     BoolExpr exprEffect = predicatesExpressionsList.get(predicate).get(1);
