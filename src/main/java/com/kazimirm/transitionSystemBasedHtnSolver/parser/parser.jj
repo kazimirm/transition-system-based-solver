@@ -1,0 +1,844 @@
+ options {
+    IGNORE_CASE = false;
+    OPTIMIZE_TOKEN_MANAGER = true;
+    LOOKAHEAD=5;
+  }
+
+  PARSER_BEGIN(ParserHDDL)
+  package com.kazimirm.transitionSystemBasedHtnSolver.parser;
+
+import java.io.*;
+import java.util.*;
+import com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.*;
+
+public class ParserHDDL {
+
+  public static void main(String[] args) throws ParseException,FileNotFoundException {
+
+     if (args.length < 1) {
+         System.out.println("Please pass in the filename for a parameter.");
+         System.exit(1);
+     }
+
+      ParserHDDL parser = new ParserHDDL(new FileInputStream(args[0]));
+
+      //Domain domain = parser.start();
+      //HtnInput input = parser.start();
+      //System.out.println("Parse completed.");
+   }
+ }}
+ }
+
+
+
+  PARSER_END(ParserHDDL)
+
+   SKIP: /* Whitespaces */
+   {
+     "\t"
+   | "\n"
+   | "\r"
+   | " "
+   }
+
+  TOKEN: /* All possible valid tokens */
+  {
+    <LPAR:    			    "(">										/* ( */
+    | <RPAR:    			")">										/* ) */
+    | <LSBRA:    			"[">										/* [ */
+    | <RSBRA:    			"]">										/* ] */
+    | <LT:    			    "<">										/* < */
+    | <GT:    			    ">">										/* > */
+    | <EQ:    			    "=">										/* = */
+    | <DASH:    			"-">										/* - */
+    | <COLON:    			":">										/* : */
+    | <QUESTIONMARK:  	    "?">										/* ? */
+    | <AND:  				"and">										/* and */
+    | <NOT:  				"not">										/* not */
+    | <OR:  				"or">										/* or */
+    | <DEFINE:    		    "define">									/* define */
+    | <DOMAIN:    		    "domain">									/* domain */
+    | <PROBLEM:    		    "problem">									/* problem */
+    | <REQUIREMENTS:  	    "requirements">								/* requirements */
+    | <TYPES:  			    "types">									/* types */
+    | <CONSTANTS:  		    "constants">								/* constants */
+    | <PREDICATES:  		"predicates">								/* predicates */
+    | <PARAMETERS:  		"parameters">								/* parameters */
+    | <OBJECTS:  		    "objects">								    /* objects */
+    | <TASK:  		        "task">								        /* tasks */
+    | <SUBTASKS:  		    "subtasks">								    /* subtasks */
+    | <TASKS:  		        "tasks">								    /* tasks */
+    | <ORDERING:  		    "ordering">								    /* ordering */
+    | <METHOD:  		    "method">								    /* method */
+    | <ACTION:  		    "action">								    /* action */
+    | <PRECONDITION:  		"precondition">								/* precondition */
+    | <EFFECT:  		    "effect">								    /* effect */
+    | <HTN:  		        "htn">								        /* htn */
+    | <INIT:  		        "init">								        /* init */
+    | <VAR:  				(["a"-"z", "A"-"Z", "0"-"9","_","-"])+>		/* variables, words, consts */
+  }
+
+////////////////////////////////////////////////////////////////////////
+////////////////    ENTRY POINT      ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+  Domain parseDomain():
+  {
+      Domain domain = new Domain();
+  }
+  {
+    domain = domain()
+    <EOF>
+      {
+        return domain;
+      }
+  }
+
+    Problem parseProblem():
+    {
+        Problem problem = new Problem();
+    }
+    {
+      problem = problem()
+      <EOF>
+        {
+          return problem;
+        }
+    }
+
+//  Domain start():
+//  {
+//      Domain domain = new Domain();
+//      Problem problem = new Problem();
+//  }
+//  {
+//    domain = domain()
+////    | problem = problem()
+//    <EOF>
+//      {
+//        return domain;
+//      }
+//  }
+
+//  HtnInput start():
+//  {
+//    HtnInput input = new HtnInput();
+//  }
+//  {
+//    input = domain() | input = problem()
+//    <EOF>
+//      {
+//        return input;
+//      }
+//  }
+
+////////////////////////////////////////////////////////////////////////
+////////////////    HELP METHODS       /////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+  String getAttribute() :
+  {
+    Token attribute;
+  }
+  {
+    attribute = <VAR>
+    {
+      return attribute.toString();
+    }
+  }
+////////////////////////////////////////////////////////////////////////
+////////////////    DOMAIN      ////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+  Domain domain():
+  {
+    Domain domain = new Domain();
+    List<Requirement> requirements = new ArrayList<>();
+    List<Type> types = new ArrayList<>();
+    List<Predicate> predicates = new ArrayList<>();
+    List<Task> tasks = new ArrayList<>();
+    List<Method> methods = new ArrayList<>();
+    List<Action> actions = new ArrayList<>();
+    String domainName;
+  }
+  {
+    <LPAR> <DEFINE> <LPAR> <DOMAIN> domainName = getAttribute() <RPAR>
+    (requirements = getRequirements())?
+    types = getTypes()
+    predicates = getPredicates()
+    tasks = getTasks()
+    methods = getMethods()
+    actions = getActions()
+    <RPAR>
+    {
+        domain.setName(domainName);
+        domain.setRequirements(requirements);
+        domain.setTypes(types);
+        domain.setPredicates(predicates);
+        domain.setTasks(tasks);
+        domain.setMethods(methods);
+        domain.setActions(actions);
+        return domain;
+    }
+  }
+////////////////////////////////////////////////////////////////////////
+////////////////    REQUIREMENTS       /////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+List<Requirement> getRequirements():
+ {
+    List<Requirement> requirements = new ArrayList<>();
+    Requirement requirement;
+ }
+ {
+    <LPAR> <COLON> <REQUIREMENTS> (requirement = getRequirement() { requirements.add(requirement);})* <RPAR>
+    {
+        return requirements;
+    }
+ }
+
+ Requirement getRequirement():
+ {
+     Requirement requirement = new Requirement();
+     String value;
+ }
+ {
+     <COLON> value = getAttribute()
+     {
+        requirement.setValue(value);
+        return requirement;
+     }
+ }
+
+////////////////////////////////////////////////////////////////////////
+////////////////    TYPES   ////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+ List<Type> getTypes():
+ {
+    List<Type> types = new ArrayList<>();
+    Type type;
+ }
+ {
+    <LPAR> <COLON> <TYPES> (type = getType() { types.add(type);})* <RPAR>
+    {
+        return types;
+    }
+ }
+
+ Type getType():
+ {
+     Type type = new Type();
+     String name;
+     String baseType;
+ }
+ {
+     name = getAttribute() <DASH> baseType = getAttribute()
+     {
+        type.setName(name);
+        type.setBaseType(baseType);
+        return type;
+     }
+ }
+
+////////////////////////////////////////////////////////////////////////
+////////////////    PREDICATES   ///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+  List<Predicate> getPredicates():
+  {
+     List<Predicate> predicates = new ArrayList<>();
+     Predicate predicate;
+  }
+  {
+     <LPAR> <COLON> <PREDICATES> (predicate = getPredicate()
+                                    {
+                                        predicates.add(predicate);
+                                    })* <RPAR>
+     {
+         return predicates;
+     }
+  }
+
+ Predicate getPredicate():
+ {
+     Predicate predicate = new Predicate();
+     List<Argument> arguments = new ArrayList<>();
+
+     String name;
+     String argumentName;
+     String argumentType;
+ }
+ {
+     <LPAR> (
+                name = getAttribute()
+                    (<QUESTIONMARK> argumentName = getAttribute() <DASH> argumentType = getAttribute()
+                        {
+                            Argument argument = new Argument();
+                            argument.setName(argumentName);
+                            argument.setType(argumentType);
+                            arguments.add(argument);
+                        }
+                    )+
+                ) <RPAR>
+     {
+        predicate.setName(name);
+        predicate.setArguments(arguments);
+        return predicate;
+     }
+ }
+////////////////////////////////////////////////////////////////////////
+////////////////    GET PARAMETERS   ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+///                 Used in task/method/action/problem body          ///
+////////////////////////////////////////////////////////////////////////
+
+List<Parameter> getParameters():
+ {
+    List<Parameter> parameters = new ArrayList<>();
+    String paramName;
+    String paramType;
+ }
+ {
+    <COLON> <PARAMETERS> <LPAR> (<QUESTIONMARK> paramName = getAttribute() <DASH> paramType = getAttribute()
+    {
+             Parameter parameter = new Parameter();
+             parameter.setName(paramName);
+             parameter.setType(paramType);
+             parameters.add(parameter);
+    })* <RPAR>
+
+    {
+        return parameters;
+    }
+ }
+
+////////////////////////////////////////////////////////////////////////
+////////////////    TASKS   ////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+Task getTask():
+ {
+    Task task = new Task();
+    List<Parameter> parameters = new ArrayList<>();
+    String name;
+    String paramName;
+    String paramType;
+ }
+ {
+     name = getAttribute()
+        parameters = getParameters()
+
+    {
+        task.setName(name);
+        task.setParameters(parameters);
+        return task;
+    }
+ }
+
+ List<Task> getTasks():
+ {
+     List<Task> tasks = new ArrayList<>();
+     List<Argument> arguments = new ArrayList<>();
+     String name;
+ }
+ {
+    (
+        {
+            Task task = new Task();
+        }
+            <LPAR> <COLON> <TASK> task = getTask() <RPAR>
+        {
+            tasks.add(task);
+        }
+    )*
+    {
+        return tasks;
+    }
+ }
+
+////////////////////////////////////////////////////////////////////////
+////////////////    METHODS   //////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+List<Method> getMethods():
+{
+    List<Method> methods = new ArrayList<>();
+    Method method;
+
+}
+{
+    (<LPAR> <COLON> <METHOD> method = getMethod() { methods.add(method);} <RPAR>)*
+    {
+        return methods;
+    }
+}
+
+
+
+Method getMethod():
+ {
+    Method method = new Method();
+    Task task = new Task();
+    List<Parameter> methodParameters = new ArrayList<>();
+    List<Subtask> subtasks = new ArrayList<>();
+    List<Ordering> ordering = new ArrayList<>();
+    String methodName;
+    String paramName;
+    String paramType;
+    String taskName;
+ }
+ {
+        methodName = getAttribute()
+        methodParameters = getParameters()
+        task = getTaskSignature(methodParameters)
+        (subtasks = getSubtaskDefinition() | subtasks = getSubtasksDefinition())
+        (ordering = getOrdering())*
+
+    {
+        method.setName(methodName);
+        method.setParameters(methodParameters);
+        method.setTask(task);
+        method.setSubtasks(subtasks);
+        method.setOrdering(ordering);
+        return method;
+    }
+ }
+
+Task getTaskSignature(List<Parameter> parameters):
+ {
+     Task task = new Task();
+     List<Parameter> taskParameters = new ArrayList<>();
+     String taskName;
+     String paramName;
+ }
+ {
+     <COLON> <TASK> <LPAR> taskName = getAttribute() (<QUESTIONMARK> paramName = getAttribute()
+     {
+        for(Parameter p : parameters) {
+            if(p.getName().equals(paramName)) {
+                taskParameters.add(p);
+            }
+        }
+     })* <RPAR>
+
+    {
+        task.setName(taskName);
+        task.setParameters(taskParameters);
+        return task;
+    }
+ }
+
+List<Subtask> getSubtaskDefinition():
+{
+    List<Subtask> subtasks = new ArrayList<>();
+    List<Parameter> subtaskParameters = new ArrayList<>();
+    String subtaskName;
+    String taskName;
+    String param;
+}
+{
+    <COLON> <SUBTASKS> <LPAR>
+        ( subtaskName = getAttribute() <LPAR> taskName = getAttribute()
+            (
+                <QUESTIONMARK> param = getAttribute()
+                    {
+                        Parameter parameter = new Parameter();
+                        parameter.setName(param);
+                        subtaskParameters.add(parameter);
+                    }
+            )*
+        <RPAR>
+
+        {
+            Subtask subtask = new Subtask();
+            Task task = new Task();
+            subtask.setName(subtaskName);
+            task.setName(taskName);
+            task.setParameters(subtaskParameters);
+            subtask.setTask(task);
+            subtasks.add(subtask);
+            subtaskParameters = new ArrayList<>();
+        }
+        )
+        <RPAR>
+
+    {
+        return subtasks;
+    }
+}
+
+List<Subtask> getSubtasksDefinition():
+{
+    List<Subtask> subtasks = new ArrayList<>();
+    List<Parameter> subtaskParameters = new ArrayList<>();
+    String subtaskName;
+    String taskName;
+    String param;
+}
+{
+    <COLON> <SUBTASKS> <LPAR> <AND>
+        (<LPAR> subtaskName = getAttribute() <LPAR> taskName = getAttribute()
+            (
+                <QUESTIONMARK> param = getAttribute()
+                    {
+                        Parameter parameter = new Parameter();
+                        parameter.setName(param);
+                        subtaskParameters.add(parameter);
+                    }
+            )* <RPAR> <RPAR>
+
+        {
+            Subtask subtask = new Subtask();
+            Task task = new Task();
+            subtask.setName(subtaskName);
+            task.setName(taskName);
+            task.setParameters(subtaskParameters);
+            subtask.setTask(task);
+            subtasks.add(subtask);
+            subtaskParameters = new ArrayList<>();
+        }
+        )*
+        <RPAR>
+
+    {
+        return subtasks;
+    }
+}
+
+List<Ordering> getOrdering():
+{
+    List<Ordering> ordering = new ArrayList<>();
+    String subtaskBefore;
+    String subtaskAfter;
+}
+{
+    <COLON> <ORDERING> <LPAR> <AND>
+    (<LPAR> <LT> subtaskBefore = getAttribute() subtaskAfter = getAttribute() <RPAR>
+        {
+            Ordering o = new Ordering();
+            o.setSubtaskBefore(subtaskBefore);
+            o.setSubtaskAfter(subtaskAfter);
+            ordering.add(o);
+        }
+    )*
+    <RPAR>
+    {
+        return ordering;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////
+////////////////    Actions   //////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+List<Action> getActions():
+{
+    List<Action> actions = new ArrayList<>();
+    Action action = new Action();
+}
+{
+    (action = getAction(){actions.add(action);})*
+    {
+        return actions;
+    }
+}
+
+Action getAction():
+{
+    Action action = new Action();
+    List<Parameter> parameters = new ArrayList<>();
+    List<Predicate> preconditions = new ArrayList<>();
+    List<Predicate> effects = new ArrayList<>();
+    String actionName;
+}
+{
+    <LPAR> <COLON> <ACTION>
+    actionName = getAttribute()
+    parameters = getParameters()
+    <COLON> <PRECONDITION> preconditions = getActionPredicates()
+    <COLON> <EFFECT> effects = getActionPredicates()
+    <RPAR>
+    {
+        action.setName(actionName);
+        action.setParameters(parameters);
+        action.setPreconditions(preconditions);
+        action.setEffects(effects);
+        return action;
+    }
+}
+
+List<Predicate> getActionPredicates():
+{
+    List<Predicate> predicates = new ArrayList<>();
+    List<Argument> arguments = new ArrayList<>();
+    String name;
+    String param;
+
+}
+{
+    <LPAR>
+    (
+        <AND>
+        (
+            //////////////////////////////////////////
+            ////////////// TRUE //////////////////////
+            //////////////////////////////////////////
+            (
+            <LPAR> name = getAttribute()
+            (
+                <QUESTIONMARK> param = getAttribute()
+                {
+                   Argument argument = new Argument();
+                   argument.setName(param);
+                   arguments.add(argument);
+                }
+            )*
+            <RPAR>
+            {
+                Predicate predicate = new Predicate();
+                predicate.setName(name);
+                predicate.setArguments(arguments);
+                predicate.setValue(true);
+                predicates.add(predicate);
+                arguments = new ArrayList<>();
+            }
+            )
+
+            |
+            //////////////////////////////////////////
+            ////////////// FALSE /////////////////////
+            //////////////////////////////////////////
+            (
+            <LPAR> <NOT> <LPAR>name = getAttribute()
+            (
+                <QUESTIONMARK> param = getAttribute()
+                {
+                   Argument argument = new Argument();
+                   argument.setName(param);
+                   arguments.add(argument);
+                }
+            )*
+            <RPAR>
+            {
+                Predicate predicate = new Predicate();
+                predicate.setName(name);
+                predicate.setArguments(arguments);
+                predicate.setValue(false);
+                predicates.add(predicate);
+                arguments = new ArrayList<>();
+            }
+            <RPAR>
+            )
+        )*
+    )*
+    <RPAR>
+    {
+        return predicates;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////
+////////////////    Problem   //////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+Problem problem():
+  {
+    Problem problem = new Problem();
+    List<Argument> objects = new ArrayList<>();
+    List<Predicate> init = new ArrayList<>();
+    Htn htn;
+    String problemName;
+    String domainName;
+  }
+  {
+    <LPAR> <DEFINE> <LPAR> <PROBLEM> problemName = getAttribute() <RPAR>
+    <LPAR> <COLON> <DOMAIN> domainName = getAttribute() <RPAR>
+    objects = getObjects()
+    htn = getHtn()
+    init = getInit()
+    <RPAR>
+    {
+        problem.setName(problemName);
+        problem.setObjects(objects);
+        problem.setHtn(htn);
+        problem.setInit(init);
+        return problem;
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////
+////////////////    Objects   //////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+List<Argument> getObjects():
+{
+    List<Argument> objects = new ArrayList<>();
+    String name;
+    String type;
+}
+{
+    <LPAR> <COLON> <OBJECTS>
+    (name = getAttribute() <DASH> type = getAttribute()
+        {
+            Argument object = new Argument();
+            object.setName(name);
+            object.setType(type);
+            objects.add(object);
+        }
+    )*
+    <RPAR>
+    {
+        return objects;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////
+////////////////    HTN   //////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+Htn getHtn():
+{
+    Htn htn = new Htn();
+    List<Parameter> parameters = new ArrayList<>();
+    List<Subtask> subtasks = new ArrayList<>();
+    List<Ordering> ordering = new ArrayList<>();
+}
+{
+    <LPAR> <COLON> <HTN>
+    (parameters = getParameters())?
+    (subtasks = getSubtasks() | subtasks = getSubtask())
+    (ordering = getOrdering())?
+    <RPAR>
+    {
+        htn.setParameters(parameters);
+        htn.setSubtasks(subtasks);
+        htn.setOrdering(ordering);
+        return htn;
+    }
+
+}
+
+////////////////////////////////////////////////////////////////////////
+////////////////    subtasks - in HTN///////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+List<Subtask> getSubtask():
+{
+    List<Subtask> subtasks = new ArrayList<>();
+    List<Parameter> subtaskParameters = new ArrayList<>();
+    String subtaskName;
+    String taskName;
+    String param;
+}
+{
+    <COLON> (<SUBTASKS> | <TASKS>) <LPAR>
+        (subtaskName = getAttribute() <LPAR> taskName = getAttribute()
+            (
+                param = getAttribute()
+                    {
+                        Parameter parameter = new Parameter();
+                        parameter.setName(param);
+                        subtaskParameters.add(parameter);
+                    }
+            )* <RPAR>
+
+        {
+            Subtask subtask = new Subtask();
+            Task task = new Task();
+            subtask.setName(subtaskName);
+            task.setName(taskName);
+            task.setParameters(subtaskParameters);
+            subtask.setTask(task);
+            subtasks.add(subtask);
+            subtaskParameters = new ArrayList<>();
+        }
+        )*
+        <RPAR>
+
+    {
+        return subtasks;
+    }
+}
+
+
+List<Subtask> getSubtasks():
+{
+    List<Subtask> subtasks = new ArrayList<>();
+    List<Parameter> subtaskParameters = new ArrayList<>();
+    String subtaskName;
+    String taskName;
+    String param;
+}
+{
+    <COLON> (<SUBTASKS> | <TASKS>) <LPAR> <AND>
+        (<LPAR> subtaskName = getAttribute() <LPAR> taskName = getAttribute()
+            (
+                param = getAttribute()
+                    {
+                        Parameter parameter = new Parameter();
+                        parameter.setName(param);
+                        subtaskParameters.add(parameter);
+                    }
+            )* <RPAR> <RPAR>
+
+        {
+            Subtask subtask = new Subtask();
+            Task task = new Task();
+            subtask.setName(subtaskName);
+            task.setName(taskName);
+            task.setParameters(subtaskParameters);
+            subtask.setTask(task);
+            subtasks.add(subtask);
+            subtaskParameters = new ArrayList<>();
+        }
+        )*
+        <RPAR>
+
+    {
+        return subtasks;
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////
+////////////////    init   /////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+List<Predicate> getInit():
+{
+    List<Predicate> init = new ArrayList<>();
+    List<Argument> arguments = new ArrayList<>();
+    Predicate predicate = new Predicate();
+    Argument argument = new Argument();
+    String name;
+    String arg;
+}
+{
+
+    <LPAR> <COLON> <INIT>
+    (
+        <LPAR>
+        {
+            arguments = new ArrayList<>();
+        }
+        name = getAttribute()
+        (
+            arg = getAttribute()
+            {
+                argument = new Argument();
+                argument.setName(arg);
+                arguments.add(argument);
+            }
+        )*
+        <RPAR>
+        {
+            predicate = new Predicate();
+            predicate.setName(name);
+            predicate.setValue(true);
+            predicate.setArguments(arguments);
+            init.add(predicate);
+        }
+    )*
+    <RPAR>
+    {
+        return init;
+    }
+}
