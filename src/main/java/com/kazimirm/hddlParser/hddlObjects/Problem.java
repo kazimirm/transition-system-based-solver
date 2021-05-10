@@ -2,6 +2,7 @@ package com.kazimirm.hddlParser.hddlObjects;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Problem extends HtnInput{
@@ -14,7 +15,7 @@ public class Problem extends HtnInput{
     // filled in enricher and used by encoder
     private HashMap<String, List<Argument>> objectsToTypedLists = new HashMap<>(); // for each type creates list with such objects
     private HashMap<String, Type> typeNameToType = new HashMap<>();
-    private HashMap<String, Integer> objectToInt = new HashMap<>();
+    private LinkedHashMap<String, Integer> objectToInt = new LinkedHashMap<>();
     private List<Predicate> predicates = new ArrayList<>();
 
     public Problem() {
@@ -81,11 +82,11 @@ public class Problem extends HtnInput{
         this.typeNameToType = typeNameToType;
     }
 
-    public HashMap<String, Integer> getObjectToInt() {
+    public LinkedHashMap<String, Integer> getObjectToInt() {
         return objectToInt;
     }
 
-    public void setObjectToInt(HashMap<String, Integer> objectToInt) {
+    public void setObjectToInt(LinkedHashMap<String, Integer> objectToInt) {
         this.objectToInt = objectToInt;
     }
 

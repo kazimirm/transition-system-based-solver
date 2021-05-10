@@ -18,7 +18,7 @@ public class Z3Encoder {
 
     private HashMap<String, List<Argument>> objectsToTypedLists; // for each type creates list with such objects
     private HashMap<String, Type> typeNameToType;
-    private HashMap<String, Integer> objectToInt;
+    private LinkedHashMap<String, Integer> objectToInt;
     private List<Expr> allExpressions = new ArrayList<>();
     private HashMap<String, FuncDecl> functions = new HashMap<>();
     private List<Predicate> predicates;
@@ -446,7 +446,14 @@ public class Z3Encoder {
 //            System.out.println("KEY: " + key);
 //            System.out.println("VALUE: " + exprHashMap.get(key));
 //        }
-        System.out.println("}");
+        System.out.println("graph [labelloc=\"b\" labeljust=\"r\" label=<\n" +
+                "\t<TABLE BORDER=\"0\" CELLBORDER=\"2\" CELLSPACING=\"0\">\n" +
+                "\t<TR><TD colspan=\"2\">Objects Legend</TD></TR>");
+        for (Map.Entry<String, Integer> value : objectToInt.entrySet()) {
+            System.out.println("<TR><TD>" + value.getValue() + "</TD><TD>" + value.getKey() + "</TD></TR>");
+        }
+        System.out.println("</TABLE>>];" +
+                            "}");
 
     }
 

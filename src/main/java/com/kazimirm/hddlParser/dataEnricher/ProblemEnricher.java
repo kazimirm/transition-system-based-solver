@@ -19,7 +19,7 @@ public class ProblemEnricher {
     private List<Predicate> predicates = new ArrayList<>();
     private HashMap<String, List<Argument>> objectsToTypedLists = new HashMap<>(); // for each type creates list with such objects
     private HashMap<String, Type> typeNameToType = new HashMap<>();
-    private HashMap<String, Integer> objectToInt = new HashMap<>();
+    private LinkedHashMap<String, Integer> objectToInt = new LinkedHashMap<>();
 
     public ProblemEnricher(Domain domain, Problem problem) {
         this.domain = domain;
