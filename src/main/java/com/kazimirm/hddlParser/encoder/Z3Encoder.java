@@ -407,23 +407,10 @@ public class Z3Encoder {
             for (Expr e : expressions.get(i)) {
                 if (!(e instanceof BoolExpr)){
                     String color;
-                    String name = "";
-                    String label = "";
                     if ("Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
                         color = "red";
-//                        name = "\"" + (e.getArgs()[e.getNumArgs() - 1]).toString()
-//                                .replace("true", "").replace("false", "")
-//                                .replace("\n", "").replace("\r", "").trim().replaceAll(" +", " ") + "\"";
-//                        label = ",xlabel=" + name;
-//                        System.out.println(name + "\n"+ e.hashCode() + "[color=" + color + label +"] ");
-                        System.out.println(getExpressionName(e) + "[color=" + color + "] ");
-                    } else if ("Z3_OP_PR_ASSERTED".equals(e.getFuncDecl().getDeclKind().name())){
-                        color = "green";
-                    } else {
-                        color = "black";
-                        label = ",xlabel=" + e.getFuncDecl().getDeclKind().name();
+                        System.out.println(getExpressionName(e) + "[color=" + color + "];");
                     }
-//                    System.out.println(e.hashCode() + "[color=" + color + label +"] ");
                 }
 
                 if (e.getNumArgs() >= 1) {
@@ -432,7 +419,6 @@ public class Z3Encoder {
                     for (Expr arg : e.getArgs()){
                          exprHashMap.put(arg.hashCode(), arg);
                         if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name()))) {
-//                        if (!(arg instanceof BoolExpr)) {
                             System.out.println(e.hashCode() + " -> " + arg.hashCode() + ";");
                         }
                     }
@@ -442,18 +428,14 @@ public class Z3Encoder {
             expressions.add(newLevel);
             i++;
         }
-//        for (Integer key: exprHashMap.keySet()){
-//            System.out.println("KEY: " + key);
-//            System.out.println("VALUE: " + exprHashMap.get(key));
-//        }
+
         System.out.println("graph [labelloc=\"b\" labeljust=\"r\" label=<\n" +
                 "\t<TABLE BORDER=\"0\" CELLBORDER=\"2\" CELLSPACING=\"0\">\n" +
                 "\t<TR><TD colspan=\"2\">Objects Legend</TD></TR>");
         for (Map.Entry<String, Integer> value : objectToInt.entrySet()) {
             System.out.println("<TR><TD>" + value.getValue() + "</TD><TD>" + value.getKey() + "</TD></TR>");
         }
-        System.out.println("</TABLE>>];" +
-                            "}");
+        System.out.println("</TABLE>>];\n}");
 
     }
 
