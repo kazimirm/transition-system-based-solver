@@ -84,14 +84,14 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib</classpathPrefix>
+                            <classpathPrefix>classes/lib</classpathPrefix>
                             <!-- <mainClass>test.org.Cliente</mainClass> -->
                             <mainClass>
                                 com.kazimirm.transitionSystemBasedHtnSolver.TransitionSystemBasedHtnSolver
                             </mainClass>
                         </manifest>
                         <manifestEntries>
-                            <Class-Path>lib/z3-4.8.10.jar</Class-Path>
+                            <Class-Path>classes/lib/z3-4.8.10.jar</Class-Path>
                         </manifestEntries>
                     </archive>
                 </configuration>
