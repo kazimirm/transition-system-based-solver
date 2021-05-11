@@ -7,21 +7,15 @@
     <groupId>Transition-system-based_HTN_planning_solver</groupId>
     <artifactId>Transition-system-based_HTN_planning_solver</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <dependencies>
 
         <!-- JUNIT for unit tests-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
+            <version>5.7.0</version>
             <scope>test</scope>
-        </dependency>
-
-        <!-- https://github.com/sosy-lab/java-smt unified SMT solver API - not USED-->
-        <dependency>
-            <groupId>org.sosy-lab</groupId>
-            <artifactId>java-smt</artifactId>
-            <version>3.7.0-61-gea80187e</version>
         </dependency>
 
         <!-- Z3 local dependency located in libs directory-->
@@ -49,12 +43,10 @@
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>2.11.1</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/guru.nidi/graphviz-java Graphviz for graph visualization -->
         <dependency>
-            <groupId>guru.nidi</groupId>
-            <artifactId>graphviz-java</artifactId>
-            <version>0.18.1</version>
+            <groupId>com.vaadin.external.slf4j</groupId>
+            <artifactId>vaadin-slf4j-jdk14</artifactId>
+            <version>1.6.1</version>
         </dependency>
     </dependencies>
     <properties>
@@ -62,5 +54,49 @@
         <maven.compiler.source>15</maven.compiler.source>
         <maven.compiler.target>15</maven.compiler.target>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/classes/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib</classpathPrefix>
+                            <!-- <mainClass>test.org.Cliente</mainClass> -->
+                            <mainClass>
+                                com.kazimirm.transitionSystemBasedHtnSolver.TransitionSystemBasedHtnSolver
+                            </mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>lib/z3-4.8.10.jar</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
