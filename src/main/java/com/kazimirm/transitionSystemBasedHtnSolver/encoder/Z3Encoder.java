@@ -38,7 +38,7 @@ public class Z3Encoder {
         predicates = problem.getPredicates();
     }
 
-    public void encodeToZ3Expressions() {
+    public void encodeToZ3ExpressionsAndGetResult() {
         fix = ctx.mkFixedpoint();
 
         Params params = ctx.mkParams();

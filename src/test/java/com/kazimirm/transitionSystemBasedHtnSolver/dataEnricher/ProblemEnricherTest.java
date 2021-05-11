@@ -62,7 +62,7 @@ class ProblemEnricherTest {
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
         pE.enrichProblem();
         Z3Encoder encoder = new Z3Encoder(domain, problem);
-        encoder.encodeToZ3Expressions();
+        encoder.encodeToZ3ExpressionsAndGetResult();
     }
 
     @Test
@@ -71,7 +71,7 @@ class ProblemEnricherTest {
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
         pE.enrichProblem();
         Z3Encoder encoder = new Z3Encoder(domain, problem);
-        encoder.encodeToZ3Expressions();
+        encoder.encodeToZ3ExpressionsAndGetResult();
     }
 
     @Test
@@ -80,6 +80,6 @@ class ProblemEnricherTest {
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
         pE.enrichProblem();
         Z3Encoder encoder = new Z3Encoder(domain, problem);
-        encoder.encodeToZ3Expressions();
+        encoder.encodeToZ3ExpressionsAndGetResult();
     }
 }
