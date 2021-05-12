@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory;
 
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ProblemEnricher {
 
@@ -24,6 +22,7 @@ public class ProblemEnricher {
     public ProblemEnricher(Domain domain, Problem problem) {
         this.domain = domain;
         this.problem = problem;
+        enrichProblem();
     }
 
     public Domain getDomain() {

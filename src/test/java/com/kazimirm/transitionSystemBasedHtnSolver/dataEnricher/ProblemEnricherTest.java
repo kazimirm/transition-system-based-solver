@@ -17,6 +17,8 @@ class ProblemEnricherTest {
     private final String domain_htn = "domain-htn.hddl";
     private final String domain_htn_pfile01 = "pfile01.hddl";
     private final String domain_htn_pfile02 = "pfile02.hddl";
+    private final String domain_rover = "rover-domain.hddl";
+    private final String problem_rover = "rover-pfile01.hddl";
     private Domain domain;
     private Problem problem;
     private ParserHDDL parser;
@@ -82,4 +84,13 @@ class ProblemEnricherTest {
         Z3Encoder encoder = new Z3Encoder(domain, problem);
         encoder.encodeToZ3ExpressionsAndGetResult();
     }
+
+//    @Test
+//    void encodeProblemRover() throws FileNotFoundException, ParseException {
+//        setUp(domain_rover, problem_rover);
+//        ProblemEnricher pE = new ProblemEnricher(domain, problem);
+//        pE.enrichProblem();
+//        Z3Encoder encoder = new Z3Encoder(domain, problem);
+//        encoder.encodeToZ3ExpressionsAndGetResult();
+//    }
 }

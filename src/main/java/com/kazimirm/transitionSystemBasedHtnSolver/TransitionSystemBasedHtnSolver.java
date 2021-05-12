@@ -21,6 +21,7 @@ public class TransitionSystemBasedHtnSolver {
         String pD = args[0];
         String pP = args[1];
 
+        long startTime = System.nanoTime();
         try (InputStream dI = Files.newInputStream(Paths.get(pD));
              InputStream pI = Files.newInputStream(Paths.get(pP))) {
 
@@ -36,6 +37,12 @@ public class TransitionSystemBasedHtnSolver {
 
         } catch (IOException | ParseException e) {
             e.printStackTrace();
+        } finally {
+            long endTime = System.nanoTime();
+            long elapsedTime = (endTime - startTime);
+            double duration = (double) elapsedTime / 1_000_000_000;
+            System.out.println("Execution took '"+ duration +"' seconds");
         }
+
     }
 }
