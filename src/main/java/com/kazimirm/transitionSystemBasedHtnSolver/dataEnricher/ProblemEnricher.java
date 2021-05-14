@@ -157,6 +157,31 @@ public class ProblemEnricher {
             postConditions.forEach(p -> p.setIndex(m.getSubtasks().size()));
             t.setPostConditions(postConditions);
 
+
+
+            // Methods with preconditions have unique handling. As our encoding does not support that, we create an action
+            // for each method that has some preconditions. This action has the same parameters and preconditions as method,
+            // no effects and it will be the first subtask of the method.
+            if (m.getPreconditions() != null && !m.getPreconditions().isEmpty()){
+                Action preconditionAction = new Action();
+                preconditionAction.setName(m.getName() + "_Precondition");
+                preconditionAction.setParameters(m.getParameters());
+                preconditionAction.setPreconditions(m.getPreconditions());
+                preconditionAction.setEffects(Collections.emptyList());
+                domain.getActions().add(preconditionAction);
+
+                Task preconditionTask = new Task();
+                preconditionTask.setName(m.getName() + "_Precondition");
+                preconditionTask.setParameters(m.getParameters());
+                preconditionTask.setPostConditions(Collections.emptyList());
+                preconditionTask.setPreConditions(m.getPreconditions());
+
+                Subtask preconditionSubtask = new Subtask();
+                preconditionSubtask.setName(m.getName() + "_Precondition");
+                preconditionSubtask.setTask(preconditionTask);
+                m.getSubtasks().add(0, preconditionSubtask);
+            }
+
             for (Subtask s : m.getSubtasks()) {
                 Task st = s.getTask();
 
