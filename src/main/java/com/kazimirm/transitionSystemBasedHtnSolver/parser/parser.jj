@@ -378,6 +378,7 @@ Method getMethod():
     Method method = new Method();
     Task task = new Task();
     List<Parameter> methodParameters = new ArrayList<>();
+    List<Predicate> preconditions = new ArrayList<>();
     List<Subtask> subtasks = new ArrayList<>();
     List<Ordering> ordering = new ArrayList<>();
     String methodName;
@@ -389,6 +390,7 @@ Method getMethod():
         methodName = getAttribute()
         methodParameters = getParameters()
         task = getTaskSignature(methodParameters)
+        (<COLON> <PRECONDITION> preconditions = getActionPredicates())?
         (subtasks = getSubtaskDefinition() | subtasks = getSubtasksDefinition())
         (ordering = getOrdering())*
 
@@ -396,6 +398,7 @@ Method getMethod():
         method.setName(methodName);
         method.setParameters(methodParameters);
         method.setTask(task);
+        method.setPreconditions(preconditions);
         method.setSubtasks(subtasks);
         method.setOrdering(ordering);
         return method;
@@ -474,7 +477,7 @@ List<Subtask> getSubtasksDefinition():
     String param;
 }
 {
-    <COLON> <SUBTASKS> <LPAR> <AND>
+    <COLON> <SUBTASKS> <LPAR> (<AND>)?
         (<LPAR> subtaskName = getAttribute() <LPAR> taskName = getAttribute()
             (
                 <QUESTIONMARK> param = getAttribute()

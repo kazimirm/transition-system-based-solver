@@ -17,8 +17,8 @@ class ProblemEnricherTest {
     private final String domain_htn = "domain-htn.hddl";
     private final String domain_htn_pfile01 = "pfile01.hddl";
     private final String domain_htn_pfile02 = "pfile02.hddl";
-    private final String domain_rover = "rover-domain.hddl";
-    private final String problem_rover = "rover-pfile01.hddl";
+    private final String dmn = "rover-domain.hddl";
+    private final String prb = "rover-pfile01.hddl";
     private Domain domain;
     private Problem problem;
     private ParserHDDL parser;
@@ -48,22 +48,19 @@ class ProblemEnricherTest {
     void enrichProblemPreliminaries() throws FileNotFoundException, ParseException {
         setUp(DOMAIN_BASIC_FROM_PRELIMINARIES, PROBLEM_BASIC_FROM_PRELIMINARIES);
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
-        pE.enrichProblem();
     }
 
     @Test
     void enrichProblemPfile01() throws FileNotFoundException, ParseException {
         setUp(domain_htn, domain_htn_pfile01);
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
-        pE.enrichProblem();
     }
 
     @Test
     void encodeProblemPfile01() throws FileNotFoundException, ParseException {
         setUp(domain_htn, domain_htn_pfile01);
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
-        pE.enrichProblem();
-        Z3Encoder encoder = new Z3Encoder(domain, problem);
+        Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
         encoder.encodeToZ3ExpressionsAndGetResult();
     }
 
@@ -71,8 +68,7 @@ class ProblemEnricherTest {
     void encodeProblemPfile02() throws FileNotFoundException, ParseException {
         setUp(domain_htn, domain_htn_pfile02);
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
-        pE.enrichProblem();
-        Z3Encoder encoder = new Z3Encoder(domain, problem);
+        Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
         encoder.encodeToZ3ExpressionsAndGetResult();
     }
 
@@ -80,17 +76,15 @@ class ProblemEnricherTest {
     void encodeProblemPreliminaries() throws FileNotFoundException, ParseException {
         setUp(DOMAIN_BASIC_FROM_PRELIMINARIES, PROBLEM_BASIC_FROM_PRELIMINARIES);
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
-        pE.enrichProblem();
-        Z3Encoder encoder = new Z3Encoder(domain, problem);
+        Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
         encoder.encodeToZ3ExpressionsAndGetResult();
     }
 
-//    @Test
-//    void encodeProblemRover() throws FileNotFoundException, ParseException {
-//        setUp(domain_rover, problem_rover);
-//        ProblemEnricher pE = new ProblemEnricher(domain, problem);
-//        pE.enrichProblem();
-//        Z3Encoder encoder = new Z3Encoder(domain, problem);
-//        encoder.encodeToZ3ExpressionsAndGetResult();
-//    }
+    @Test
+    void encodeProblemRover() throws FileNotFoundException, ParseException {
+        setUp(dmn, prb);
+        ProblemEnricher pE = new ProblemEnricher(domain, problem);
+        Z3Encoder encoder = new Z3Encoder(domain, problem);
+        encoder.encodeToZ3ExpressionsAndGetResult();
+    }
 }

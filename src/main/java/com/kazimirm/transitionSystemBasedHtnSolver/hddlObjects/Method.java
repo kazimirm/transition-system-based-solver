@@ -6,6 +6,7 @@ public class Method {
     private String name;
     private List<Parameter> parameters;
     private Task task;
+    private List<Predicate> preconditions;
     private List<Subtask> subtasks;
     private List<Ordering> ordering;
 
@@ -34,6 +35,14 @@ public class Method {
 
     public void setTask(Task task) {
         this.task = task;
+    }
+
+    public List<Predicate> getPreconditions() {
+        return preconditions;
+    }
+
+    public void setPreconditions(List<Predicate> preconditions) {
+        this.preconditions = preconditions;
     }
 
     public List<Subtask> getSubtasks() {
