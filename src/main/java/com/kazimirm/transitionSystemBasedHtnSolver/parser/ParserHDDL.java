@@ -218,6 +218,11 @@ predicates.add(predicate);
     name = getAttribute();
     label_4:
     while (true) {
+      if (jj_2_5(5)) {
+        ;
+      } else {
+        break label_4;
+      }
       jj_consume_token(QUESTIONMARK);
       argumentName = getAttribute();
       jj_consume_token(DASH);
@@ -226,11 +231,6 @@ Argument argument = new Argument();
                             argument.setName(argumentName);
                             argument.setType(argumentType);
                             arguments.add(argument);
-      if (jj_2_5(5)) {
-        ;
-      } else {
-        break label_4;
-      }
     }
     jj_consume_token(RPAR);
 predicate.setName(name);
@@ -1260,11 +1260,11 @@ predicate = new Predicate();
     if (jj_scan_token(LPAR)) return true;
     if (jj_3R_getAttribute_142_5_30()) return true;
     Token xsp;
-    if (jj_3_5()) return true;
     while (true) {
       xsp = jj_scanpos;
       if (jj_3_5()) { jj_scanpos = xsp; break; }
     }
+    if (jj_scan_token(RPAR)) return true;
     return false;
   }
 
