@@ -40,7 +40,6 @@
 		(visible ?arg0 - waypoint ?arg1 - waypoint)
 		(visible_from ?arg0 - objective ?arg1 - waypoint)
 		(visited ?arg0 - waypoint)
-		(works)
 	)
 
 	(:task calibrate_abs

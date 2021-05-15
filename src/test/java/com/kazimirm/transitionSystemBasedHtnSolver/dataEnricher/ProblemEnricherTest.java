@@ -21,11 +21,11 @@ class ProblemEnricherTest {
     private final String prb = "rover-pfile01.hddl";
     private Domain domain;
     private Problem problem;
-    private ParserHDDL parser;
+    private static ParserHDDL parser;
 
     @BeforeAll
     static void setup(){
-        ParserHDDL parser = new ParserHDDL(InputStream.nullInputStream());
+        parser = new ParserHDDL(InputStream.nullInputStream());
     }
 
     void setUp(String d, String p) throws FileNotFoundException, ParseException {
