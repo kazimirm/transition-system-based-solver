@@ -250,7 +250,8 @@ List<Requirement> getRequirements():
      <LPAR> <COLON> <PREDICATES> (predicate = getPredicate()
                                     {
                                         predicates.add(predicate);
-                                    })* <RPAR>
+                                    }
+                                  )* <RPAR>
      {
          return predicates;
      }
@@ -300,17 +301,26 @@ List<Requirement> getRequirements():
 List<Parameter> getParameters():
  {
     List<Parameter> parameters = new ArrayList<>();
+    List<Parameter> parametersOfSameType;
     String paramName;
     String paramType;
  }
  {
-    <COLON> <PARAMETERS> <LPAR> (<QUESTIONMARK> paramName = getAttribute() <DASH> paramType = getAttribute()
-    {
-             Parameter parameter = new Parameter();
-             parameter.setName(paramName);
-             parameter.setType(paramType);
-             parameters.add(parameter);
-    })* <RPAR>
+    <COLON> <PARAMETERS> <LPAR> ({parametersOfSameType = new ArrayList<>();}
+                                    (<QUESTIONMARK> paramName = getAttribute()
+                                        {
+                                         Parameter parameter = new Parameter();
+                                         parameter.setName(paramName);
+                                         parameters.add(parameter);
+                                         }
+                                    )+ <DASH> paramType = getAttribute()
+                                    {
+                                        for (Parameter p : parametersOfSameType){
+                                            p.setType(paramType);
+                                        }
+                                        parameters = Stream.concat(parameters.stream(), parametersOfSameType.stream()).collect(Collectors.toList());
+                                    }
+    )* <RPAR>
 
     {
         return parameters;
@@ -396,7 +406,7 @@ Method getMethod():
         methodName = getAttribute()
         methodParameters = getParameters()
         task = getTaskSignature(methodParameters)
-        (<COLON> <PRECONDITION> preconditions = getActionPredicates())?
+        (<COLON> <PRECONDITION> (preconditions = getActionPredicates()) | (preconditions =  getActionPredicate()))?
         (subtasks = getSubtaskDefinition() | subtasks = getSubtasksDefinition())
         (ordering = getOrdering())*
 
@@ -639,6 +649,69 @@ List<Predicate> getActionPredicates():
         )*
     )*
     <RPAR>
+    {
+        return predicates;
+    }
+}
+
+List<Predicate> getActionPredicate():
+{
+    List<Predicate> predicates = new ArrayList<>();
+    List<Argument> arguments = new ArrayList<>();
+    String name;
+    String param;
+
+}
+{
+
+            //////////////////////////////////////////
+            ////////////// TRUE //////////////////////
+            //////////////////////////////////////////
+            (
+            <LPAR> name = getAttribute()
+            (
+                <QUESTIONMARK> param = getAttribute()
+                {
+                   Argument argument = new Argument();
+                   argument.setName(param);
+                   arguments.add(argument);
+                }
+            )*
+            <RPAR>
+            {
+                Predicate predicate = new Predicate();
+                predicate.setName(name);
+                predicate.setArguments(arguments);
+                predicate.setValue(true);
+                predicates.add(predicate);
+                arguments = new ArrayList<>();
+            }
+            )
+           |
+            //////////////////////////////////////////
+            ////////////// FALSE /////////////////////
+            //////////////////////////////////////////
+            (
+            <LPAR> <NOT> <LPAR>name = getAttribute()
+            (
+                <QUESTIONMARK> param = getAttribute()
+                {
+                   Argument argument = new Argument();
+                   argument.setName(param);
+                   arguments.add(argument);
+                }
+            )*
+            <RPAR>
+            {
+                Predicate predicate = new Predicate();
+                predicate.setName(name);
+                predicate.setArguments(arguments);
+                predicate.setValue(false);
+                predicates.add(predicate);
+                arguments = new ArrayList<>();
+            }
+        <RPAR>
+        )
     {
         return predicates;
     }
