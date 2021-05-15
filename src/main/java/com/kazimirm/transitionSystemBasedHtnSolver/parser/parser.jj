@@ -2,6 +2,7 @@
     IGNORE_CASE = false;
     OPTIMIZE_TOKEN_MANAGER = true;
     LOOKAHEAD=5;
+    STATIC=false;
   }
 
   PARSER_BEGIN(ParserHDDL)

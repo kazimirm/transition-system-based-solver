@@ -7,6 +7,7 @@ import com.kazimirm.transitionSystemBasedHtnSolver.parser.ParseException;
 import com.kazimirm.transitionSystemBasedHtnSolver.parser.ParserHDDL;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.io.*;
 import java.util.Objects;
@@ -14,6 +15,7 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ParserTest {
 
     private final String DOMAIN_BASIC_FROM_PRELIMINARIES = "domain_basic_from_preliminaries.txt";
@@ -22,28 +24,23 @@ public class ParserTest {
     private final String DOMAIN_INPUT_INVALID_2 = "domain_input_invalid_1.txt"; // wrong space
     private final String PROBLEM_INPUT_BASIC_1 = "problem_input_basic_1.txt";
     private final String DOMAIN_INPUT_BASIC_1 = "domain_input_basic_1.txt";
-    private static ParserHDDL parser;
+    private ParserHDDL parser;
     private Domain domain;
     private Problem problem;
 
-    @BeforeAll
-    static void setup(){
-        parser = new ParserHDDL(InputStream.nullInputStream());
-    }
-
     void setUp(String d, String p) throws FileNotFoundException, ParseException {
         ClassLoader classLoader = this.getClass().getClassLoader();
+
         File file = new File(classLoader.getResource(d).getFile());
         InputStream targetStream = new FileInputStream(file);
 
-        parser.ReInit(targetStream);
+        parser = new ParserHDDL(targetStream);
         domain = parser.parseDomain();
-
 
         file = new File(Objects.requireNonNull(classLoader.getResource(p)).getFile());
         targetStream = new FileInputStream(file);
 
-        parser.ReInit(targetStream);
+        parser = new ParserHDDL(targetStream);
         problem = parser.parseProblem();
     }
 

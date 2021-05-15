@@ -7,10 +7,12 @@ import com.kazimirm.transitionSystemBasedHtnSolver.parser.ParseException;
 import com.kazimirm.transitionSystemBasedHtnSolver.parser.ParserHDDL;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.io.*;
 import java.util.Objects;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProblemEnricherTest {
     private final String DOMAIN_BASIC_FROM_PRELIMINARIES = "domain_basic_from_preliminaries.txt";
     private final String PROBLEM_BASIC_FROM_PRELIMINARIES = "problem_basic_from_preliminaries.txt";
@@ -21,26 +23,21 @@ class ProblemEnricherTest {
     private final String prb = "rover-pfile01.hddl";
     private Domain domain;
     private Problem problem;
-    private static ParserHDDL parser;
-
-    @BeforeAll
-    static void setup(){
-        parser = new ParserHDDL(InputStream.nullInputStream());
-    }
+    private ParserHDDL parser;
 
     void setUp(String d, String p) throws FileNotFoundException, ParseException {
         ClassLoader classLoader = this.getClass().getClassLoader();
+
         File file = new File(classLoader.getResource(d).getFile());
         InputStream targetStream = new FileInputStream(file);
 
-        parser.ReInit(targetStream);
+        parser = new ParserHDDL(targetStream);
         domain = parser.parseDomain();
-
 
         file = new File(Objects.requireNonNull(classLoader.getResource(p)).getFile());
         targetStream = new FileInputStream(file);
 
-        parser.ReInit(targetStream);
+        parser = new ParserHDDL(targetStream);
         problem = parser.parseProblem();
     }
 

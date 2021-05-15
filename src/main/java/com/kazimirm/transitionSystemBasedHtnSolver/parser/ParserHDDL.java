@@ -25,7 +25,7 @@ public class ParserHDDL implements ParserHDDLConstants {
 ////////////////////////////////////////////////////////////////////////
 ////////////////    ENTRY POINT      ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-  static final public 
+  final public 
   Domain parseDomain() throws ParseException {Domain domain = new Domain();
     domain = domain();
     jj_consume_token(0);
@@ -33,7 +33,7 @@ public class ParserHDDL implements ParserHDDLConstants {
     throw new Error("Missing return statement in function");
 }
 
-  static final public Problem parseProblem() throws ParseException {Problem problem = new Problem();
+  final public Problem parseProblem() throws ParseException {Problem problem = new Problem();
     problem = problem();
     jj_consume_token(0);
 {if ("" != null) return problem;}
@@ -69,7 +69,7 @@ public class ParserHDDL implements ParserHDDLConstants {
 ////////////////////////////////////////////////////////////////////////
 ////////////////    HELP METHODS       /////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-  static final public   String getAttribute() throws ParseException {Token attribute;
+  final public   String getAttribute() throws ParseException {Token attribute;
     attribute = jj_consume_token(VAR);
 {if ("" != null) return attribute.toString();}
     throw new Error("Missing return statement in function");
@@ -78,7 +78,7 @@ public class ParserHDDL implements ParserHDDLConstants {
 ////////////////////////////////////////////////////////////////////////
 ////////////////    DOMAIN      ////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-  static final public 
+  final public 
   Domain domain() throws ParseException {Domain domain = new Domain();
     List<Requirement> requirements = new ArrayList<>();
     List<Type> types = new ArrayList<>();
@@ -118,7 +118,7 @@ domain.setName(domainName);
 ////////////////////////////////////////////////////////////////////////
 ////////////////    REQUIREMENTS       /////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-  static final public 
+  final public 
 List<Requirement> getRequirements() throws ParseException {List<Requirement> requirements = new ArrayList<>();
     Requirement requirement;
     jj_consume_token(LPAR);
@@ -139,7 +139,7 @@ requirements.add(requirement);
     throw new Error("Missing return statement in function");
 }
 
-  static final public Requirement getRequirement() throws ParseException {Requirement requirement = new Requirement();
+  final public Requirement getRequirement() throws ParseException {Requirement requirement = new Requirement();
      String value;
     jj_consume_token(COLON);
     value = getAttribute();
@@ -151,7 +151,7 @@ requirement.setValue(value);
 ////////////////////////////////////////////////////////////////////////
 ////////////////    TYPES   ////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-  static final public 
+  final public 
  List<Type> getTypes() throws ParseException {List<Type> types = new ArrayList<>();
     Type type;
     jj_consume_token(LPAR);
@@ -172,7 +172,7 @@ types.add(type);
     throw new Error("Missing return statement in function");
 }
 
-  static final public Type getType() throws ParseException {Type type = new Type();
+  final public Type getType() throws ParseException {Type type = new Type();
      String name;
      String baseType;
     name = getAttribute();
@@ -187,7 +187,7 @@ type.setName(name);
 ////////////////////////////////////////////////////////////////////////
 ////////////////    PREDICATES   ///////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-  static final public 
+  final public 
   List<Predicate> getPredicates() throws ParseException {List<Predicate> predicates = new ArrayList<>();
      Predicate predicate;
     jj_consume_token(LPAR);
@@ -208,7 +208,7 @@ predicates.add(predicate);
     throw new Error("Missing return statement in function");
 }
 
-  static final public Predicate getPredicate() throws ParseException {Predicate predicate = new Predicate();
+  final public Predicate getPredicate() throws ParseException {Predicate predicate = new Predicate();
      List<Argument> arguments = new ArrayList<>();
 
      String name;
@@ -244,7 +244,7 @@ predicate.setName(name);
 ////////////////////////////////////////////////////////////////////////
 ///                 Used in task/method/action/problem body          ///
 ////////////////////////////////////////////////////////////////////////
-  static final public 
+  final public 
 List<Parameter> getParameters() throws ParseException {List<Parameter> parameters = new ArrayList<>();
     String paramName;
     String paramType;
@@ -275,7 +275,7 @@ Parameter parameter = new Parameter();
 ////////////////////////////////////////////////////////////////////////
 ////////////////    TASKS   ////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-  static final public 
+  final public 
 Task getTask() throws ParseException {Task task = new Task();
     List<Parameter> parameters = new ArrayList<>();
     String name;
@@ -289,7 +289,7 @@ task.setName(name);
     throw new Error("Missing return statement in function");
 }
 
-  static final public List<Task> getTasks() throws ParseException {List<Task> tasks = new ArrayList<>();
+  final public List<Task> getTasks() throws ParseException {List<Task> tasks = new ArrayList<>();
      List<Argument> arguments = new ArrayList<>();
      String name;
     label_6:
@@ -314,7 +314,7 @@ tasks.add(task);
 ////////////////////////////////////////////////////////////////////////
 ////////////////    METHODS   //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-  static final public List<Method> getMethods() throws ParseException {List<Method> methods = new ArrayList<>();
+  final public List<Method> getMethods() throws ParseException {List<Method> methods = new ArrayList<>();
     Method method;
     label_7:
     while (true) {
@@ -334,7 +334,7 @@ methods.add(method);
     throw new Error("Missing return statement in function");
 }
 
-  static final public Method getMethod() throws ParseException {Method method = new Method();
+  final public Method getMethod() throws ParseException {Method method = new Method();
     Task task = new Task();
     List<Parameter> methodParameters = new ArrayList<>();
     List<Predicate> preconditions = new ArrayList<>();
@@ -381,7 +381,7 @@ method.setName(methodName);
     throw new Error("Missing return statement in function");
 }
 
-  static final public Task getTaskSignature(List<Parameter> parameters) throws ParseException {Task task = new Task();
+  final public Task getTaskSignature(List<Parameter> parameters) throws ParseException {Task task = new Task();
      List<Parameter> taskParameters = new ArrayList<>();
      String taskName;
      String paramName;
@@ -411,7 +411,7 @@ task.setName(taskName);
     throw new Error("Missing return statement in function");
 }
 
-  static final public List<Subtask> getSubtaskDefinition() throws ParseException {List<Subtask> subtasks = new ArrayList<>();
+  final public List<Subtask> getSubtaskDefinition() throws ParseException {List<Subtask> subtasks = new ArrayList<>();
     List<Parameter> subtaskParameters = new ArrayList<>();
     String subtaskName;
     String taskName;
@@ -449,7 +449,7 @@ Subtask subtask = new Subtask();
     throw new Error("Missing return statement in function");
 }
 
-  static final public List<Subtask> getSubtasksDefinition() throws ParseException {List<Subtask> subtasks = new ArrayList<>();
+  final public List<Subtask> getSubtasksDefinition() throws ParseException {List<Subtask> subtasks = new ArrayList<>();
     List<Parameter> subtaskParameters = new ArrayList<>();
     String subtaskName;
     String taskName;
@@ -502,7 +502,7 @@ Subtask subtask = new Subtask();
     throw new Error("Missing return statement in function");
 }
 
-  static final public List<Ordering> getOrdering() throws ParseException {List<Ordering> ordering = new ArrayList<>();
+  final public List<Ordering> getOrdering() throws ParseException {List<Ordering> ordering = new ArrayList<>();
     String subtaskBefore;
     String subtaskAfter;
     jj_consume_token(COLON);
@@ -534,7 +534,7 @@ Ordering o = new Ordering();
 ////////////////////////////////////////////////////////////////////////
 ////////////////    Actions   //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-  static final public 
+  final public 
 List<Action> getActions() throws ParseException {List<Action> actions = new ArrayList<>();
     Action action = new Action();
     label_14:
@@ -551,7 +551,7 @@ actions.add(action);
     throw new Error("Missing return statement in function");
 }
 
-  static final public Action getAction() throws ParseException {Action action = new Action();
+  final public Action getAction() throws ParseException {Action action = new Action();
     List<Parameter> parameters = new ArrayList<>();
     List<Predicate> preconditions = new ArrayList<>();
     List<Predicate> effects = new ArrayList<>();
@@ -576,7 +576,7 @@ action.setName(actionName);
     throw new Error("Missing return statement in function");
 }
 
-  static final public List<Predicate> getActionPredicates() throws ParseException {List<Predicate> predicates = new ArrayList<>();
+  final public List<Predicate> getActionPredicates() throws ParseException {List<Predicate> predicates = new ArrayList<>();
     List<Argument> arguments = new ArrayList<>();
     String name;
     String param;
@@ -659,7 +659,7 @@ Predicate predicate = new Predicate();
 ////////////////////////////////////////////////////////////////////////
 ////////////////    Problem   //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-  static final public 
+  final public 
 Problem problem() throws ParseException {Problem problem = new Problem();
     List<Argument> objects = new ArrayList<>();
     List<Predicate> init = new ArrayList<>();
@@ -692,7 +692,7 @@ problem.setName(problemName);
 ////////////////////////////////////////////////////////////////////////
 ////////////////    Objects   //////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-  static final public 
+  final public 
 List<Argument> getObjects() throws ParseException {List<Argument> objects = new ArrayList<>();
     String name;
     String type;
@@ -722,7 +722,7 @@ Argument object = new Argument();
 ////////////////////////////////////////////////////////////////////////
 ////////////////    HTN   //////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-  static final public 
+  final public 
 Htn getHtn() throws ParseException {Htn htn = new Htn();
     List<Parameter> parameters = new ArrayList<>();
     List<Subtask> subtasks = new ArrayList<>();
@@ -759,7 +759,7 @@ htn.setParameters(parameters);
 ////////////////////////////////////////////////////////////////////////
 ////////////////    subtasks - in HTN///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-  static final public List<Subtask> getSubtask() throws ParseException {List<Subtask> subtasks = new ArrayList<>();
+  final public List<Subtask> getSubtask() throws ParseException {List<Subtask> subtasks = new ArrayList<>();
     List<Parameter> subtaskParameters = new ArrayList<>();
     String subtaskName;
     String taskName;
@@ -811,7 +811,7 @@ Subtask subtask = new Subtask();
     throw new Error("Missing return statement in function");
 }
 
-  static final public List<Subtask> getSubtasks() throws ParseException {List<Subtask> subtasks = new ArrayList<>();
+  final public List<Subtask> getSubtasks() throws ParseException {List<Subtask> subtasks = new ArrayList<>();
     List<Parameter> subtaskParameters = new ArrayList<>();
     String subtaskName;
     String taskName;
@@ -869,7 +869,7 @@ Subtask subtask = new Subtask();
 ////////////////////////////////////////////////////////////////////////
 ////////////////    init   /////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-  static final public 
+  final public 
 List<Predicate> getInit() throws ParseException {List<Predicate> init = new ArrayList<>();
     List<Argument> arguments = new ArrayList<>();
     Predicate predicate = new Predicate();
@@ -913,7 +913,7 @@ predicate = new Predicate();
     throw new Error("Missing return statement in function");
 }
 
-  static private boolean jj_2_1(int xla)
+  private boolean jj_2_1(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_1()); }
@@ -921,7 +921,7 @@ predicate = new Predicate();
     finally { jj_save(0, xla); }
   }
 
-  static private boolean jj_2_2(int xla)
+  private boolean jj_2_2(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_2()); }
@@ -929,7 +929,7 @@ predicate = new Predicate();
     finally { jj_save(1, xla); }
   }
 
-  static private boolean jj_2_3(int xla)
+  private boolean jj_2_3(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_3()); }
@@ -937,7 +937,7 @@ predicate = new Predicate();
     finally { jj_save(2, xla); }
   }
 
-  static private boolean jj_2_4(int xla)
+  private boolean jj_2_4(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_4()); }
@@ -945,7 +945,7 @@ predicate = new Predicate();
     finally { jj_save(3, xla); }
   }
 
-  static private boolean jj_2_5(int xla)
+  private boolean jj_2_5(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_5()); }
@@ -953,7 +953,7 @@ predicate = new Predicate();
     finally { jj_save(4, xla); }
   }
 
-  static private boolean jj_2_6(int xla)
+  private boolean jj_2_6(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_6()); }
@@ -961,7 +961,7 @@ predicate = new Predicate();
     finally { jj_save(5, xla); }
   }
 
-  static private boolean jj_2_7(int xla)
+  private boolean jj_2_7(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_7()); }
@@ -969,7 +969,7 @@ predicate = new Predicate();
     finally { jj_save(6, xla); }
   }
 
-  static private boolean jj_2_8(int xla)
+  private boolean jj_2_8(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_8()); }
@@ -977,7 +977,7 @@ predicate = new Predicate();
     finally { jj_save(7, xla); }
   }
 
-  static private boolean jj_2_9(int xla)
+  private boolean jj_2_9(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_9()); }
@@ -985,7 +985,7 @@ predicate = new Predicate();
     finally { jj_save(8, xla); }
   }
 
-  static private boolean jj_2_10(int xla)
+  private boolean jj_2_10(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_10()); }
@@ -993,7 +993,7 @@ predicate = new Predicate();
     finally { jj_save(9, xla); }
   }
 
-  static private boolean jj_2_11(int xla)
+  private boolean jj_2_11(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_11()); }
@@ -1001,7 +1001,7 @@ predicate = new Predicate();
     finally { jj_save(10, xla); }
   }
 
-  static private boolean jj_2_12(int xla)
+  private boolean jj_2_12(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_12()); }
@@ -1009,7 +1009,7 @@ predicate = new Predicate();
     finally { jj_save(11, xla); }
   }
 
-  static private boolean jj_2_13(int xla)
+  private boolean jj_2_13(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_13()); }
@@ -1017,7 +1017,7 @@ predicate = new Predicate();
     finally { jj_save(12, xla); }
   }
 
-  static private boolean jj_2_14(int xla)
+  private boolean jj_2_14(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_14()); }
@@ -1025,7 +1025,7 @@ predicate = new Predicate();
     finally { jj_save(13, xla); }
   }
 
-  static private boolean jj_2_15(int xla)
+  private boolean jj_2_15(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_15()); }
@@ -1033,7 +1033,7 @@ predicate = new Predicate();
     finally { jj_save(14, xla); }
   }
 
-  static private boolean jj_2_16(int xla)
+  private boolean jj_2_16(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_16()); }
@@ -1041,7 +1041,7 @@ predicate = new Predicate();
     finally { jj_save(15, xla); }
   }
 
-  static private boolean jj_2_17(int xla)
+  private boolean jj_2_17(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_17()); }
@@ -1049,7 +1049,7 @@ predicate = new Predicate();
     finally { jj_save(16, xla); }
   }
 
-  static private boolean jj_2_18(int xla)
+  private boolean jj_2_18(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_18()); }
@@ -1057,7 +1057,7 @@ predicate = new Predicate();
     finally { jj_save(17, xla); }
   }
 
-  static private boolean jj_2_19(int xla)
+  private boolean jj_2_19(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_19()); }
@@ -1065,7 +1065,7 @@ predicate = new Predicate();
     finally { jj_save(18, xla); }
   }
 
-  static private boolean jj_2_20(int xla)
+  private boolean jj_2_20(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_20()); }
@@ -1073,7 +1073,7 @@ predicate = new Predicate();
     finally { jj_save(19, xla); }
   }
 
-  static private boolean jj_2_21(int xla)
+  private boolean jj_2_21(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_21()); }
@@ -1081,7 +1081,7 @@ predicate = new Predicate();
     finally { jj_save(20, xla); }
   }
 
-  static private boolean jj_2_22(int xla)
+  private boolean jj_2_22(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_22()); }
@@ -1089,7 +1089,7 @@ predicate = new Predicate();
     finally { jj_save(21, xla); }
   }
 
-  static private boolean jj_2_23(int xla)
+  private boolean jj_2_23(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_23()); }
@@ -1097,7 +1097,7 @@ predicate = new Predicate();
     finally { jj_save(22, xla); }
   }
 
-  static private boolean jj_2_24(int xla)
+  private boolean jj_2_24(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_24()); }
@@ -1105,7 +1105,7 @@ predicate = new Predicate();
     finally { jj_save(23, xla); }
   }
 
-  static private boolean jj_2_25(int xla)
+  private boolean jj_2_25(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_25()); }
@@ -1113,7 +1113,7 @@ predicate = new Predicate();
     finally { jj_save(24, xla); }
   }
 
-  static private boolean jj_2_26(int xla)
+  private boolean jj_2_26(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_26()); }
@@ -1121,7 +1121,7 @@ predicate = new Predicate();
     finally { jj_save(25, xla); }
   }
 
-  static private boolean jj_2_27(int xla)
+  private boolean jj_2_27(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_27()); }
@@ -1129,7 +1129,7 @@ predicate = new Predicate();
     finally { jj_save(26, xla); }
   }
 
-  static private boolean jj_2_28(int xla)
+  private boolean jj_2_28(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_28()); }
@@ -1137,7 +1137,7 @@ predicate = new Predicate();
     finally { jj_save(27, xla); }
   }
 
-  static private boolean jj_2_29(int xla)
+  private boolean jj_2_29(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_29()); }
@@ -1145,7 +1145,7 @@ predicate = new Predicate();
     finally { jj_save(28, xla); }
   }
 
-  static private boolean jj_2_30(int xla)
+  private boolean jj_2_30(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_30()); }
@@ -1153,7 +1153,7 @@ predicate = new Predicate();
     finally { jj_save(29, xla); }
   }
 
-  static private boolean jj_2_31(int xla)
+  private boolean jj_2_31(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_31()); }
@@ -1161,7 +1161,7 @@ predicate = new Predicate();
     finally { jj_save(30, xla); }
   }
 
-  static private boolean jj_2_32(int xla)
+  private boolean jj_2_32(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_32()); }
@@ -1169,7 +1169,7 @@ predicate = new Predicate();
     finally { jj_save(31, xla); }
   }
 
-  static private boolean jj_2_33(int xla)
+  private boolean jj_2_33(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_33()); }
@@ -1177,7 +1177,7 @@ predicate = new Predicate();
     finally { jj_save(32, xla); }
   }
 
-  static private boolean jj_2_34(int xla)
+  private boolean jj_2_34(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_34()); }
@@ -1185,7 +1185,7 @@ predicate = new Predicate();
     finally { jj_save(33, xla); }
   }
 
-  static private boolean jj_2_35(int xla)
+  private boolean jj_2_35(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_35()); }
@@ -1193,7 +1193,7 @@ predicate = new Predicate();
     finally { jj_save(34, xla); }
   }
 
-  static private boolean jj_2_36(int xla)
+  private boolean jj_2_36(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_36()); }
@@ -1201,7 +1201,7 @@ predicate = new Predicate();
     finally { jj_save(35, xla); }
   }
 
-  static private boolean jj_2_37(int xla)
+  private boolean jj_2_37(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_37()); }
@@ -1209,7 +1209,7 @@ predicate = new Predicate();
     finally { jj_save(36, xla); }
   }
 
-  static private boolean jj_2_38(int xla)
+  private boolean jj_2_38(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_38()); }
@@ -1217,7 +1217,7 @@ predicate = new Predicate();
     finally { jj_save(37, xla); }
   }
 
-  static private boolean jj_2_39(int xla)
+  private boolean jj_2_39(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_39()); }
@@ -1225,7 +1225,7 @@ predicate = new Predicate();
     finally { jj_save(38, xla); }
   }
 
-  static private boolean jj_2_40(int xla)
+  private boolean jj_2_40(int xla)
  {
     jj_la = xla; jj_lastpos = jj_scanpos = token;
     try { return (!jj_3_40()); }
@@ -1233,32 +1233,32 @@ predicate = new Predicate();
     finally { jj_save(39, xla); }
   }
 
-  static private boolean jj_3_13()
+  private boolean jj_3_13()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     return false;
   }
 
-  static private boolean jj_3_34()
+  private boolean jj_3_34()
  {
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     return false;
   }
 
-  static private boolean jj_3_8()
+  private boolean jj_3_8()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_scan_token(COLON)) return true;
     if (jj_scan_token(METHOD)) return true;
-    if (jj_3R_getMethod_390_9_32()) return true;
+    if (jj_3R_getMethod_391_9_32()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getPredicate_271_6_29()
+  private boolean jj_3R_getPredicate_272_6_29()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -1268,34 +1268,34 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3R_getAction_556_5_37()
+  private boolean jj_3R_getAction_557_5_37()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_scan_token(COLON)) return true;
     if (jj_scan_token(ACTION)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
-    if (jj_3R_getParameters_301_5_38()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
+    if (jj_3R_getParameters_302_5_38()) return true;
     return false;
   }
 
-  static private boolean jj_3_31()
+  private boolean jj_3_31()
  {
     if (jj_scan_token(SUBTASKS)) return true;
     return false;
   }
 
-  static private boolean jj_3_14()
+  private boolean jj_3_14()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     return false;
   }
 
-  static private boolean jj_3_33()
+  private boolean jj_3_33()
  {
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -1305,25 +1305,25 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3_40()
+  private boolean jj_3_40()
  {
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     return false;
   }
 
-  static private boolean jj_3_29()
+  private boolean jj_3_29()
  {
-    if (jj_3R_getSubtask_734_5_40()) return true;
+    if (jj_3R_getSubtask_735_5_40()) return true;
     return false;
   }
 
-  static private boolean jj_3_1()
+  private boolean jj_3_1()
  {
-    if (jj_3R_getRequirements_192_5_26()) return true;
+    if (jj_3R_getRequirements_193_5_26()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getSubtask_734_5_40()
+  private boolean jj_3R_getSubtask_735_5_40()
  {
     if (jj_scan_token(COLON)) return true;
     Token xsp;
@@ -1341,16 +1341,16 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3_19()
+  private boolean jj_3_19()
  {
-    if (jj_3R_getAction_556_5_37()) return true;
+    if (jj_3R_getAction_557_5_37()) return true;
     return false;
   }
 
-  static private boolean jj_3_39()
+  private boolean jj_3_39()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -1360,50 +1360,50 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3_7()
+  private boolean jj_3_7()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_scan_token(COLON)) return true;
     if (jj_scan_token(TASK)) return true;
-    if (jj_3R_getTask_327_6_31()) return true;
+    if (jj_3R_getTask_328_6_31()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getSubtaskDefinition_441_5_34()
+  private boolean jj_3R_getSubtaskDefinition_442_5_34()
  {
     if (jj_scan_token(COLON)) return true;
     if (jj_scan_token(SUBTASKS)) return true;
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     if (jj_scan_token(LPAR)) return true;
     return false;
   }
 
-  static private boolean jj_3_23()
+  private boolean jj_3_23()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     return false;
   }
 
-  static private boolean jj_3_3()
+  private boolean jj_3_3()
  {
-    if (jj_3R_getType_234_6_28()) return true;
+    if (jj_3R_getType_235_6_28()) return true;
     return false;
   }
 
-  static private boolean jj_3_11()
+  private boolean jj_3_11()
  {
-    if (jj_3R_getSubtasksDefinition_480_5_35()) return true;
+    if (jj_3R_getSubtasksDefinition_481_5_35()) return true;
     return false;
   }
 
-  static private boolean jj_3_25()
+  private boolean jj_3_25()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_scan_token(NOT)) return true;
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -1413,65 +1413,65 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3R_getAttribute_142_5_30()
+  private boolean jj_3R_getAttribute_143_5_30()
  {
     if (jj_scan_token(VAR)) return true;
     return false;
   }
 
-  static private boolean jj_3_30()
+  private boolean jj_3_30()
  {
-    if (jj_3R_getOrdering_516_5_36()) return true;
+    if (jj_3R_getOrdering_517_5_36()) return true;
     return false;
   }
 
-  static private boolean jj_3_28()
+  private boolean jj_3_28()
  {
-    if (jj_3R_getSubtasks_773_5_39()) return true;
+    if (jj_3R_getSubtasks_774_5_39()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getType_234_6_28()
+  private boolean jj_3R_getType_235_6_28()
  {
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     if (jj_scan_token(DASH)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     return false;
   }
 
-  static private boolean jj_3_6()
+  private boolean jj_3_6()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     if (jj_scan_token(DASH)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     return false;
   }
 
-  static private boolean jj_3_27()
+  private boolean jj_3_27()
  {
-    if (jj_3R_getParameters_301_5_38()) return true;
+    if (jj_3R_getParameters_302_5_38()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getTask_327_6_31()
+  private boolean jj_3R_getTask_328_6_31()
  {
-    if (jj_3R_getAttribute_142_5_30()) return true;
-    if (jj_3R_getParameters_301_5_38()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
+    if (jj_3R_getParameters_302_5_38()) return true;
     return false;
   }
 
-  static private boolean jj_3_18()
+  private boolean jj_3_18()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_scan_token(LT)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     if (jj_scan_token(RPAR)) return true;
     return false;
   }
 
-  static private boolean jj_3R_getOrdering_516_5_36()
+  private boolean jj_3R_getOrdering_517_5_36()
  {
     if (jj_scan_token(COLON)) return true;
     if (jj_scan_token(ORDERING)) return true;
@@ -1486,38 +1486,38 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3_36()
+  private boolean jj_3_36()
  {
     if (jj_scan_token(TASKS)) return true;
     return false;
   }
 
-  static private boolean jj_3_2()
+  private boolean jj_3_2()
  {
-    if (jj_3R_getRequirement_204_6_27()) return true;
+    if (jj_3R_getRequirement_205_6_27()) return true;
     return false;
   }
 
-  static private boolean jj_3_15()
+  private boolean jj_3_15()
  {
     if (jj_scan_token(AND)) return true;
     return false;
   }
 
-  static private boolean jj_3_22()
+  private boolean jj_3_22()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     return false;
   }
 
-  static private boolean jj_3_38()
+  private boolean jj_3_38()
  {
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     return false;
   }
 
-  static private boolean jj_3_21()
+  private boolean jj_3_21()
  {
     Token xsp;
     xsp = jj_scanpos;
@@ -1528,10 +1528,10 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3_24()
+  private boolean jj_3_24()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -1541,31 +1541,31 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3_35()
+  private boolean jj_3_35()
  {
     if (jj_scan_token(SUBTASKS)) return true;
     return false;
   }
 
-  static private boolean jj_3_12()
+  private boolean jj_3_12()
  {
-    if (jj_3R_getOrdering_516_5_36()) return true;
+    if (jj_3R_getOrdering_517_5_36()) return true;
     return false;
   }
 
-  static private boolean jj_3_17()
+  private boolean jj_3_17()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     return false;
   }
 
-  static private boolean jj_3_37()
+  private boolean jj_3_37()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -1575,29 +1575,29 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3_10()
+  private boolean jj_3_10()
  {
-    if (jj_3R_getSubtaskDefinition_441_5_34()) return true;
+    if (jj_3R_getSubtaskDefinition_442_5_34()) return true;
     return false;
   }
 
-  static private boolean jj_3_9()
+  private boolean jj_3_9()
  {
     if (jj_scan_token(COLON)) return true;
     if (jj_scan_token(PRECONDITION)) return true;
-    if (jj_3R_getActionPredicates_580_5_33()) return true;
+    if (jj_3R_getActionPredicates_581_5_33()) return true;
     return false;
   }
 
-  static private boolean jj_3_26()
+  private boolean jj_3_26()
  {
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     if (jj_scan_token(DASH)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getParameters_301_5_38()
+  private boolean jj_3R_getParameters_302_5_38()
  {
     if (jj_scan_token(COLON)) return true;
     if (jj_scan_token(PARAMETERS)) return true;
@@ -1611,7 +1611,7 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3_20()
+  private boolean jj_3_20()
  {
     if (jj_scan_token(AND)) return true;
     Token xsp;
@@ -1622,21 +1622,21 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3R_getRequirement_204_6_27()
+  private boolean jj_3R_getRequirement_205_6_27()
  {
     if (jj_scan_token(COLON)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getMethod_390_9_32()
+  private boolean jj_3R_getMethod_391_9_32()
  {
-    if (jj_3R_getAttribute_142_5_30()) return true;
-    if (jj_3R_getParameters_301_5_38()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
+    if (jj_3R_getParameters_302_5_38()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getSubtasks_773_5_39()
+  private boolean jj_3R_getSubtasks_774_5_39()
  {
     if (jj_scan_token(COLON)) return true;
     Token xsp;
@@ -1655,12 +1655,12 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3_16()
+  private boolean jj_3_16()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -1670,7 +1670,7 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3R_getActionPredicates_580_5_33()
+  private boolean jj_3R_getActionPredicates_581_5_33()
  {
     if (jj_scan_token(LPAR)) return true;
     Token xsp;
@@ -1682,7 +1682,7 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3R_getSubtasksDefinition_480_5_35()
+  private boolean jj_3R_getSubtasksDefinition_481_5_35()
  {
     if (jj_scan_token(COLON)) return true;
     if (jj_scan_token(SUBTASKS)) return true;
@@ -1698,16 +1698,16 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3_5()
+  private boolean jj_3_5()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     if (jj_scan_token(DASH)) return true;
-    if (jj_3R_getAttribute_142_5_30()) return true;
+    if (jj_3R_getAttribute_143_5_30()) return true;
     return false;
   }
 
-  static private boolean jj_3R_getRequirements_192_5_26()
+  private boolean jj_3R_getRequirements_193_5_26()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_scan_token(COLON)) return true;
@@ -1721,31 +1721,30 @@ predicate = new Predicate();
     return false;
   }
 
-  static private boolean jj_3_4()
+  private boolean jj_3_4()
  {
-    if (jj_3R_getPredicate_271_6_29()) return true;
+    if (jj_3R_getPredicate_272_6_29()) return true;
     return false;
   }
 
-  static private boolean jj_3_32()
+  private boolean jj_3_32()
  {
     if (jj_scan_token(TASKS)) return true;
     return false;
   }
 
-  static private boolean jj_initialized_once = false;
   /** Generated Token Manager. */
-  static public ParserHDDLTokenManager token_source;
-  static SimpleCharStream jj_input_stream;
+  public ParserHDDLTokenManager token_source;
+  SimpleCharStream jj_input_stream;
   /** Current token. */
-  static public Token token;
+  public Token token;
   /** Next token. */
-  static public Token jj_nt;
-  static private int jj_ntk;
-  static private Token jj_scanpos, jj_lastpos;
-  static private int jj_la;
-  static private int jj_gen;
-  static final private int[] jj_la1 = new int[0];
+  public Token jj_nt;
+  private int jj_ntk;
+  private Token jj_scanpos, jj_lastpos;
+  private int jj_la;
+  private int jj_gen;
+  final private int[] jj_la1 = new int[0];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -1758,9 +1757,9 @@ predicate = new Predicate();
 	private static void jj_la1_init_1() {
 	   jj_la1_1 = new int[] {};
 	}
-  static final private JJCalls[] jj_2_rtns = new JJCalls[40];
-  static private boolean jj_rescan = false;
-  static private int jj_gc = 0;
+  final private JJCalls[] jj_2_rtns = new JJCalls[40];
+  private boolean jj_rescan = false;
+  private int jj_gc = 0;
 
   /** Constructor with InputStream. */
   public ParserHDDL(java.io.InputStream stream) {
@@ -1768,13 +1767,6 @@ predicate = new Predicate();
   }
   /** Constructor with InputStream and supplied encoding */
   public ParserHDDL(java.io.InputStream stream, String encoding) {
-	 if (jj_initialized_once) {
-	   System.out.println("ERROR: Second call to constructor of static parser.  ");
-	   System.out.println("	   You must either use ReInit() or set the JavaCC option STATIC to false");
-	   System.out.println("	   during parser generation.");
-	   throw new Error();
-	 }
-	 jj_initialized_once = true;
 	 try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
 	 token_source = new ParserHDDLTokenManager(jj_input_stream);
 	 token = new Token();
@@ -1784,11 +1776,11 @@ predicate = new Predicate();
   }
 
   /** Reinitialise. */
-  static public void ReInit(java.io.InputStream stream) {
+  public void ReInit(java.io.InputStream stream) {
 	  ReInit(stream, null);
   }
   /** Reinitialise. */
-  static public void ReInit(java.io.InputStream stream, String encoding) {
+  public void ReInit(java.io.InputStream stream, String encoding) {
 	 try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
 	 token_source.ReInit(jj_input_stream);
 	 token = new Token();
@@ -1800,13 +1792,6 @@ predicate = new Predicate();
 
   /** Constructor. */
   public ParserHDDL(java.io.Reader stream) {
-	 if (jj_initialized_once) {
-	   System.out.println("ERROR: Second call to constructor of static parser. ");
-	   System.out.println("	   You must either use ReInit() or set the JavaCC option STATIC to false");
-	   System.out.println("	   during parser generation.");
-	   throw new Error();
-	 }
-	 jj_initialized_once = true;
 	 jj_input_stream = new SimpleCharStream(stream, 1, 1);
 	 token_source = new ParserHDDLTokenManager(jj_input_stream);
 	 token = new Token();
@@ -1816,7 +1801,7 @@ predicate = new Predicate();
   }
 
   /** Reinitialise. */
-  static public void ReInit(java.io.Reader stream) {
+  public void ReInit(java.io.Reader stream) {
 	if (jj_input_stream == null) {
 	   jj_input_stream = new SimpleCharStream(stream, 1, 1);
 	} else {
@@ -1835,13 +1820,6 @@ predicate = new Predicate();
 
   /** Constructor with generated Token Manager. */
   public ParserHDDL(ParserHDDLTokenManager tm) {
-	 if (jj_initialized_once) {
-	   System.out.println("ERROR: Second call to constructor of static parser. ");
-	   System.out.println("	   You must either use ReInit() or set the JavaCC option STATIC to false");
-	   System.out.println("	   during parser generation.");
-	   throw new Error();
-	 }
-	 jj_initialized_once = true;
 	 token_source = tm;
 	 token = new Token();
 	 jj_ntk = -1;
@@ -1858,7 +1836,7 @@ predicate = new Predicate();
 	 for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  static private Token jj_consume_token(int kind) throws ParseException {
+  private Token jj_consume_token(int kind) throws ParseException {
 	 Token oldToken;
 	 if ((oldToken = token).next != null) token = token.next;
 	 else token = token.next = token_source.getNextToken();
@@ -1890,7 +1868,7 @@ predicate = new Predicate();
     }
   }
   static private final LookaheadSuccess jj_ls = new LookaheadSuccess();
-  static private boolean jj_scan_token(int kind) {
+  private boolean jj_scan_token(int kind) {
 	 if (jj_scanpos == jj_lastpos) {
 	   jj_la--;
 	   if (jj_scanpos.next == null) {
@@ -1913,7 +1891,7 @@ predicate = new Predicate();
 
 
 /** Get the next Token. */
-  static final public Token getNextToken() {
+  final public Token getNextToken() {
 	 if (token.next != null) token = token.next;
 	 else token = token.next = token_source.getNextToken();
 	 jj_ntk = -1;
@@ -1922,7 +1900,7 @@ predicate = new Predicate();
   }
 
 /** Get the specific Token. */
-  static final public Token getToken(int index) {
+  final public Token getToken(int index) {
 	 Token t = token;
 	 for (int i = 0; i < index; i++) {
 	   if (t.next != null) t = t.next;
@@ -1931,20 +1909,20 @@ predicate = new Predicate();
 	 return t;
   }
 
-  static private int jj_ntk_f() {
+  private int jj_ntk_f() {
 	 if ((jj_nt=token.next) == null)
 	   return (jj_ntk = (token.next=token_source.getNextToken()).kind);
 	 else
 	   return (jj_ntk = jj_nt.kind);
   }
 
-  static private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
-  static private int[] jj_expentry;
-  static private int jj_kind = -1;
-  static private int[] jj_lasttokens = new int[100];
-  static private int jj_endpos;
+  private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+  private int[] jj_expentry;
+  private int jj_kind = -1;
+  private int[] jj_lasttokens = new int[100];
+  private int jj_endpos;
 
-  static private void jj_add_error_token(int kind, int pos) {
+  private void jj_add_error_token(int kind, int pos) {
 	 if (pos >= 100) {
 		return;
 	 }
@@ -1983,7 +1961,7 @@ predicate = new Predicate();
   }
 
   /** Generate ParseException. */
-  static public ParseException generateParseException() {
+  public ParseException generateParseException() {
 	 jj_expentries.clear();
 	 boolean[] la1tokens = new boolean[38];
 	 if (jj_kind >= 0) {
@@ -2019,22 +1997,22 @@ predicate = new Predicate();
 	 return new ParseException(token, exptokseq, tokenImage);
   }
 
-  static private boolean trace_enabled;
+  private boolean trace_enabled;
 
 /** Trace enabled. */
-  static final public boolean trace_enabled() {
+  final public boolean trace_enabled() {
 	 return trace_enabled;
   }
 
   /** Enable tracing. */
-  static final public void enable_tracing() {
+  final public void enable_tracing() {
   }
 
   /** Disable tracing. */
-  static final public void disable_tracing() {
+  final public void disable_tracing() {
   }
 
-  static private void jj_rescan_token() {
+  private void jj_rescan_token() {
 	 jj_rescan = true;
 	 for (int i = 0; i < 40; i++) {
 	   try {
@@ -2094,7 +2072,7 @@ predicate = new Predicate();
 	 jj_rescan = false;
   }
 
-  static private void jj_save(int index, int xla) {
+  private void jj_save(int index, int xla) {
 	 JJCalls p = jj_2_rtns[index];
 	 while (p.gen > jj_gen) {
 	   if (p.next == null) { p = p.next = new JJCalls(); break; }
