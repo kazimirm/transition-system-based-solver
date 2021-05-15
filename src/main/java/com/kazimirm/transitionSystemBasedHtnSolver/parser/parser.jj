@@ -24,10 +24,6 @@ public class ParserHDDL {
      }
 
       ParserHDDL parser = new ParserHDDL(new FileInputStream(args[0]));
-
-      //Domain domain = parser.start();
-      //HtnInput input = parser.start();
-      //System.out.println("Parse completed.");
    }
 }
 
@@ -264,7 +260,7 @@ List<Requirement> getRequirements():
  {
      Predicate predicate = new Predicate();
      List<Argument> arguments = new ArrayList<>();
-
+     List<Argument> argumentsOfSameType;
      String name;
      String argumentName;
      String argumentType;
@@ -272,14 +268,22 @@ List<Requirement> getRequirements():
  {
      <LPAR> (
                 name = getAttribute()
-                    (<QUESTIONMARK> argumentName = getAttribute() <DASH> argumentType = getAttribute()
-                        {
-                            Argument argument = new Argument();
-                            argument.setName(argumentName);
+                  ({argumentsOfSameType = new ArrayList<>();}
+                   (<QUESTIONMARK> argumentName = getAttribute()
+                    {
+                      Argument argument = new Argument();
+                      argument.setName(argumentName);
+                      argumentsOfSameType.add(argument);
+                    }
+                    )+
+                    <DASH> argumentType = getAttribute()
+                    {
+                        for(Argument argument : argumentsOfSameType) {
                             argument.setType(argumentType);
-                            arguments.add(argument);
                         }
-                    )*
+                        arguments = Stream.concat(arguments.stream(), argumentsOfSameType.stream()).collect(Collectors.toList());
+                    }
+                  )*
                 ) <RPAR>
      {
         predicate.setName(name);
