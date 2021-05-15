@@ -59,23 +59,25 @@ public interface ParserHDDLConstants {
   /** RegularExpression Id. */
   int SUBTASKS = 28;
   /** RegularExpression Id. */
-  int TASKS = 29;
+  int ORDERED_SUBTASKS = 29;
   /** RegularExpression Id. */
-  int ORDERING = 30;
+  int TASKS = 30;
   /** RegularExpression Id. */
-  int METHOD = 31;
+  int ORDERING = 31;
   /** RegularExpression Id. */
-  int ACTION = 32;
+  int METHOD = 32;
   /** RegularExpression Id. */
-  int PRECONDITION = 33;
+  int ACTION = 33;
   /** RegularExpression Id. */
-  int EFFECT = 34;
+  int PRECONDITION = 34;
   /** RegularExpression Id. */
-  int HTN = 35;
+  int EFFECT = 35;
   /** RegularExpression Id. */
-  int INIT = 36;
+  int HTN = 36;
   /** RegularExpression Id. */
-  int VAR = 37;
+  int INIT = 37;
+  /** RegularExpression Id. */
+  int VAR = 38;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -111,6 +113,7 @@ public interface ParserHDDLConstants {
     "\"objects\"",
     "\"task\"",
     "\"subtasks\"",
+    "\"ordered-subtasks\"",
     "\"tasks\"",
     "\"ordering\"",
     "\"method\"",

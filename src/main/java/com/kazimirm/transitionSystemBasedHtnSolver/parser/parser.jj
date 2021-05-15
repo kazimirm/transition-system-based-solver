@@ -10,6 +10,8 @@
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.*;
 
 public class ParserHDDL {
@@ -67,6 +69,7 @@ public class ParserHDDL {
     | <OBJECTS:  		    "objects">								    /* objects */
     | <TASK:  		        "task">								        /* tasks */
     | <SUBTASKS:  		    "subtasks">								    /* subtasks */
+    | <ORDERED_SUBTASKS:  	"ordered-subtasks">							/* ordered-subtasks */
     | <TASKS:  		        "tasks">								    /* tasks */
     | <ORDERING:  		    "ordering">								    /* ordering */
     | <METHOD:  		    "method">								    /* method */
@@ -84,53 +87,27 @@ public class ParserHDDL {
 
   Domain parseDomain():
   {
-      Domain domain = new Domain();
+    Domain domain = new Domain();
   }
   {
     domain = domain()
     <EOF>
-      {
-        return domain;
-      }
+        {
+            return domain;
+        }
   }
 
-    Problem parseProblem():
-    {
-        Problem problem = new Problem();
-    }
-    {
-      problem = problem()
-      <EOF>
+  Problem parseProblem():
+  {
+    Problem problem = new Problem();
+  }
+  {
+    problem = problem()
+    <EOF>
         {
-          return problem;
+            return problem;
         }
-    }
-
-//  Domain start():
-//  {
-//      Domain domain = new Domain();
-//      Problem problem = new Problem();
-//  }
-//  {
-//    domain = domain()
-////    | problem = problem()
-//    <EOF>
-//      {
-//        return domain;
-//      }
-//  }
-
-//  HtnInput start():
-//  {
-//    HtnInput input = new HtnInput();
-//  }
-//  {
-//    input = domain() | input = problem()
-//    <EOF>
-//      {
-//        return input;
-//      }
-//  }
+  }
 
 ////////////////////////////////////////////////////////////////////////
 ////////////////    HELP METHODS       /////////////////////////////////
@@ -216,10 +193,11 @@ List<Requirement> getRequirements():
  List<Type> getTypes():
  {
     List<Type> types = new ArrayList<>();
+    List<Type> typesList = new ArrayList<>();
     Type type;
  }
  {
-    <LPAR> <COLON> <TYPES> (type = getType() { types.add(type);})* <RPAR>
+    <LPAR> <COLON> <TYPES> ((type = getType() { types.add(type);}) | (typesList = getTypesList() {types = Stream.concat(types.stream(), typesList.stream()).collect(Collectors.toList());}))* <RPAR>
     {
         return types;
     }
@@ -239,6 +217,29 @@ List<Requirement> getRequirements():
         return type;
      }
  }
+
+  List<Type> getTypesList():
+  {
+      List<Type> types = new ArrayList<>();
+      String name;
+      String baseType;
+  }
+  {
+      (name = getAttribute()
+        {
+            Type type = new Type();
+            type.setName(name);
+            types.add(type);
+        }
+      )*
+      <DASH> baseType = getAttribute()
+      {
+        for(Type t : types) {
+            t.setBaseType(baseType);
+         }
+         return types;
+      }
+  }
 
 ////////////////////////////////////////////////////////////////////////
 ////////////////    PREDICATES   ///////////////////////////////////////
