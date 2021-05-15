@@ -5,7 +5,6 @@ import com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.Domain;
 import com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.Problem;
 import com.kazimirm.transitionSystemBasedHtnSolver.parser.ParseException;
 import com.kazimirm.transitionSystemBasedHtnSolver.parser.ParserHDDL;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
