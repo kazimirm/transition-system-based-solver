@@ -411,7 +411,7 @@ public class Z3Encoder {
                     String color;
                     if ("Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
                         color = "red";
-                        if (getExpressionName(e) != null) {
+                        if (!getExpressionName(e).contains("_Precondition#")) {
                             sb.append(getExpressionName(e) + "[color=" + color + "];").append(System.getProperty("line.separator"));
                         }
                     }
@@ -423,7 +423,7 @@ public class Z3Encoder {
                     for (Expr arg : e.getArgs()){
                          exprHashMap.put(arg.hashCode(), arg);
                         if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name())) &&
-                            !ignoreNodes.contains(e.hashCode()) && !ignoreNodes.contains(arg.hashCode())) {
+                            !getExpressionName(e).contains("_Precondition#") && !getExpressionName(arg).contains("_Precondition#")) {
                             sb.append(e.hashCode() + " -> " + arg.hashCode() + ";").append(System.getProperty("line.separator"));
                         }
                     }
@@ -451,10 +451,6 @@ public class Z3Encoder {
         name =  (e.getArgs()[e.getNumArgs() - 1]).toString()
                 .replace("true", "").replace("false", "")
                 .replace("\n", "").replace("\r", "").trim().replaceAll(" +", " ");
-        }
-        if (name.contains("_Precondition#")){
-            ignoreNodes.add(e.hashCode());
-            return null;
         }
         return e.hashCode() + " [label=\"" + name + "\"]";
     }
