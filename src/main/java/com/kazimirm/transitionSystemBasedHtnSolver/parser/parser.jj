@@ -744,18 +744,27 @@ Problem problem():
 List<Argument> getObjects():
 {
     List<Argument> objects = new ArrayList<>();
+    List<Argument> objectsOfSameType = new ArrayList<>();
     String name;
     String type;
 }
 {
     <LPAR> <COLON> <OBJECTS>
-    (name = getAttribute() <DASH> type = getAttribute()
+    ({objectsOfSameType = new ArrayList<>();}
+    (name = getAttribute()
         {
             Argument object = new Argument();
             object.setName(name);
-            object.setType(type);
-            objects.add(object);
+            objectsOfSameType.add(object);
         }
+    )*
+    <DASH> type = getAttribute()
+    {
+        for (Argument obj : objects){
+             obj.setType(type);
+        }
+        objects = Stream.concat(objects.stream(), objectsOfSameType.stream()).collect(Collectors.toList());
+    }
     )*
     <RPAR>
     {
