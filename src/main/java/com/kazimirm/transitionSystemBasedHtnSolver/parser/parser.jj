@@ -406,7 +406,7 @@ Method getMethod():
         methodName = getAttribute()
         methodParameters = getParameters()
         task = getTaskSignature(methodParameters)
-        (<COLON> <PRECONDITION> (preconditions = getActionPredicates()) | (preconditions =  getActionPredicate()))?
+        (<COLON> <PRECONDITION> ((preconditions =  getActionPredicate() | preconditions = getActionPredicates())) | (<LPAR> <RPAR>))?
         (subtasks = getSubtaskDefinition() | subtasks = getSubtasksDefinition())
         (ordering = getOrdering())*
 
@@ -684,7 +684,7 @@ List<Predicate> getActionPredicate():
                 predicate.setArguments(arguments);
                 predicate.setValue(true);
                 predicates.add(predicate);
-                arguments = new ArrayList<>();
+                return predicates;
             }
             )
            |
@@ -692,7 +692,7 @@ List<Predicate> getActionPredicate():
             ////////////// FALSE /////////////////////
             //////////////////////////////////////////
             (
-            <LPAR> <NOT> <LPAR>name = getAttribute()
+            <LPAR> <NOT> <LPAR> name = getAttribute()
             (
                 <QUESTIONMARK> param = getAttribute()
                 {
@@ -701,20 +701,16 @@ List<Predicate> getActionPredicate():
                    arguments.add(argument);
                 }
             )*
-            <RPAR>
+            <RPAR> <RPAR>
             {
                 Predicate predicate = new Predicate();
                 predicate.setName(name);
                 predicate.setArguments(arguments);
                 predicate.setValue(false);
                 predicates.add(predicate);
-                arguments = new ArrayList<>();
+                return predicates;
             }
-        <RPAR>
         )
-    {
-        return predicates;
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////
