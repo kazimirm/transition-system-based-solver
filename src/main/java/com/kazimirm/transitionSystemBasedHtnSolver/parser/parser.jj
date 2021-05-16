@@ -387,8 +387,6 @@ List<Method> getMethods():
     }
 }
 
-
-
 Method getMethod():
  {
     Method method = new Method();
@@ -407,7 +405,7 @@ Method getMethod():
         methodParameters = getParameters()
         task = getTaskSignature(methodParameters)
         (<COLON> <PRECONDITION> ((preconditions =  getActionPredicate() | preconditions = getActionPredicates())) | (<LPAR> <RPAR>))?
-        (subtasks = getSubtaskDefinition() | subtasks = getSubtasksDefinition())
+        (subtasks = getSubtasksDefinition())?
         (ordering = getOrdering())*
 
     {
@@ -445,17 +443,18 @@ Task getTaskSignature(List<Parameter> parameters):
     }
  }
 
-List<Subtask> getSubtaskDefinition():
+
+Subtask getSubtaskDefinition():
 {
-    List<Subtask> subtasks = new ArrayList<>();
+    Subtask subtask = new Subtask();
     List<Parameter> subtaskParameters = new ArrayList<>();
-    String subtaskName;
+    String subtaskName = "Unnamed";
     String taskName;
     String param;
 }
 {
-    <COLON> (<SUBTASKS> | <TASK> | <ORDERED_SUBTASKS>) <LPAR>
-        ( subtaskName = getAttribute() <LPAR> taskName = getAttribute()
+    /////// With subtask name (for example: (task0 (get_to ?v ?l2)) )
+    (<LPAR> subtaskName = getAttribute() <LPAR> taskName = getAttribute()
             (
                 <QUESTIONMARK> param = getAttribute()
                     {
@@ -464,59 +463,55 @@ List<Subtask> getSubtaskDefinition():
                         subtaskParameters.add(parameter);
                     }
             )*
-        <RPAR>
-
-        {
-            Subtask subtask = new Subtask();
-            Task task = new Task();
-            subtask.setName(subtaskName);
-            task.setName(taskName);
-            task.setParameters(subtaskParameters);
-            subtask.setTask(task);
-            subtasks.add(subtask);
-            subtaskParameters = new ArrayList<>();
-        }
-        )
-        <RPAR>
-
+    <RPAR> <RPAR>
     {
-        return subtasks;
+        Task task = new Task();
+        subtask.setName(subtaskName);
+        task.setName(taskName);
+        task.setParameters(subtaskParameters);
+        subtask.setTask(task);
+        return subtask;
     }
+    )
+    |
+    /////// Without subtask name (for example: (get_to ?v ?l2) )
+    (<LPAR> taskName = getAttribute()
+                (
+                    <QUESTIONMARK> param = getAttribute()
+                        {
+                            Parameter parameter = new Parameter();
+                            parameter.setName(param);
+                            subtaskParameters.add(parameter);
+                        }
+                )*
+    <RPAR>
+    {
+        Task task = new Task();
+        subtask.setName(subtaskName);
+        task.setName(taskName);
+        task.setParameters(subtaskParameters);
+        subtask.setTask(task);
+        return subtask;
+    }
+    )
 }
 
 List<Subtask> getSubtasksDefinition():
 {
     List<Subtask> subtasks = new ArrayList<>();
-    List<Parameter> subtaskParameters = new ArrayList<>();
     String subtaskName;
     String taskName;
     String param;
 }
 {
-    <COLON> (<SUBTASKS> | <TASKS> | <ORDERED_SUBTASKS>) <LPAR> <AND>
-        (<LPAR> subtaskName = getAttribute() <LPAR> taskName = getAttribute()
-            (
-                <QUESTIONMARK> param = getAttribute()
-                    {
-                        Parameter parameter = new Parameter();
-                        parameter.setName(param);
-                        subtaskParameters.add(parameter);
-                    }
-            )* <RPAR> <RPAR>
-
-        {
-            Subtask subtask = new Subtask();
-            Task task = new Task();
-            subtask.setName(subtaskName);
-            task.setName(taskName);
-            task.setParameters(subtaskParameters);
-            subtask.setTask(task);
-            subtasks.add(subtask);
-            subtaskParameters = new ArrayList<>();
-        }
-        )*
-        <RPAR>
-
+    <COLON> (<SUBTASKS> | <TASKS> | <ORDERED_SUBTASKS>)
+    (
+    (<LPAR> <RPAR>)
+    |
+    (<LPAR> <AND> ({Subtask subtask = new Subtask();} subtask = getSubtaskDefinition() {subtasks.add(subtask);})* <RPAR>)
+    |
+    (({Subtask subtask = new Subtask();} subtask = getSubtaskDefinition() {subtasks.add(subtask);})*)
+    )
     {
         return subtasks;
     }
@@ -795,7 +790,7 @@ Htn getHtn():
 }
 
 ////////////////////////////////////////////////////////////////////////
-////////////////    subtasks - in HTN///////////////////////////////////
+////////////////    subtasks - in HTN     //////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 List<Subtask> getSubtask():
 {
