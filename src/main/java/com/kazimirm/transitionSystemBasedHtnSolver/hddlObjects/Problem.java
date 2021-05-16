@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Problem extends HtnInput{
     private String name;
-    private Domain domain;
+    private String domain;
     private List<Argument> objects;
     private Htn htn;
     private List<Predicate> init;
@@ -30,11 +30,11 @@ public class Problem extends HtnInput{
         this.name = name;
     }
 
-    public Domain getDomain() {
+    public String getDomain() {
         return domain;
     }
 
-    public void setDomain(Domain domain) {
+    public void setDomain(String domain) {
         this.domain = domain;
     }
 

@@ -47,4 +47,28 @@ public class IpcTasksTest {
         encoder.encodeToZ3ExpressionsAndGetResult();
         System.out.println();
     }
+
+//    @Test
+//    // Uses constraints
+//    void testSattelite01() throws FileNotFoundException, ParseException {
+//        dmn = "IPC_2020/satellite01/Satellite/domains/satellite2.hddl";
+//        prb = "IPC_2020/satellite01/Satellite/problems/1obs-1sat-1mod.hddl";
+//        setUp(dmn, prb);
+//        ProblemEnricher pE = new ProblemEnricher(domain, problem);
+//        Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
+//        encoder.encodeToZ3ExpressionsAndGetResult();
+//        System.out.println();
+//    }
+
+//    @Test
+//    // Uses constraints
+//    void testUmTranslog() throws FileNotFoundException, ParseException {
+//        dmn = "IPC_2020/um-translog01/UM-Translog/domains/UMTranslog.hddl";
+//        prb = "IPC_2020/um-translog01/UM-Translog/problems/01-A-AirplanesHub.hddl";
+//        setUp(dmn, prb);
+//        ProblemEnricher pE = new ProblemEnricher(domain, problem);
+//        Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
+//        encoder.encodeToZ3ExpressionsAndGetResult();
+//        System.out.println();
+//    }
 }

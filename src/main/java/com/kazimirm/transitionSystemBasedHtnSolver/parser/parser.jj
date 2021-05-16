@@ -206,12 +206,19 @@ List<Requirement> getRequirements():
      String baseType;
  }
  {
-     name = getAttribute() <DASH> baseType = getAttribute()
+     (name = getAttribute() <DASH> baseType = getAttribute()
      {
         type.setName(name);
         type.setBaseType(baseType);
         return type;
-     }
+     })
+     |
+     (name = getAttribute()
+     {
+          type.setName(name);
+          type.setBaseType(name);
+          return type;
+     })
  }
 
   List<Type> getTypesList():
@@ -739,6 +746,7 @@ Problem problem():
     <RPAR>
     {
         problem.setName(problemName);
+        problem.setDomain(domainName);
         problem.setObjects(objects);
         problem.setHtn(htn);
         problem.setInit(init);
