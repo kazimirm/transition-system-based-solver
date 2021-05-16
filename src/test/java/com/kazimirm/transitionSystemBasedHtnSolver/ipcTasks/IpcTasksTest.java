@@ -1,6 +1,7 @@
 package com.kazimirm.transitionSystemBasedHtnSolver.ipcTasks;
 
 import com.kazimirm.transitionSystemBasedHtnSolver.dataEnricher.ProblemEnricher;
+import com.kazimirm.transitionSystemBasedHtnSolver.encoder.Z3Encoder;
 import com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.Domain;
 import com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.Problem;
 import com.kazimirm.transitionSystemBasedHtnSolver.parser.ParseException;
@@ -42,6 +43,8 @@ public class IpcTasksTest {
         prb = "IPC_2020/p-rover01/rover/problems/pfile01.hddl";
         setUp(dmn, prb);
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
+        Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
+        encoder.encodeToZ3ExpressionsAndGetResult();
         System.out.println();
     }
 }
