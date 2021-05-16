@@ -156,22 +156,12 @@ types = Stream.concat(types.stream(), typesList.stream()).collect(Collectors.toL
   final public Type getType() throws ParseException {Type type = new Type();
      String name;
      String baseType;
-    if (jj_2_6(5)) {
-      name = getAttribute();
-      jj_consume_token(DASH);
-      baseType = getAttribute();
+    name = getAttribute();
+    jj_consume_token(DASH);
+    baseType = getAttribute();
 type.setName(name);
         type.setBaseType(baseType);
         {if ("" != null) return type;}
-    } else if (jj_2_7(5)) {
-      name = getAttribute();
-type.setName(name);
-          type.setBaseType(name);
-          {if ("" != null) return type;}
-    } else {
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
     throw new Error("Missing return statement in function");
 }
 
@@ -180,7 +170,7 @@ type.setName(name);
       String baseType;
     label_3:
     while (true) {
-      if (jj_2_8(5)) {
+      if (jj_2_6(5)) {
         ;
       } else {
         break label_3;
@@ -210,7 +200,7 @@ for(Type t : types) {
     jj_consume_token(PREDICATES);
     label_4:
     while (true) {
-      if (jj_2_9(5)) {
+      if (jj_2_7(5)) {
         ;
       } else {
         break label_4;
@@ -233,7 +223,7 @@ predicates.add(predicate);
     name = getAttribute();
     label_5:
     while (true) {
-      if (jj_2_10(5)) {
+      if (jj_2_8(5)) {
         ;
       } else {
         break label_5;
@@ -246,7 +236,7 @@ argumentsOfSameType = new ArrayList<>();
 Argument argument = new Argument();
                       argument.setName(argumentName);
                       argumentsOfSameType.add(argument);
-        if (jj_2_11(5)) {
+        if (jj_2_9(5)) {
           ;
         } else {
           break label_6;
@@ -281,7 +271,7 @@ List<Parameter> getParameters() throws ParseException {List<Parameter> parameter
     jj_consume_token(LPAR);
     label_7:
     while (true) {
-      if (jj_2_12(5)) {
+      if (jj_2_10(5)) {
         ;
       } else {
         break label_7;
@@ -294,7 +284,7 @@ parametersOfSameType = new ArrayList<>();
 Parameter parameter = new Parameter();
                                          parameter.setName(paramName);
                                          parametersOfSameType.add(parameter);
-        if (jj_2_13(5)) {
+        if (jj_2_11(5)) {
           ;
         } else {
           break label_8;
@@ -334,7 +324,7 @@ task.setName(name);
      String name;
     label_9:
     while (true) {
-      if (jj_2_14(5)) {
+      if (jj_2_12(5)) {
         ;
       } else {
         break label_9;
@@ -358,7 +348,7 @@ tasks.add(task);
     Method method;
     label_10:
     while (true) {
-      if (jj_2_15(5)) {
+      if (jj_2_13(5)) {
         ;
       } else {
         break label_10;
@@ -387,19 +377,19 @@ methods.add(method);
     methodName = getAttribute();
     methodParameters = getParameters();
     task = getTaskSignature(methodParameters);
-    if (jj_2_20(5)) {
-      if (jj_2_18(5)) {
+    if (jj_2_18(5)) {
+      if (jj_2_16(5)) {
         jj_consume_token(COLON);
         jj_consume_token(PRECONDITION);
-        if (jj_2_16(5)) {
+        if (jj_2_14(5)) {
           preconditions = getActionPredicate();
-        } else if (jj_2_17(5)) {
+        } else if (jj_2_15(5)) {
           preconditions = getActionPredicates();
         } else {
           jj_consume_token(-1);
           throw new ParseException();
         }
-      } else if (jj_2_19(5)) {
+      } else if (jj_2_17(5)) {
         jj_consume_token(LPAR);
         jj_consume_token(RPAR);
       } else {
@@ -409,12 +399,12 @@ methods.add(method);
     } else {
       ;
     }
-    if (jj_2_21(5)) {
+    if (jj_2_19(5)) {
       subtasks = getSubtasksDefinition();
     } else {
       ;
     }
-    if (jj_2_22(5)) {
+    if (jj_2_20(5)) {
       ordering = getOrdering();
     } else {
       ;
@@ -439,7 +429,7 @@ method.setName(methodName);
     taskName = getAttribute();
     label_11:
     while (true) {
-      if (jj_2_23(5)) {
+      if (jj_2_21(5)) {
         ;
       } else {
         break label_11;
@@ -468,14 +458,14 @@ Subtask getSubtaskDefinition() throws ParseException {Subtask subtask = new Subt
     String subtaskName = "Unnamed";
     String taskName;
     String param;
-    if (jj_2_26(5)) {
+    if (jj_2_24(5)) {
       jj_consume_token(LPAR);
       subtaskName = getAttribute();
       jj_consume_token(LPAR);
       taskName = getAttribute();
       label_12:
       while (true) {
-        if (jj_2_24(5)) {
+        if (jj_2_22(5)) {
           ;
         } else {
           break label_12;
@@ -494,12 +484,12 @@ Task task = new Task();
         task.setParameters(subtaskParameters);
         subtask.setTask(task);
         {if ("" != null) return subtask;}
-    } else if (jj_2_27(5)) {
+    } else if (jj_2_25(5)) {
       jj_consume_token(LPAR);
       taskName = getAttribute();
       label_13:
       while (true) {
-        if (jj_2_25(5)) {
+        if (jj_2_23(5)) {
           ;
         } else {
           break label_13;
@@ -529,25 +519,25 @@ Task task = new Task();
     String taskName;
     String param;
     jj_consume_token(COLON);
-    if (jj_2_28(5)) {
+    if (jj_2_26(5)) {
       jj_consume_token(SUBTASKS);
-    } else if (jj_2_29(5)) {
+    } else if (jj_2_27(5)) {
       jj_consume_token(TASKS);
-    } else if (jj_2_30(5)) {
+    } else if (jj_2_28(5)) {
       jj_consume_token(ORDERED_SUBTASKS);
     } else {
       jj_consume_token(-1);
       throw new ParseException();
     }
-    if (jj_2_33(5)) {
+    if (jj_2_31(5)) {
       jj_consume_token(LPAR);
       jj_consume_token(RPAR);
-    } else if (jj_2_34(5)) {
+    } else if (jj_2_32(5)) {
       jj_consume_token(LPAR);
       jj_consume_token(AND);
       label_14:
       while (true) {
-        if (jj_2_31(5)) {
+        if (jj_2_29(5)) {
           ;
         } else {
           break label_14;
@@ -560,7 +550,7 @@ subtasks.add(subtask);
     } else {
       label_15:
       while (true) {
-        if (jj_2_32(5)) {
+        if (jj_2_30(5)) {
           ;
         } else {
           break label_15;
@@ -584,11 +574,11 @@ List<Ordering> getOrdering() throws ParseException {List<Ordering> ordering = ne
     jj_consume_token(COLON);
     jj_consume_token(ORDERING);
     jj_consume_token(LPAR);
-    if (jj_2_36(5)) {
+    if (jj_2_34(5)) {
       jj_consume_token(AND);
       label_16:
       while (true) {
-        if (jj_2_35(5)) {
+        if (jj_2_33(5)) {
           ;
         } else {
           break label_16;
@@ -619,7 +609,7 @@ List<Action> getActions() throws ParseException {List<Action> actions = new Arra
     Action action = new Action();
     label_17:
     while (true) {
-      if (jj_2_37(5)) {
+      if (jj_2_35(5)) {
         ;
       } else {
         break label_17;
@@ -663,7 +653,7 @@ action.setName(actionName);
     jj_consume_token(LPAR);
     label_18:
     while (true) {
-      if (jj_2_38(5)) {
+      if (jj_2_36(5)) {
         ;
       } else {
         break label_18;
@@ -671,17 +661,17 @@ action.setName(actionName);
       jj_consume_token(AND);
       label_19:
       while (true) {
-        if (jj_2_39(5)) {
+        if (jj_2_37(5)) {
           ;
         } else {
           break label_19;
         }
-        if (jj_2_42(5)) {
+        if (jj_2_40(5)) {
           jj_consume_token(LPAR);
           name = getAttribute();
           label_20:
           while (true) {
-            if (jj_2_40(5)) {
+            if (jj_2_38(5)) {
               ;
             } else {
               break label_20;
@@ -699,14 +689,14 @@ Predicate predicate = new Predicate();
                 predicate.setValue(true);
                 predicates.add(predicate);
                 arguments = new ArrayList<>();
-        } else if (jj_2_43(5)) {
+        } else if (jj_2_41(5)) {
           jj_consume_token(LPAR);
           jj_consume_token(NOT);
           jj_consume_token(LPAR);
           name = getAttribute();
           label_21:
           while (true) {
-            if (jj_2_41(5)) {
+            if (jj_2_39(5)) {
               ;
             } else {
               break label_21;
@@ -740,12 +730,12 @@ Predicate predicate = new Predicate();
     List<Argument> arguments = new ArrayList<>();
     String name;
     String param;
-    if (jj_2_46(5)) {
+    if (jj_2_44(5)) {
       jj_consume_token(LPAR);
       name = getAttribute();
       label_22:
       while (true) {
-        if (jj_2_44(5)) {
+        if (jj_2_42(5)) {
           ;
         } else {
           break label_22;
@@ -763,14 +753,14 @@ Predicate predicate = new Predicate();
                 predicate.setValue(true);
                 predicates.add(predicate);
                 {if ("" != null) return predicates;}
-    } else if (jj_2_47(5)) {
+    } else if (jj_2_45(5)) {
       jj_consume_token(LPAR);
       jj_consume_token(NOT);
       jj_consume_token(LPAR);
       name = getAttribute();
       label_23:
       while (true) {
-        if (jj_2_45(5)) {
+        if (jj_2_43(5)) {
           ;
         } else {
           break label_23;
@@ -821,7 +811,7 @@ Problem problem() throws ParseException {Problem problem = new Problem();
     objects = getObjects();
     htn = getHtn();
     init = getInit();
-    if (jj_2_48(5)) {
+    if (jj_2_46(5)) {
       ordering = getOrdering();
     } else {
       ;
@@ -850,7 +840,7 @@ List<Argument> getObjects() throws ParseException {List<Argument> objects = new 
     jj_consume_token(OBJECTS);
     label_24:
     while (true) {
-      if (jj_2_49(5)) {
+      if (jj_2_47(5)) {
         ;
       } else {
         break label_24;
@@ -858,7 +848,7 @@ List<Argument> getObjects() throws ParseException {List<Argument> objects = new 
 objectsOfSameType = new ArrayList<>();
       label_25:
       while (true) {
-        if (jj_2_50(5)) {
+        if (jj_2_48(5)) {
           ;
         } else {
           break label_25;
@@ -891,13 +881,13 @@ Htn getHtn() throws ParseException {Htn htn = new Htn();
     jj_consume_token(LPAR);
     jj_consume_token(COLON);
     jj_consume_token(HTN);
-    if (jj_2_51(5)) {
+    if (jj_2_49(5)) {
       parameters = getParameters();
     } else {
       ;
     }
     subtasks = getProblemSubtasks();
-    if (jj_2_52(5)) {
+    if (jj_2_50(5)) {
       ordering = getOrdering();
     } else {
       ;
@@ -918,14 +908,14 @@ htn.setParameters(parameters);
     String subtaskName = "Unnamed";
     String taskName;
     String param;
-    if (jj_2_55(5)) {
+    if (jj_2_53(5)) {
       jj_consume_token(LPAR);
       subtaskName = getAttribute();
       jj_consume_token(LPAR);
       taskName = getAttribute();
       label_26:
       while (true) {
-        if (jj_2_53(5)) {
+        if (jj_2_51(5)) {
           ;
         } else {
           break label_26;
@@ -943,12 +933,12 @@ Task task = new Task();
         task.setParameters(subtaskParameters);
         subtask.setTask(task);
         {if ("" != null) return subtask;}
-    } else if (jj_2_56(5)) {
+    } else if (jj_2_54(5)) {
       jj_consume_token(LPAR);
       taskName = getAttribute();
       label_27:
       while (true) {
-        if (jj_2_54(5)) {
+        if (jj_2_52(5)) {
           ;
         } else {
           break label_27;
@@ -977,25 +967,25 @@ Task task = new Task();
     String taskName;
     String param;
     jj_consume_token(COLON);
-    if (jj_2_57(5)) {
+    if (jj_2_55(5)) {
       jj_consume_token(SUBTASKS);
-    } else if (jj_2_58(5)) {
+    } else if (jj_2_56(5)) {
       jj_consume_token(TASKS);
-    } else if (jj_2_59(5)) {
+    } else if (jj_2_57(5)) {
       jj_consume_token(ORDERED_SUBTASKS);
     } else {
       jj_consume_token(-1);
       throw new ParseException();
     }
-    if (jj_2_62(5)) {
+    if (jj_2_60(5)) {
       jj_consume_token(LPAR);
       jj_consume_token(RPAR);
-    } else if (jj_2_63(5)) {
+    } else if (jj_2_61(5)) {
       jj_consume_token(LPAR);
       jj_consume_token(AND);
       label_28:
       while (true) {
-        if (jj_2_60(5)) {
+        if (jj_2_58(5)) {
           ;
         } else {
           break label_28;
@@ -1008,7 +998,7 @@ subtasks.add(subtask);
     } else {
       label_29:
       while (true) {
-        if (jj_2_61(5)) {
+        if (jj_2_59(5)) {
           ;
         } else {
           break label_29;
@@ -1037,7 +1027,7 @@ List<Predicate> getInit() throws ParseException {List<Predicate> init = new Arra
     jj_consume_token(INIT);
     label_30:
     while (true) {
-      if (jj_2_64(5)) {
+      if (jj_2_62(5)) {
         ;
       } else {
         break label_30;
@@ -1047,7 +1037,7 @@ arguments = new ArrayList<>();
       name = getAttribute();
       label_31:
       while (true) {
-        if (jj_2_65(5)) {
+        if (jj_2_63(5)) {
           ;
         } else {
           break label_31;
@@ -1573,37 +1563,6 @@ predicate = new Predicate();
     finally { jj_save(62, xla); }
   }
 
-  private boolean jj_2_64(int xla)
- {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    try { return (!jj_3_64()); }
-    catch(LookaheadSuccess ls) { return true; }
-    finally { jj_save(63, xla); }
-  }
-
-  private boolean jj_2_65(int xla)
- {
-    jj_la = xla; jj_lastpos = jj_scanpos = token;
-    try { return (!jj_3_65()); }
-    catch(LookaheadSuccess ls) { return true; }
-    finally { jj_save(64, xla); }
-  }
-
-  private boolean jj_3_37()
- {
-    if (jj_3R_getAction_581_5_45()) return true;
-    return false;
-  }
-
-  private boolean jj_3_14()
- {
-    if (jj_scan_token(LPAR)) return true;
-    if (jj_scan_token(COLON)) return true;
-    if (jj_scan_token(TASK)) return true;
-    if (jj_3R_getTask_350_6_38()) return true;
-    return false;
-  }
-
   private boolean jj_3R_getRequirement_178_6_33()
  {
     if (jj_scan_token(COLON)) return true;
@@ -1611,15 +1570,29 @@ predicate = new Predicate();
     return false;
   }
 
-  private boolean jj_3_48()
+  private boolean jj_3_34()
  {
-    if (jj_3R_getOrdering_541_5_43()) return true;
+    if (jj_scan_token(AND)) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_33()) { jj_scanpos = xsp; break; }
+    }
     return false;
   }
 
-  private boolean jj_3_30()
+  private boolean jj_3_35()
  {
-    if (jj_scan_token(ORDERED_SUBTASKS)) return true;
+    if (jj_3R_getAction_574_5_45()) return true;
+    return false;
+  }
+
+  private boolean jj_3_12()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(COLON)) return true;
+    if (jj_scan_token(TASK)) return true;
+    if (jj_3R_getTask_343_6_38()) return true;
     return false;
   }
 
@@ -1637,13 +1610,25 @@ predicate = new Predicate();
     return false;
   }
 
-  private boolean jj_3_65()
+  private boolean jj_3_46()
+ {
+    if (jj_3R_getOrdering_534_5_43()) return true;
+    return false;
+  }
+
+  private boolean jj_3_28()
+ {
+    if (jj_scan_token(ORDERED_SUBTASKS)) return true;
+    return false;
+  }
+
+  private boolean jj_3_63()
  {
     if (jj_3R_getAttribute_116_5_36()) return true;
     return false;
   }
 
-  private boolean jj_3_35()
+  private boolean jj_3_33()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_scan_token(LT)) return true;
@@ -1653,293 +1638,21 @@ predicate = new Predicate();
     return false;
   }
 
-  private boolean jj_3R_getTask_350_6_38()
+  private boolean jj_3R_getTask_343_6_38()
  {
     if (jj_3R_getAttribute_116_5_36()) return true;
-    if (jj_3R_getParameters_316_5_46()) return true;
+    if (jj_3R_getParameters_309_5_46()) return true;
     return false;
   }
 
-  private boolean jj_3R_getOrdering_541_5_43()
+  private boolean jj_3R_getOrdering_534_5_43()
  {
     if (jj_scan_token(COLON)) return true;
     if (jj_scan_token(ORDERING)) return true;
     if (jj_scan_token(LPAR)) return true;
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3_36()) jj_scanpos = xsp;
-    if (jj_scan_token(RPAR)) return true;
-    return false;
-  }
-
-  private boolean jj_3_13()
- {
-    if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    return false;
-  }
-
-  private boolean jj_3_29()
- {
-    if (jj_scan_token(TASKS)) return true;
-    return false;
-  }
-
-  private boolean jj_3_12()
- {
-    Token xsp;
-    if (jj_3_13()) return true;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_13()) { jj_scanpos = xsp; break; }
-    }
-    if (jj_scan_token(DASH)) return true;
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    return false;
-  }
-
-  private boolean jj_3_31()
- {
-    if (jj_3R_getSubtaskDefinition_467_5_44()) return true;
-    return false;
-  }
-
-  private boolean jj_3_64()
- {
-    if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_65()) { jj_scanpos = xsp; break; }
-    }
-    if (jj_scan_token(RPAR)) return true;
-    return false;
-  }
-
-  private boolean jj_3_59()
- {
-    if (jj_scan_token(ORDERED_SUBTASKS)) return true;
-    return false;
-  }
-
-  private boolean jj_3_45()
- {
-    if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    return false;
-  }
-
-  private boolean jj_3_28()
- {
-    if (jj_scan_token(SUBTASKS)) return true;
-    return false;
-  }
-
-  private boolean jj_3_19()
- {
-    if (jj_scan_token(LPAR)) return true;
-    if (jj_scan_token(RPAR)) return true;
-    return false;
-  }
-
-  private boolean jj_3_32()
- {
-    if (jj_3R_getSubtaskDefinition_467_5_44()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_getSubtasksDefinition_523_5_48()
- {
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_32()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3_58()
- {
-    if (jj_scan_token(TASKS)) return true;
-    return false;
-  }
-
-  private boolean jj_3_1()
- {
-    if (jj_3R_getRequirements_166_5_32()) return true;
-    return false;
-  }
-
-  private boolean jj_3_34()
- {
-    if (jj_scan_token(LPAR)) return true;
-    if (jj_scan_token(AND)) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_31()) { jj_scanpos = xsp; break; }
-    }
-    if (jj_scan_token(RPAR)) return true;
-    return false;
-  }
-
-  private boolean jj_3_47()
- {
-    if (jj_scan_token(LPAR)) return true;
-    if (jj_scan_token(NOT)) return true;
-    if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_45()) { jj_scanpos = xsp; break; }
-    }
-    if (jj_scan_token(RPAR)) return true;
-    return false;
-  }
-
-  private boolean jj_3_33()
- {
-    if (jj_scan_token(LPAR)) return true;
-    if (jj_scan_token(RPAR)) return true;
-    return false;
-  }
-
-  private boolean jj_3_60()
- {
-    if (jj_3R_getProblemSubtask_832_5_47()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_getSubtasksDefinition_517_5_42()
- {
-    if (jj_scan_token(COLON)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_28()) {
-    jj_scanpos = xsp;
-    if (jj_3_29()) {
-    jj_scanpos = xsp;
-    if (jj_3_30()) return true;
-    }
-    }
-    xsp = jj_scanpos;
-    if (jj_3_33()) {
-    jj_scanpos = xsp;
-    if (jj_3_34()) {
-    jj_scanpos = xsp;
-    if (jj_3R_getSubtasksDefinition_523_5_48()) return true;
-    }
-    }
-    return false;
-  }
-
-  private boolean jj_3_57()
- {
-    if (jj_scan_token(SUBTASKS)) return true;
-    return false;
-  }
-
-  private boolean jj_3_61()
- {
-    if (jj_3R_getProblemSubtask_832_5_47()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_getParameters_316_5_46()
- {
-    if (jj_scan_token(COLON)) return true;
-    if (jj_scan_token(PARAMETERS)) return true;
-    if (jj_scan_token(LPAR)) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_12()) { jj_scanpos = xsp; break; }
-    }
-    if (jj_scan_token(RPAR)) return true;
-    return false;
-  }
-
-  private boolean jj_3_25()
- {
-    if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    return false;
-  }
-
-  private boolean jj_3_63()
- {
-    if (jj_scan_token(LPAR)) return true;
-    if (jj_scan_token(AND)) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_60()) { jj_scanpos = xsp; break; }
-    }
-    if (jj_scan_token(RPAR)) return true;
-    return false;
-  }
-
-  private boolean jj_3_44()
- {
-    if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    return false;
-  }
-
-  private boolean jj_3_62()
- {
-    if (jj_scan_token(LPAR)) return true;
-    if (jj_scan_token(RPAR)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_getAttribute_116_5_36()
- {
-    if (jj_scan_token(VAR)) return true;
-    return false;
-  }
-
-  private boolean jj_3R_getActionPredicate_679_13_40()
- {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_46()) {
-    jj_scanpos = xsp;
-    if (jj_3_47()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3_46()
- {
-    if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_44()) { jj_scanpos = xsp; break; }
-    }
-    if (jj_scan_token(RPAR)) return true;
-    return false;
-  }
-
-  private boolean jj_3_54()
- {
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    return false;
-  }
-
-  private boolean jj_3_27()
- {
-    if (jj_scan_token(LPAR)) return true;
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_25()) { jj_scanpos = xsp; break; }
-    }
+    if (jj_3_34()) jj_scanpos = xsp;
     if (jj_scan_token(RPAR)) return true;
     return false;
   }
@@ -1951,10 +1664,9 @@ predicate = new Predicate();
     return false;
   }
 
-  private boolean jj_3_23()
+  private boolean jj_3_27()
  {
-    if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_116_5_36()) return true;
+    if (jj_scan_token(TASKS)) return true;
     return false;
   }
 
@@ -1971,42 +1683,160 @@ predicate = new Predicate();
     return false;
   }
 
-  private boolean jj_3_17()
+  private boolean jj_3_29()
  {
-    if (jj_3R_getActionPredicates_605_5_41()) return true;
+    if (jj_3R_getSubtaskDefinition_460_5_44()) return true;
     return false;
   }
 
-  private boolean jj_3_24()
- {
-    if (jj_scan_token(QUESTIONMARK)) return true;
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    return false;
-  }
-
-  private boolean jj_3_9()
- {
-    if (jj_3R_getPredicate_277_6_37()) return true;
-    return false;
-  }
-
-  private boolean jj_3_56()
+  private boolean jj_3_62()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_3R_getAttribute_116_5_36()) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
-      if (jj_3_54()) { jj_scanpos = xsp; break; }
+      if (jj_3_63()) { jj_scanpos = xsp; break; }
     }
     if (jj_scan_token(RPAR)) return true;
     return false;
   }
 
-  private boolean jj_3R_getPredicate_277_6_37()
+  private boolean jj_3_57()
+ {
+    if (jj_scan_token(ORDERED_SUBTASKS)) return true;
+    return false;
+  }
+
+  private boolean jj_3_1()
+ {
+    if (jj_3R_getRequirements_166_5_32()) return true;
+    return false;
+  }
+
+  private boolean jj_3_43()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3_26()
+ {
+    if (jj_scan_token(SUBTASKS)) return true;
+    return false;
+  }
+
+  private boolean jj_3_17()
  {
     if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(RPAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3_30()
+ {
+    if (jj_3R_getSubtaskDefinition_460_5_44()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_getSubtasksDefinition_516_5_48()
+ {
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_30()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3_56()
+ {
+    if (jj_scan_token(TASKS)) return true;
+    return false;
+  }
+
+  private boolean jj_3_32()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(AND)) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_29()) { jj_scanpos = xsp; break; }
+    }
+    if (jj_scan_token(RPAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3_45()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(NOT)) return true;
+    if (jj_scan_token(LPAR)) return true;
     if (jj_3R_getAttribute_116_5_36()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_43()) { jj_scanpos = xsp; break; }
+    }
+    if (jj_scan_token(RPAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3_31()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(RPAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3_58()
+ {
+    if (jj_3R_getProblemSubtask_825_5_47()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_getSubtasksDefinition_510_5_42()
+ {
+    if (jj_scan_token(COLON)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_26()) {
+    jj_scanpos = xsp;
+    if (jj_3_27()) {
+    jj_scanpos = xsp;
+    if (jj_3_28()) return true;
+    }
+    }
+    xsp = jj_scanpos;
+    if (jj_3_31()) {
+    jj_scanpos = xsp;
+    if (jj_3_32()) {
+    jj_scanpos = xsp;
+    if (jj_3R_getSubtasksDefinition_516_5_48()) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3_55()
+ {
+    if (jj_scan_token(SUBTASKS)) return true;
+    return false;
+  }
+
+  private boolean jj_3_59()
+ {
+    if (jj_3R_getProblemSubtask_825_5_47()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_getParameters_309_5_46()
+ {
+    if (jj_scan_token(COLON)) return true;
+    if (jj_scan_token(PARAMETERS)) return true;
+    if (jj_scan_token(LPAR)) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -2016,18 +1846,173 @@ predicate = new Predicate();
     return false;
   }
 
-  private boolean jj_3R_getSubtaskDefinition_467_5_44()
+  private boolean jj_3_23()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_getAttribute_116_5_36()
+ {
+    if (jj_scan_token(VAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3_61()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(AND)) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_58()) { jj_scanpos = xsp; break; }
+    }
+    if (jj_scan_token(RPAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3_42()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3_60()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(RPAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_getActionPredicate_672_13_40()
  {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3_26()) {
+    if (jj_3_44()) {
     jj_scanpos = xsp;
-    if (jj_3_27()) return true;
+    if (jj_3_45()) return true;
     }
     return false;
   }
 
-  private boolean jj_3_26()
+  private boolean jj_3_44()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_42()) { jj_scanpos = xsp; break; }
+    }
+    if (jj_scan_token(RPAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3_52()
+ {
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3_25()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_23()) { jj_scanpos = xsp; break; }
+    }
+    if (jj_scan_token(RPAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3_9()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3_21()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3_8()
+ {
+    Token xsp;
+    if (jj_3_9()) return true;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_9()) { jj_scanpos = xsp; break; }
+    }
+    if (jj_scan_token(DASH)) return true;
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3_15()
+ {
+    if (jj_3R_getActionPredicates_598_5_41()) return true;
+    return false;
+  }
+
+  private boolean jj_3_22()
+ {
+    if (jj_scan_token(QUESTIONMARK)) return true;
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3_7()
+ {
+    if (jj_3R_getPredicate_270_6_37()) return true;
+    return false;
+  }
+
+  private boolean jj_3_54()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_52()) { jj_scanpos = xsp; break; }
+    }
+    if (jj_scan_token(RPAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_getPredicate_270_6_37()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_8()) { jj_scanpos = xsp; break; }
+    }
+    if (jj_scan_token(RPAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_getSubtaskDefinition_460_5_44()
+ {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_24()) {
+    jj_scanpos = xsp;
+    if (jj_3_25()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3_24()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_3R_getAttribute_116_5_36()) return true;
@@ -2036,26 +2021,32 @@ predicate = new Predicate();
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
-      if (jj_3_24()) { jj_scanpos = xsp; break; }
+      if (jj_3_22()) { jj_scanpos = xsp; break; }
     }
     if (jj_scan_token(RPAR)) return true;
     return false;
   }
 
-  private boolean jj_3_53()
+  private boolean jj_3_51()
  {
     if (jj_3R_getAttribute_116_5_36()) return true;
     return false;
   }
 
-  private boolean jj_3_41()
+  private boolean jj_3_39()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
     if (jj_3R_getAttribute_116_5_36()) return true;
     return false;
   }
 
-  private boolean jj_3_43()
+  private boolean jj_3_5()
+ {
+    if (jj_3R_getTypesList_224_7_35()) return true;
+    return false;
+  }
+
+  private boolean jj_3_41()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_scan_token(NOT)) return true;
@@ -2064,30 +2055,24 @@ predicate = new Predicate();
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
-      if (jj_3_41()) { jj_scanpos = xsp; break; }
+      if (jj_3_39()) { jj_scanpos = xsp; break; }
     }
     if (jj_scan_token(RPAR)) return true;
     return false;
   }
 
-  private boolean jj_3_5()
- {
-    if (jj_3R_getTypesList_231_7_35()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_getProblemSubtask_832_5_47()
+  private boolean jj_3R_getProblemSubtask_825_5_47()
  {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3_55()) {
+    if (jj_3_53()) {
     jj_scanpos = xsp;
-    if (jj_3_56()) return true;
+    if (jj_3_54()) return true;
     }
     return false;
   }
 
-  private boolean jj_3_55()
+  private boolean jj_3_53()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_3R_getAttribute_116_5_36()) return true;
@@ -2096,136 +2081,40 @@ predicate = new Predicate();
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
-      if (jj_3_53()) { jj_scanpos = xsp; break; }
+      if (jj_3_51()) { jj_scanpos = xsp; break; }
     }
     if (jj_scan_token(RPAR)) return true;
     return false;
   }
 
-  private boolean jj_3_16()
+  private boolean jj_3_14()
  {
-    if (jj_3R_getActionPredicate_679_13_40()) return true;
+    if (jj_3R_getActionPredicate_672_13_40()) return true;
     return false;
   }
 
-  private boolean jj_3_40()
+  private boolean jj_3_38()
  {
     if (jj_scan_token(QUESTIONMARK)) return true;
     if (jj_3R_getAttribute_116_5_36()) return true;
     return false;
   }
 
-  private boolean jj_3_39()
+  private boolean jj_3_37()
  {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3_42()) {
+    if (jj_3_40()) {
     jj_scanpos = xsp;
-    if (jj_3_43()) return true;
+    if (jj_3_41()) return true;
     }
     return false;
   }
 
-  private boolean jj_3_42()
+  private boolean jj_3_40()
  {
     if (jj_scan_token(LPAR)) return true;
     if (jj_3R_getAttribute_116_5_36()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_40()) { jj_scanpos = xsp; break; }
-    }
-    if (jj_scan_token(RPAR)) return true;
-    return false;
-  }
-
-  private boolean jj_3_52()
- {
-    if (jj_3R_getOrdering_541_5_43()) return true;
-    return false;
-  }
-
-  private boolean jj_3_8()
- {
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    return false;
-  }
-
-  private boolean jj_3_51()
- {
-    if (jj_3R_getParameters_316_5_46()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_getTypesList_231_7_35()
- {
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_8()) { jj_scanpos = xsp; break; }
-    }
-    if (jj_scan_token(DASH)) return true;
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    return false;
-  }
-
-  private boolean jj_3_22()
- {
-    if (jj_3R_getOrdering_541_5_43()) return true;
-    return false;
-  }
-
-  private boolean jj_3_21()
- {
-    if (jj_3R_getSubtasksDefinition_517_5_42()) return true;
-    return false;
-  }
-
-  private boolean jj_3_38()
- {
-    if (jj_scan_token(AND)) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3_39()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  private boolean jj_3_20()
- {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_18()) {
-    jj_scanpos = xsp;
-    if (jj_3_19()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3_18()
- {
-    if (jj_scan_token(COLON)) return true;
-    if (jj_scan_token(PRECONDITION)) return true;
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_16()) {
-    jj_scanpos = xsp;
-    if (jj_3_17()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3R_getMethod_411_9_39()
- {
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    if (jj_3R_getParameters_316_5_46()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_getActionPredicates_605_5_41()
- {
-    if (jj_scan_token(LPAR)) return true;
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
@@ -2235,9 +2124,86 @@ predicate = new Predicate();
     return false;
   }
 
+  private boolean jj_3_50()
+ {
+    if (jj_3R_getOrdering_534_5_43()) return true;
+    return false;
+  }
+
+  private boolean jj_3_6()
+ {
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3_49()
+ {
+    if (jj_3R_getParameters_309_5_46()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_getTypesList_224_7_35()
+ {
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_6()) { jj_scanpos = xsp; break; }
+    }
+    if (jj_scan_token(DASH)) return true;
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3_20()
+ {
+    if (jj_3R_getOrdering_534_5_43()) return true;
+    return false;
+  }
+
+  private boolean jj_3_19()
+ {
+    if (jj_3R_getSubtasksDefinition_510_5_42()) return true;
+    return false;
+  }
+
+  private boolean jj_3_36()
+ {
+    if (jj_scan_token(AND)) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_37()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3_18()
+ {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_16()) {
+    jj_scanpos = xsp;
+    if (jj_3_17()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3_16()
+ {
+    if (jj_scan_token(COLON)) return true;
+    if (jj_scan_token(PRECONDITION)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_14()) {
+    jj_scanpos = xsp;
+    if (jj_3_15()) return true;
+    }
+    return false;
+  }
+
   private boolean jj_3_4()
  {
-    if (jj_3R_getType_209_6_34()) return true;
+    if (jj_3R_getType_209_5_34()) return true;
     return false;
   }
 
@@ -2252,63 +2218,28 @@ predicate = new Predicate();
     return false;
   }
 
-  private boolean jj_3_7()
+  private boolean jj_3R_getMethod_404_9_39()
  {
     if (jj_3R_getAttribute_116_5_36()) return true;
+    if (jj_3R_getParameters_309_5_46()) return true;
     return false;
   }
 
-  private boolean jj_3_6()
- {
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    if (jj_scan_token(DASH)) return true;
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_getType_209_6_34()
- {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3_6()) {
-    jj_scanpos = xsp;
-    if (jj_3_7()) return true;
-    }
-    return false;
-  }
-
-  private boolean jj_3_15()
+  private boolean jj_3R_getActionPredicates_598_5_41()
  {
     if (jj_scan_token(LPAR)) return true;
-    if (jj_scan_token(COLON)) return true;
-    if (jj_scan_token(METHOD)) return true;
-    if (jj_3R_getMethod_411_9_39()) return true;
-    return false;
-  }
-
-  private boolean jj_3_50()
- {
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    return false;
-  }
-
-  private boolean jj_3R_getAction_581_5_45()
- {
-    if (jj_scan_token(LPAR)) return true;
-    if (jj_scan_token(COLON)) return true;
-    if (jj_scan_token(ACTION)) return true;
-    if (jj_3R_getAttribute_116_5_36()) return true;
-    if (jj_3R_getParameters_316_5_46()) return true;
-    return false;
-  }
-
-  private boolean jj_3_49()
- {
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
-      if (jj_3_50()) { jj_scanpos = xsp; break; }
+      if (jj_3_36()) { jj_scanpos = xsp; break; }
     }
+    if (jj_scan_token(RPAR)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_getType_209_5_34()
+ {
+    if (jj_3R_getAttribute_116_5_36()) return true;
     if (jj_scan_token(DASH)) return true;
     if (jj_3R_getAttribute_116_5_36()) return true;
     return false;
@@ -2320,14 +2251,40 @@ predicate = new Predicate();
     return false;
   }
 
-  private boolean jj_3_36()
+  private boolean jj_3_13()
  {
-    if (jj_scan_token(AND)) return true;
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(COLON)) return true;
+    if (jj_scan_token(METHOD)) return true;
+    if (jj_3R_getMethod_404_9_39()) return true;
+    return false;
+  }
+
+  private boolean jj_3_48()
+ {
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_getAction_574_5_45()
+ {
+    if (jj_scan_token(LPAR)) return true;
+    if (jj_scan_token(COLON)) return true;
+    if (jj_scan_token(ACTION)) return true;
+    if (jj_3R_getAttribute_116_5_36()) return true;
+    if (jj_3R_getParameters_309_5_46()) return true;
+    return false;
+  }
+
+  private boolean jj_3_47()
+ {
     Token xsp;
     while (true) {
       xsp = jj_scanpos;
-      if (jj_3_35()) { jj_scanpos = xsp; break; }
+      if (jj_3_48()) { jj_scanpos = xsp; break; }
     }
+    if (jj_scan_token(DASH)) return true;
+    if (jj_3R_getAttribute_116_5_36()) return true;
     return false;
   }
 
@@ -2355,7 +2312,7 @@ predicate = new Predicate();
 	private static void jj_la1_init_1() {
 	   jj_la1_1 = new int[] {};
 	}
-  final private JJCalls[] jj_2_rtns = new JJCalls[65];
+  final private JJCalls[] jj_2_rtns = new JJCalls[63];
   private boolean jj_rescan = false;
   private int jj_gc = 0;
 
@@ -2612,7 +2569,7 @@ predicate = new Predicate();
 
   private void jj_rescan_token() {
 	 jj_rescan = true;
-	 for (int i = 0; i < 65; i++) {
+	 for (int i = 0; i < 63; i++) {
 	   try {
 		 JJCalls p = jj_2_rtns[i];
 
@@ -2683,8 +2640,6 @@ predicate = new Predicate();
 			   case 60: jj_3_61(); break;
 			   case 61: jj_3_62(); break;
 			   case 62: jj_3_63(); break;
-			   case 63: jj_3_64(); break;
-			   case 64: jj_3_65(); break;
 			 }
 		   }
 		   p = p.next;
