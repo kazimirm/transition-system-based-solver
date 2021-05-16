@@ -11,6 +11,7 @@ public class Problem extends HtnInput{
     private List<Argument> objects;
     private Htn htn;
     private List<Predicate> init;
+    private List<Ordering> ordering;
 
     // filled in enricher and used by encoder
     private HashMap<String, List<Argument>> objectsToTypedLists = new HashMap<>(); // for each type creates list with such objects
@@ -59,6 +60,14 @@ public class Problem extends HtnInput{
 
     public void setInit(List<Predicate> init) {
         this.init = init;
+    }
+
+    public List<Ordering> getOrdering() {
+        return ordering;
+    }
+
+    public void setOrdering(List<Ordering> ordering) {
+        this.ordering = ordering;
     }
 
     @Override

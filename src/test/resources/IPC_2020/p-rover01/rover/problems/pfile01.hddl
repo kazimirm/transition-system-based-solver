@@ -15,7 +15,7 @@
    (get_image_data objective1 high_res)
    )
   :ordering ( )
-  :constraints ( ))
+  )
 (:init
 	(visible waypoint1 waypoint0)
 	(visible waypoint0 waypoint1)

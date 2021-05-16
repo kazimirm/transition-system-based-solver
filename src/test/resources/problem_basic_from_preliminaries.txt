@@ -7,9 +7,9 @@
         t0 - vehicle
     )
     (:htn
-        :subtasks (
-            task0 (get_to t0 c1)
-            task1 (get_to t0 c0)
+        :subtasks (and
+            (task0 (get_to t0 c1))
+            (task1 (get_to t0 c0))
         )
     )
     (:init
