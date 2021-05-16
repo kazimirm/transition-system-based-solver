@@ -23,6 +23,7 @@ public class Z3Encoder {
     private HashMap<String, FuncDecl> functions = new HashMap<>();
     private List<Predicate> predicates;
     private HashMap<String, List<BoolExpr>> predicatesExpressionsList = new HashMap<>();
+    private Set<Integer> ignoreNodes = new HashSet<>();
 
     private Context ctx = new Context();
     private Fixedpoint fix;
@@ -393,6 +394,7 @@ public class Z3Encoder {
     }
 
     private void visualizeGraph() {
+        StringBuilder sb = new StringBuilder();
         Expr root = answer.getArgs()[0];
         List<List<Expr>> expressions = new ArrayList<>();
         expressions.add(Arrays.asList(root));
@@ -400,7 +402,7 @@ public class Z3Encoder {
         HashMap<Integer, Expr> exprHashMap = new HashMap<>();
         exprHashMap.put(root.hashCode(), root);
 
-        System.out.println("digraph " + problem.getName() + " {");
+        sb.append("digraph " + problem.getName() + " {").append(System.getProperty("line.separator"));
 
         while (expressions.get(i) != null && !expressions.get(i).isEmpty()) {
             List<Expr> newLevel = new ArrayList<>();
@@ -409,7 +411,9 @@ public class Z3Encoder {
                     String color;
                     if ("Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
                         color = "red";
-                        System.out.println(getExpressionName(e) + "[color=" + color + "];");
+                        if (getExpressionName(e) != null) {
+                            sb.append(getExpressionName(e) + "[color=" + color + "];").append(System.getProperty("line.separator"));
+                        }
                     }
                 }
 
@@ -418,8 +422,9 @@ public class Z3Encoder {
 
                     for (Expr arg : e.getArgs()){
                          exprHashMap.put(arg.hashCode(), arg);
-                        if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name()))) {
-                            System.out.println(e.hashCode() + " -> " + arg.hashCode() + ";");
+                        if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name())) &&
+                            !ignoreNodes.contains(e.hashCode()) && !ignoreNodes.contains(arg.hashCode())) {
+                            sb.append(e.hashCode() + " -> " + arg.hashCode() + ";").append(System.getProperty("line.separator"));
                         }
                     }
 
@@ -429,13 +434,14 @@ public class Z3Encoder {
             i++;
         }
 
-        System.out.println("graph [labelloc=\"b\" labeljust=\"r\" label=<\n" +
+        sb.append("graph [labelloc=\"b\" labeljust=\"r\" label=<\n" +
                 "\t<TABLE BORDER=\"0\" CELLBORDER=\"2\" CELLSPACING=\"0\">\n" +
-                "\t<TR><TD colspan=\"2\">Objects Legend</TD></TR>");
+                "\t<TR><TD colspan=\"2\">Objects Legend</TD></TR>").append(System.getProperty("line.separator"));
         for (Map.Entry<String, Integer> value : objectToInt.entrySet()) {
-            System.out.println("<TR><TD>" + value.getValue() + "</TD><TD>" + value.getKey() + "</TD></TR>");
+            sb.append("<TR><TD>" + value.getValue() + "</TD><TD>" + value.getKey() + "</TD></TR>").append(System.getProperty("line.separator"));
         }
-        System.out.println("</TABLE>>];\n}");
+        sb.append("</TABLE>>];\n}").append(System.getProperty("line.separator"));
+        System.out.println(sb.toString());
 
     }
 
@@ -446,7 +452,10 @@ public class Z3Encoder {
                 .replace("true", "").replace("false", "")
                 .replace("\n", "").replace("\r", "").trim().replaceAll(" +", " ");
         }
-        //return "\"" + name + "\\n" + e.hashCode() + "\"";
+        if (name.contains("_Precondition#")){
+            ignoreNodes.add(e.hashCode());
+            return null;
+        }
         return e.hashCode() + " [label=\"" + name + "\"]";
     }
 
