@@ -454,7 +454,7 @@ List<Subtask> getSubtaskDefinition():
     String param;
 }
 {
-    <COLON> <SUBTASKS> <LPAR>
+    <COLON> (<SUBTASKS> | <TASK> | <ORDERED_SUBTASKS>) <LPAR>
         ( subtaskName = getAttribute() <LPAR> taskName = getAttribute()
             (
                 <QUESTIONMARK> param = getAttribute()
@@ -493,7 +493,7 @@ List<Subtask> getSubtasksDefinition():
     String param;
 }
 {
-    <COLON> <SUBTASKS> <LPAR> (<AND>)?
+    <COLON> (<SUBTASKS> | <TASKS> | <ORDERED_SUBTASKS>) <LPAR> <AND>
         (<LPAR> subtaskName = getAttribute() <LPAR> taskName = getAttribute()
             (
                 <QUESTIONMARK> param = getAttribute()
