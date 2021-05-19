@@ -120,7 +120,12 @@ public class Z3Encoder {
                 // Preconditions
                 for (Predicate p : a.getPreconditions()) {
                     String predicate = getConcretePredicate(p, permutation);
-                    BoolExpr expr = predicatesExpressionsList.get(predicate).get(0);
+                    BoolExpr expr = null;
+                    try {
+                        expr = predicatesExpressionsList.get(predicate).get(0);
+                    } catch(NullPointerException e) {
+                        logger.error("missing expression predicate, probably error in setting types and subtypes.");
+                    }
                     if (p.getValue() == true) {
                         ruleAParams.add(expr);
                     } else {

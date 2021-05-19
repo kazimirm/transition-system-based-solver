@@ -9,6 +9,7 @@ public class Method {
     private List<Predicate> preconditions;
     private List<Subtask> subtasks;
     private List<Ordering> ordering;
+    private List<Constraint> constraints;
 
     public Method() {
     }
@@ -61,4 +62,11 @@ public class Method {
         this.ordering = ordering;
     }
 
+    public List<Constraint> getConstraints() {
+        return constraints;
+    }
+
+    public void setConstraints(List<Constraint> constraints) {
+        this.constraints = constraints;
+    }
 }

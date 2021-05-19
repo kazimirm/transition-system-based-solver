@@ -68,6 +68,7 @@ public class ParserHDDL {
     | <ORDERED_SUBTASKS:  	"ordered-subtasks">							/* ordered-subtasks */
     | <TASKS:  		        "tasks">								    /* tasks */
     | <ORDERING:  		    "ordering">								    /* ordering */
+    | <CONSTRAINTS:  		"constraints">								/* constraints */
     | <METHOD:  		    "method">								    /* method */
     | <ACTION:  		    "action">								    /* action */
     | <PRECONDITION:  		"precondition">								/* precondition */
@@ -395,6 +396,7 @@ Method getMethod():
     List<Predicate> preconditions = new ArrayList<>();
     List<Subtask> subtasks = new ArrayList<>();
     List<Ordering> ordering = new ArrayList<>();
+    List<Constraint> constraints = new ArrayList<>();
     String methodName;
     String paramName;
     String paramType;
@@ -407,6 +409,7 @@ Method getMethod():
         (<COLON> <PRECONDITION> ((preconditions =  getActionPredicate() | preconditions = getActionPredicates())) | (<LPAR> <RPAR>))?
         (subtasks = getSubtasksDefinition())?
         (ordering = getOrdering())?
+        (constraints = getConstraints())?
 
     {
         method.setName(methodName);
@@ -415,6 +418,7 @@ Method getMethod():
         method.setPreconditions(preconditions);
         method.setSubtasks(subtasks);
         method.setOrdering(ordering);
+        method.setConstraints(constraints);
         return method;
     }
  }
@@ -545,6 +549,39 @@ List<Ordering> getOrdering():
         return ordering;
     }
 }
+
+////////////////////////////////////////////////////////////////////////
+////////////////    Constraints   //////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+List<Constraint> getConstraints():
+{
+    List<Constraint> constraints = new ArrayList<>();
+    String param1;
+    String param2;
+}
+{
+    <COLON> <CONSTRAINTS> <LPAR> (<AND>
+    (<LPAR> <NOT> <LPAR> <EQ> <QUESTIONMARK> param1 = getAttribute() <QUESTIONMARK> param2 = getAttribute() <RPAR> <RPAR>
+        {
+            Constraint con = new Constraint();
+            Parameter p1 = new Parameter();
+            p1.setName(param1);
+            Parameter p2 = new Parameter();
+            p2.setName(param2);
+
+            con.setParam1(p1);
+            con.setParam2(p2);
+            constraints.add(con);
+        }
+    )*)?
+    <RPAR>
+    {
+        return constraints;
+    }
+}
+
+
 
 ////////////////////////////////////////////////////////////////////////
 ////////////////    Actions   //////////////////////////////////////////

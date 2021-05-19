@@ -61,6 +61,7 @@ public class ProblemEnricher {
 
         for (Type t : domain.getTypes()) {
             objectsToTypedLists.put(t.getName(), new ArrayList<>());
+            objectsToTypedLists.put(t.getBaseType(), new ArrayList<>());
             typeNameToType.put(t.getName(), t);
         }
 
@@ -129,9 +130,12 @@ public class ProblemEnricher {
             predicates.add(predicate);
             return;
         }
-
-        for (int i = 0; i < lists.get(depth).size(); i++) {
-            generatePermutationsForPredicate(p, lists, depth + 1, current + lists.get(depth).get(i).getName() + ";");
+        try {
+            for (int i = 0; i < lists.get(depth).size(); i++) {
+                generatePermutationsForPredicate(p, lists, depth + 1, current + lists.get(depth).get(i).getName() + ";");
+            }
+        } catch (NullPointerException e){
+            logger.error("NPE, probably unknown type or subtype of an object");
         }
     }
 
