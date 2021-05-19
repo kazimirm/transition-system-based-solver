@@ -363,6 +363,14 @@ public class Z3Encoder {
                 subtaskExpressions.add(subtaskExpr);
             }
 
+            for (Constraint c : m.getConstraints()){
+                // to distinct int objects are not equal
+                IntExpr param1 = intExpressions.get(c.getParam1().getName());
+                IntExpr param2 = intExpressions.get(c.getParam2().getName());
+                Expr eq = ctx.mkNot(ctx.mkEq(param1, param2));
+                subtaskExpressions.add(eq);
+            }
+
             List<Expr> params = new ArrayList<>();
 
             // Int objects
@@ -382,7 +390,6 @@ public class Z3Encoder {
                 BoolExpr param = boolExprList.get(subtasks.size());
                 params.add(param);
             }
-
 
             for (int i = 0; i < MAX_NUMBER_OF_SUBTASKS; i++){
                 Expr subtasksConjunction = ctx.mkAnd(subtaskExpressions.toArray(new Expr[0]));
