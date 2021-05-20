@@ -464,7 +464,8 @@ public class Z3Encoder {
                 .replace("true", "").replace("false", "")
                 .replace("\n", "").replace("\r", "").trim().replaceAll(" +", " ");
         }
-        return e.hashCode() + " [label=\"" + name + "\"]";
+        String description = e.getNumArgs() > 2 ? "method" : "action";
+        return e.hashCode() + " [label=\"" + name + "\"]" + "[description=\"" + description + "\"]";
     }
 
 }
