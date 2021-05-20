@@ -419,7 +419,7 @@ public class Z3Encoder {
         while (expressions.get(i) != null && !expressions.get(i).isEmpty()) {
             List<Expr> newLevel = new ArrayList<>();
             for (Expr e : expressions.get(i)) {
-                if (!(e instanceof BoolExpr)){
+                if (!(e instanceof BoolExpr) && i != 0){
                     String color;
                     if ("Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
                         color = "red";
@@ -435,7 +435,7 @@ public class Z3Encoder {
                     for (Expr arg : e.getArgs()){
                          exprHashMap.put(arg.hashCode(), arg);
                         if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name())) &&
-                            !getExpressionName(e).contains("_Precondition#") && !getExpressionName(arg).contains("_Precondition#")) {
+                            !getExpressionName(e).contains("_Precondition#") && !getExpressionName(arg).contains("_Precondition#") && i != 0) {
                             sb.append(e.hashCode() + " -> " + arg.hashCode() + ";").append(System.getProperty("line.separator"));
                         }
                     }
