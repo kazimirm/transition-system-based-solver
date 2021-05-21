@@ -18,14 +18,11 @@ public class Z3Encoder {
     private Domain domain;
     private Problem problem;
 
-    private HashMap<String, List<Argument>> objectsToTypedLists; // for each type creates list with such objects
-    private HashMap<String, Type> typeNameToType;
     private LinkedHashMap<String, Integer> objectToInt;
     private List<Expr> allExpressions = new ArrayList<>();
     private HashMap<String, FuncDecl> functions = new HashMap<>();
     private List<Predicate> predicates;
     private HashMap<String, List<BoolExpr>> predicatesExpressionsList = new HashMap<>();
-    private Set<Integer> ignoreNodes = new HashSet<>();
 
     private Context ctx = new Context();
     private Fixedpoint fix;
@@ -35,8 +32,6 @@ public class Z3Encoder {
     public Z3Encoder(Domain domain, Problem problem) {
         this.domain = domain;
         this.problem = problem;
-        objectsToTypedLists = problem.getObjectsToTypedLists();
-        typeNameToType = problem.getTypeNameToType();
         objectToInt = problem.getObjectToInt();
         predicates = problem.getPredicates();
     }
@@ -474,6 +469,7 @@ public class Z3Encoder {
         exprHashMap.put(root.hashCode(), root);
 
         Graph graph = new Graph(true);
+        graph.setIntFromInversemap(objectToInt);
         HashMap<Integer, Node> expressionHashToNode = new HashMap<>();
         Node goal = null;
 
@@ -515,8 +511,11 @@ public class Z3Encoder {
             i++;
         }
         //graph.printEdges();
-        graph.depthFirstSearch(goal);
-        System.out.println("end");
+        graph.dfsTyped(goal, TaskType.ACTION);
+        graph.resetNodesVisited();
+        System.out.println("=======>");
+        graph.dfsTyped(goal, TaskType.METHOD);
+        //System.out.println("end");
     }
 
     private String getExpressionLabel(Expr e){
