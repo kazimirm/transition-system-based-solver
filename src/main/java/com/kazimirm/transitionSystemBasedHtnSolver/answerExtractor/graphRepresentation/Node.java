@@ -1,4 +1,4 @@
-package com.kazimirm.transitionSystemBasedHtnSolver.graphRepresentation;
+package com.kazimirm.transitionSystemBasedHtnSolver.answerExtractor.graphRepresentation;
 
 import com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.TaskType;
 

@@ -1,7 +1,5 @@
 package com.kazimirm.transitionSystemBasedHtnSolver.encoder;
 
-import com.kazimirm.transitionSystemBasedHtnSolver.graphRepresentation.Graph;
-import com.kazimirm.transitionSystemBasedHtnSolver.graphRepresentation.Node;
 import com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.*;
 import com.microsoft.z3.*;
 import org.slf4j.Logger;
@@ -23,7 +21,6 @@ public class Z3Encoder {
     private HashMap<String, FuncDecl> functions = new HashMap<>();
     private List<Predicate> predicates;
     private HashMap<String, List<BoolExpr>> predicatesExpressionsList = new HashMap<>();
-    private Graph graph = new Graph(true);
 
     private Context ctx = new Context();
     private Fixedpoint fix;
@@ -40,6 +37,7 @@ public class Z3Encoder {
     public void encodeToZ3ExpressionsAndGetResult() {
         fix = ctx.mkFixedpoint();
 
+        // few settings for Z3 encoder before we start
         Params params = ctx.mkParams();
         params.add("xform.slice", false);
         params.add("xform.inline_linear", false);
@@ -51,12 +49,6 @@ public class Z3Encoder {
         encodeActions();
         encodeMethods();
         encodeHtnAndInit();
-
-        //visualizeGraph();
-        createGraph();
-        graph.printStandardOutput();
-
-        System.out.println();
     }
 
     /**
@@ -364,7 +356,8 @@ public class Z3Encoder {
             }
 
             for (Constraint c : m.getConstraints()){
-                // to distinct int objects are not equal
+                // constraints mean two distinct int objects (method params) are not equal so we encode this as negated equation
+                // adn adding to conjunction of method subtasks
                 IntExpr param1 = intExpressions.get(c.getParam1().getName());
                 IntExpr param2 = intExpressions.get(c.getParam2().getName());
                 Expr eq = ctx.mkNot(ctx.mkEq(param1, param2));
@@ -405,147 +398,19 @@ public class Z3Encoder {
         }
     }
 
-    private void visualizeGraph() {
-        StringBuilder sb = new StringBuilder();
-        Expr root = answer.getArgs()[0];
-        List<List<Expr>> expressions = new ArrayList<>();
-        expressions.add(Arrays.asList(root));
-        int i = 0;
-        HashMap<Integer, Expr> exprHashMap = new HashMap<>();
-        exprHashMap.put(root.hashCode(), root);
-
-        sb.append("digraph " + problem.getName() + " {").append(System.getProperty("line.separator"));
-
-        while (expressions.get(i) != null && !expressions.get(i).isEmpty()) {
-            List<Expr> newLevel = new ArrayList<>();
-            for (Expr e : expressions.get(i)) {
-                String label = getExpressionLabel(e);
-                if (!(e instanceof BoolExpr) && i != 0){
-                    String color;
-                    if ("Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
-                        color = "red";
-                        //if (!label.contains("_Precondition#")) {
-                            sb.append(label + "[color=" + color + ", ordering=out];").append(System.getProperty("line.separator"));
-                        //}
-                    }
-                }
-
-                if (e.getNumArgs() >= 1) {
-                    Arrays.stream(e.getArgs()).filter(arg -> !(arg instanceof BoolExpr))
-                            .sorted(Comparator.comparingInt(expr -> getOrderOfTask(getExpressionLabel(expr))))
-                            .collect(Collectors.toCollection(() -> newLevel));
-                    List<Expr> sorted = Arrays.stream(e.getArgs()).sorted(Comparator.comparingInt(expr -> getOrderOfTask(getExpressionLabel(expr)))).collect(Collectors.toList());
-
-                    for (Expr arg : sorted){
-                         exprHashMap.put(arg.hashCode(), arg);
-                        if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name()))) {
-                           //     &&
-                           // !label.contains("_Precondition#") && !getExpressionLabel(arg).contains("_Precondition#") && i != 0) {
-                            sb.append(e.hashCode() + " -> " + arg.hashCode() + ";").append(System.getProperty("line.separator"));
-                        }
-                    }
-
-                }
-            }
-            expressions.add(newLevel);
-            i++;
-        }
-
-        sb.append("graph [labelloc=\"b\" labeljust=\"r\" label=<\n" +
-                "\t<TABLE BORDER=\"0\" CELLBORDER=\"2\" CELLSPACING=\"0\">\n" +
-                "\t<TR><TD colspan=\"2\">Objects Legend</TD></TR>").append(System.getProperty("line.separator"));
-        for (Map.Entry<String, Integer> value : objectToInt.entrySet()) {
-            sb.append("<TR><TD>" + value.getValue() + "</TD><TD>" + value.getKey() + "</TD></TR>").append(System.getProperty("line.separator"));
-        }
-        sb.append("</TABLE>>];\n}").append(System.getProperty("line.separator"));
-        System.out.println(sb.toString());
-
+    public Domain getDomain() {
+        return domain;
     }
 
-    private void createGraph() {
-        Expr root = answer.getArgs()[0];
-        List<List<Expr>> expressions = new ArrayList<>();
-        expressions.add(Arrays.asList(root));
-        int i = 0;
-        int order = 0;
-        HashMap<Integer, Expr> exprHashMap = new HashMap<>();
-        exprHashMap.put(root.hashCode(), root);
-
-        graph.setIntFromInversemap(objectToInt);
-        HashMap<Integer, Node> expressionHashToNode = new HashMap<>();
-        Node goal = null;
-
-        while (expressions.get(i) != null && !expressions.get(i).isEmpty()) {
-            List<Expr> newLevel = new ArrayList<>();
-            for (Expr e : expressions.get(i)) {
-
-                if (e.getNumArgs() >= 1) {
-                    Arrays.stream(e.getArgs()).filter(arg -> !(arg instanceof BoolExpr))
-                            .sorted(Comparator.comparingInt(expr -> getOrderOfTask(getExpressionLabel(expr))))
-                            .collect(Collectors.toCollection(() -> newLevel));
-
-                    List<Expr> sorted = Arrays.stream(e.getArgs()).sorted(Comparator.comparingInt(expr -> getOrderOfTask(getExpressionLabel(expr)))).collect(Collectors.toList());
-
-                    for (Expr arg : sorted){
-                        exprHashMap.put(arg.hashCode(), arg);
-                        if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name())) && i != 0) {
-
-                            if (expressionHashToNode.get(e.hashCode()) == null){
-                                Node node = createNode(e, order++);
-                                expressionHashToNode.put(e.hashCode(), node);
-                                if ("Goal".equals(node.getName())){
-                                    graph.setRoot(node);
-                                }
-                            }
-
-                            Node node = createNode(arg, order++);
-                            expressionHashToNode.put(arg.hashCode(), node);
-
-                            graph.addEdge(expressionHashToNode.get(e.hashCode()), expressionHashToNode.get(arg.hashCode()));
-                        }
-                    }
-
-                }
-            }
-            expressions.add(newLevel);
-            i++;
-        }
+    public Problem getProblem() {
+        return problem;
     }
 
-    private String getExpressionLabel(Expr e){
-        String name = "";
-        if (!(e instanceof BoolExpr) && "Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
-        name =  (e.getArgs()[e.getNumArgs() - 1]).toString()
-                .replace("true", "").replace("false", "")
-                .replace("\n", "").replace("\r", "").trim().replaceAll(" +", " ");
-        }
-        String description = e.getNumArgs() > 2 ? "method" : "action";
-        return e.hashCode() + " [label=\"" + name + "\"]" + "[description=\"" + description + "\"]";
+    public LinkedHashMap<String, Integer> getObjectToInt() {
+        return objectToInt;
     }
 
-    private Node createNode(Expr e, int order){
-        String name = "";
-        if (!(e instanceof BoolExpr) && "Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
-            name =  (e.getArgs()[e.getNumArgs() - 1]).toString()
-                    .replace("true", "").replace("false", "")
-                    .replace("\n", "").replace("\r", "").trim().replaceAll(" +", " ");
-        }
-        TaskType type = e.getNumArgs() > 2 ? TaskType.METHOD :  TaskType.ACTION;
-        Node node = new Node();
-        node.setName(name);
-        node.setType(type);
-        node.setN(order);
-        return node;
+    public Expr getAnswer() {
+        return answer;
     }
-
-    private int getOrderOfTask(String label){
-        int order = 0;
-        try{
-            order = Integer.parseInt(label.substring(label.lastIndexOf('#') + 1, label.lastIndexOf('|')));
-        } catch (Exception e){
-            return order;
-        }
-        return order;
-    }
-
 }
