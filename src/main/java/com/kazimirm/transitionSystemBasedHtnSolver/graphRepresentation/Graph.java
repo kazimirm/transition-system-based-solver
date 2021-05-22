@@ -135,7 +135,7 @@ public class Graph {
         }
 
         if (TaskType.METHOD == node.getType()){
-            sb.append(" -> ");
+            sb.append("-> ");
             Node precondition = adjacencyMap.get(node).get(0);
             String preconditionName = precondition.getName();
             String methodName = preconditionName.substring(0, preconditionName.indexOf('#'))
