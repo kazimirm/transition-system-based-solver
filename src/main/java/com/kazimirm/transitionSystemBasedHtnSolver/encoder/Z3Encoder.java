@@ -422,9 +422,9 @@ public class Z3Encoder {
                     String color;
                     if ("Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
                         color = "red";
-                        if (!label.contains("_Precondition#")) {
+                        //if (!label.contains("_Precondition#")) {
                             sb.append(label + "[color=" + color + ", ordering=out];").append(System.getProperty("line.separator"));
-                        }
+                        //}
                     }
                 }
 
@@ -436,8 +436,9 @@ public class Z3Encoder {
 
                     for (Expr arg : sorted){
                          exprHashMap.put(arg.hashCode(), arg);
-                        if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name())) &&
-                            !label.contains("_Precondition#") && !getExpressionLabel(arg).contains("_Precondition#") && i != 0) {
+                        if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name()))) {
+                           //     &&
+                           // !label.contains("_Precondition#") && !getExpressionLabel(arg).contains("_Precondition#") && i != 0) {
                             sb.append(e.hashCode() + " -> " + arg.hashCode() + ";").append(System.getProperty("line.separator"));
                         }
                     }
@@ -488,7 +489,8 @@ public class Z3Encoder {
                     for (Expr arg : sorted){
                         exprHashMap.put(arg.hashCode(), arg);
                         if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name())) &&
-                                !label.contains("_Precondition#") && !getExpressionLabel(arg).contains("_Precondition#") && i != 0) {
+                                //!label.contains("_Precondition#") && !getExpressionLabel(arg).contains("_Precondition#") &&
+                                i != 0) {
 
                             if (expressionHashToNode.get(e.hashCode()) == null){
                                 Node node = createNode(e, order++);
@@ -511,10 +513,11 @@ public class Z3Encoder {
             i++;
         }
         //graph.printEdges();
+        System.out.println("==>");
         graph.dfsTyped(goal, TaskType.ACTION);
         graph.resetNodesVisited();
-        System.out.println("=======>");
         graph.dfsTyped(goal, TaskType.METHOD);
+        System.out.println("<==");
         //System.out.println("end");
     }
 

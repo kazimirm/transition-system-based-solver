@@ -166,7 +166,10 @@ public class ProblemEnricher {
             // Methods with preconditions have unique handling. As our encoding does not support that, we create an action
             // for each method that has some preconditions. This action has the same parameters and preconditions as method,
             // no effects and it will be the first subtask of the method.
-            if (m.getPreconditions() != null && !m.getPreconditions().isEmpty()){
+            // Firstly, the purpose was just to encode method preconditions, but to construct plan in the standard output
+            // format we need method names of abstract tasks. For this purpose we create action precondition in all methods
+            // where this precondition holds the method name that can be later extracted.
+            {
                 Action preconditionAction = new Action();
                 preconditionAction.setName(m.getName() + "_Precondition");
                 preconditionAction.setParameters(m.getParameters());
@@ -185,6 +188,7 @@ public class ProblemEnricher {
                 preconditionSubtask.setTask(preconditionTask);
                 m.getSubtasks().add(0, preconditionSubtask);
             }
+
 
             for (Subtask s : m.getSubtasks()) {
                 Task st = s.getTask();

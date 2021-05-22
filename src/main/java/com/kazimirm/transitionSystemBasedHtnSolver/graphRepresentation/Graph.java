@@ -1,6 +1,5 @@
 package com.kazimirm.transitionSystemBasedHtnSolver.graphRepresentation;
 
-import com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.Task;
 import com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.TaskType;
 
 import java.util.HashMap;
@@ -36,9 +35,6 @@ public class Graph {
         // We make sure that every used node shows up in our .keySet()
         if (!adjacencyMap.keySet().contains(source))
             adjacencyMap.put(source, null);
-
-//        if (!adjacencyMap.keySet().contains(destination))
-//            adjacencyMap.put(destination, null);
 
         addEdgeHelper(source, destination);
 
@@ -85,7 +81,10 @@ public class Graph {
     public void dfsTyped(Node node, TaskType type) {
         node.visit();
         if (type.equals(node.getType())) {
-            System.out.println(getStandardOutputTaskName(node));
+            String print = getStandardOutputOfTask(node);
+            if (!"".equals(print)) {
+                System.out.println(print);
+            }
         }
 
         LinkedList<Node> allNeighbors = adjacencyMap.get(node);
@@ -98,16 +97,30 @@ public class Graph {
         }
     }
 
-    private String getStandardOutputTaskName(Node node){
+    private String getStandardOutputOfTask(Node node){
         StringBuilder sb = new StringBuilder();
+        // we want to ignore our added actions
+        if (node.getName().contains("_Precondition")){
+            return "";
+        }
         sb.append(node.getN() + " ");
         String label = node.getName().replace("(", "").replace(")", "").replace("|", "");
+
         try {
             String remove = label.substring(label.indexOf('#'), label.indexOf(' '));
             label = label.replace(remove, "");
         } catch (StringIndexOutOfBoundsException e){
+            if ("Goal".equals(node.getName())){
+                StringBuilder root = new StringBuilder();
+                for (Node child : adjacencyMap.get(node)) {
+                    root.append(" ").append(child.getN());
+                }
+                String goal = "root" + root.toString();
+                return goal;
+            }
             return "";
         }
+
         String[] args = label.split(" ");
         for (int i = 0; i < args.length; i++){
             try {
@@ -117,6 +130,22 @@ public class Graph {
                 //nothing to there in such case
             }
             sb.append(args[i] + " ");
+        }
+
+        if (TaskType.METHOD == node.getType()){
+            sb.append(" -> ");
+            Node precondition = adjacencyMap.get(node).get(0);
+            String preconditionName = precondition.getName();
+            String methodName = preconditionName.substring(0, preconditionName.indexOf('#'))
+                    .replace("(", "").replace(")", "").replace("|", "");
+            sb.append(methodName);
+            for (Node child : adjacencyMap.get(node)){
+                if (child.getName().contains("_Precondition#")){
+                    continue;
+                }
+                sb.append(" ");
+                sb.append(child.getN());
+            }
         }
         return sb.toString();
     }
