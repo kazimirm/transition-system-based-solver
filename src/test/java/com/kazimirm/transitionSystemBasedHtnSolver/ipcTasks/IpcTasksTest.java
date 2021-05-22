@@ -1,5 +1,7 @@
 package com.kazimirm.transitionSystemBasedHtnSolver.ipcTasks;
 
+import com.kazimirm.transitionSystemBasedHtnSolver.answerExtractor.AnswerExtractor;
+import com.kazimirm.transitionSystemBasedHtnSolver.answerExtractor.graphRepresentation.Graph;
 import com.kazimirm.transitionSystemBasedHtnSolver.dataEnricher.ProblemEnricher;
 import com.kazimirm.transitionSystemBasedHtnSolver.encoder.Z3Encoder;
 import com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.Domain;
@@ -45,20 +47,22 @@ public class IpcTasksTest {
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
         Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
         encoder.encodeToZ3ExpressionsAndGetResult();
-        System.out.println();
+        AnswerExtractor extractor = new AnswerExtractor(encoder);
+        Graph graph = extractor.getGraphFromAnswer();
+        System.out.println(graph.getStandardOutput());
     }
 
-//    @Test
-//    // Uses constraints
-//    void testSattelite01() throws FileNotFoundException, ParseException {
-//        dmn = "IPC_2020/satellite01/Satellite/domains/satellite2.hddl";
-//        prb = "IPC_2020/satellite01/Satellite/problems/1obs-1sat-1mod.hddl";
-//        setUp(dmn, prb);
-//        ProblemEnricher pE = new ProblemEnricher(domain, problem);
-//        Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
-//        encoder.encodeToZ3ExpressionsAndGetResult();
-//        System.out.println();
-//    }
+    @Test
+    // Uses constraints
+    void testSattelite01() throws FileNotFoundException, ParseException {
+        dmn = "IPC_2020/satellite01/Satellite/domains/satellite2.hddl";
+        prb = "IPC_2020/satellite01/Satellite/problems/1obs-1sat-1mod.hddl";
+        setUp(dmn, prb);
+        ProblemEnricher pE = new ProblemEnricher(domain, problem);
+        Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
+        encoder.encodeToZ3ExpressionsAndGetResult();
+        System.out.println();
+    }
 
 //    @Test
 //    // Uses constraints

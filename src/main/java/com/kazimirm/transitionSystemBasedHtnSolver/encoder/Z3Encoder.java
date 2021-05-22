@@ -26,6 +26,7 @@ public class Z3Encoder {
     private Fixedpoint fix;
     private Expr answer;
     private int MAX_NUMBER_OF_SUBTASKS;
+    private final String HASH = "#";
 
     public Z3Encoder(Domain domain, Problem problem) {
         this.domain = domain;
@@ -85,13 +86,13 @@ public class Z3Encoder {
     private void encodeFunctionSignatures() {
         for (Task task : domain.getTasks()) {
             for (int i = 0; i < MAX_NUMBER_OF_SUBTASKS; i++) {
-                declareRelations(task.getName() + "#" + i, task.getParameters());
+                declareRelations(task.getName() + HASH + i, task.getParameters());
             }
         }
 
         for (Action action : domain.getActions()) {
             for (int i = 0; i < MAX_NUMBER_OF_SUBTASKS; i++) {
-                declareRelations(action.getName() + "#" + i, action.getParameters());
+                declareRelations(action.getName() + HASH + i, action.getParameters());
             }
         }
     }
@@ -168,13 +169,13 @@ public class Z3Encoder {
 
                 for (int i = 0; i < MAX_NUMBER_OF_SUBTASKS; i++) {
                     Expr ruleA = ctx.mkAnd(ruleAParams.toArray(new Expr[0]));
-                    Expr ruleB = ctx.mkApp(functions.get(a.getName() + "#" + i), ruleBExpr);
+                    Expr ruleB = ctx.mkApp(functions.get(a.getName() + HASH + i), ruleBExpr);
 
                     Expr expr = ctx.mkImplies(ruleA, ruleB);
                     allExpressions.add(expr);
                     Quantifier quantifier = ctx.mkForall(ruleBParams.toArray(new Expr[0]), expr, 0, null, null, null, null);
 
-                    Symbol symbol = ctx.mkSymbol(a.getName() + "#" + i + permutation.toString());
+                    Symbol symbol = ctx.mkSymbol(a.getName() + HASH + i + permutation.toString());
                     fix.addRule(quantifier, symbol);
                 }
                 //logger.debug("Action - " + a.getName() + ":   " + expr.toString());
@@ -227,7 +228,7 @@ public class Z3Encoder {
                 params.add(param);
             }
 
-            // postConditions
+            // effects
             for (List<BoolExpr> boolExprList : predicatesExpressionsList.values()) {
                 BoolExpr param = boolExprList.get(subtasks.indexOf(subtask) + 1);
                 boolPredicates.add(param);
@@ -235,7 +236,7 @@ public class Z3Encoder {
             }
 
             Expr[] expr = params.toArray(new Expr[0]);
-            Expr subtaskExpr = ctx.mkApp(functions.get(subtask.getTask().getName() + "#" + subtasks.indexOf(subtask)), expr);
+            Expr subtaskExpr = ctx.mkApp(functions.get(subtask.getTask().getName() + HASH + subtasks.indexOf(subtask)), expr);
             subtaskExpressions.add(subtaskExpr);
         }
 
@@ -272,7 +273,7 @@ public class Z3Encoder {
 
     /**
      * This method is used to declare function signature for each task & action and stores into functions hashmap.
-     * (Two loops for preconditions and postconditions can be merged but are separated for better readability and understanding)
+     * (Two loops for preconditions and effects can be merged but are separated for better readability and understanding)
      *
      * @param name      - action/task/... name
      * @param arguments - int objects
@@ -293,7 +294,7 @@ public class Z3Encoder {
             params.add(param);
         }
 
-        // postConditions
+        // effects
         for (Predicate p : predicates) {
             BoolSort param = ctx.mkBoolSort();
             params.add(param);
@@ -351,13 +352,13 @@ public class Z3Encoder {
                 }
 
                 Expr[] expr = params.toArray(new Expr[0]);
-                Expr subtaskExpr = ctx.mkApp(functions.get(subtask.getTask().getName() + "#" + subtasks.indexOf(subtask)), expr);
+                Expr subtaskExpr = ctx.mkApp(functions.get(subtask.getTask().getName() + HASH + subtasks.indexOf(subtask)), expr);
                 subtaskExpressions.add(subtaskExpr);
             }
 
             for (Constraint c : m.getConstraints()){
-                // constraints mean two distinct int objects (method params) are not equal so we encode this as negated equation
-                // adn adding to conjunction of method subtasks
+                // constraints mean that two distinct int objects (method params) are not equal so we encode this as negated equation
+                // and adding to conjunction of method subtasks
                 IntExpr param1 = intExpressions.get(c.getParam1().getName());
                 IntExpr param2 = intExpressions.get(c.getParam2().getName());
                 Expr eq = ctx.mkNot(ctx.mkEq(param1, param2));
@@ -386,11 +387,11 @@ public class Z3Encoder {
 
             for (int i = 0; i < MAX_NUMBER_OF_SUBTASKS; i++){
                 Expr subtasksConjunction = ctx.mkAnd(subtaskExpressions.toArray(new Expr[0]));
-                Expr taskExpr = ctx.mkApp(functions.get(m.getTask().getName() + "#" + i), params.toArray(new Expr[0]));
+                Expr taskExpr = ctx.mkApp(functions.get(m.getTask().getName() + HASH + i), params.toArray(new Expr[0]));
                 Expr methodImplication = ctx.mkImplies(subtasksConjunction, taskExpr);
                 Quantifier quantifier = ctx.mkForall(boolPredicates.toArray(new Expr[0]), methodImplication, 0, null, null, null, null);
 
-                Symbol symbol = ctx.mkSymbol(m.toString() + "#" + i);
+                Symbol symbol = ctx.mkSymbol(m.toString() + HASH + i);
                 fix.addRule(quantifier, symbol);
                 allExpressions.add(methodImplication);
             }
