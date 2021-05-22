@@ -23,6 +23,7 @@ public class Z3Encoder {
     private HashMap<String, FuncDecl> functions = new HashMap<>();
     private List<Predicate> predicates;
     private HashMap<String, List<BoolExpr>> predicatesExpressionsList = new HashMap<>();
+    private Graph graph = new Graph(true);
 
     private Context ctx = new Context();
     private Fixedpoint fix;
@@ -53,6 +54,7 @@ public class Z3Encoder {
 
         //visualizeGraph();
         createGraph();
+        graph.printStandardOutput();
 
         System.out.println();
     }
@@ -469,7 +471,6 @@ public class Z3Encoder {
         HashMap<Integer, Expr> exprHashMap = new HashMap<>();
         exprHashMap.put(root.hashCode(), root);
 
-        Graph graph = new Graph(true);
         graph.setIntFromInversemap(objectToInt);
         HashMap<Integer, Node> expressionHashToNode = new HashMap<>();
         Node goal = null;
@@ -477,7 +478,6 @@ public class Z3Encoder {
         while (expressions.get(i) != null && !expressions.get(i).isEmpty()) {
             List<Expr> newLevel = new ArrayList<>();
             for (Expr e : expressions.get(i)) {
-                String label = getExpressionName(e);
 
                 if (e.getNumArgs() >= 1) {
                     Arrays.stream(e.getArgs()).filter(arg -> !(arg instanceof BoolExpr))
@@ -488,15 +488,13 @@ public class Z3Encoder {
 
                     for (Expr arg : sorted){
                         exprHashMap.put(arg.hashCode(), arg);
-                        if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name())) &&
-                                //!label.contains("_Precondition#") && !getExpressionLabel(arg).contains("_Precondition#") &&
-                                i != 0) {
+                        if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name())) && i != 0) {
 
                             if (expressionHashToNode.get(e.hashCode()) == null){
                                 Node node = createNode(e, order++);
                                 expressionHashToNode.put(e.hashCode(), node);
                                 if ("Goal".equals(node.getName())){
-                                    goal = node;
+                                    graph.setRoot(node);
                                 }
                             }
 
@@ -512,13 +510,6 @@ public class Z3Encoder {
             expressions.add(newLevel);
             i++;
         }
-        //graph.printEdges();
-        System.out.println("==>");
-        graph.dfsTyped(goal, TaskType.ACTION);
-        graph.resetNodesVisited();
-        graph.dfsTyped(goal, TaskType.METHOD);
-        System.out.println("<==");
-        //System.out.println("end");
     }
 
     private String getExpressionLabel(Expr e){
@@ -530,15 +521,6 @@ public class Z3Encoder {
         }
         String description = e.getNumArgs() > 2 ? "method" : "action";
         return e.hashCode() + " [label=\"" + name + "\"]" + "[description=\"" + description + "\"]";
-    }
-    private String getExpressionName(Expr e){
-        String name = "";
-        if (!(e instanceof BoolExpr) && "Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
-            name =  (e.getArgs()[e.getNumArgs() - 1]).toString()
-                    .replace("true", "").replace("false", "")
-                    .replace("\n", "").replace("\r", "").trim().replaceAll(" +", " ");
-        }
-        return name;
     }
 
     private Node createNode(Expr e, int order){

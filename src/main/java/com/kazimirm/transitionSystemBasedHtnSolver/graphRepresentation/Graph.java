@@ -13,6 +13,7 @@ public class Graph {
     private HashMap<Node, LinkedList<Node>> adjacencyMap;
     private boolean directed;
     private HashMap<Integer, String> intToObject;
+    private Node root;
 
     public Graph(boolean directed) {
         this.directed = directed;
@@ -78,12 +79,13 @@ public class Graph {
         }
     }
 
-    public void dfsTyped(Node node, TaskType type) {
+    public void dfsTyped(Node node, TaskType type, StringBuilder sb) {
         node.visit();
         if (type.equals(node.getType())) {
             String print = getStandardOutputOfTask(node);
             if (!"".equals(print)) {
-                System.out.println(print);
+                sb.append(print);
+                sb.append(System.getProperty("line.separator"));
             }
         }
 
@@ -93,7 +95,7 @@ public class Graph {
 
         for (Node neighbor : allNeighbors) {
             if (!neighbor.isVisited())
-                dfsTyped(neighbor, type);
+                dfsTyped(neighbor, type, sb);
         }
     }
 
@@ -150,35 +152,18 @@ public class Graph {
         return sb.toString();
     }
 
-    public void depthFirstSearchMethods(Node node) {
-        node.visit();
-        if (TaskType.METHOD == node.getType()) {
-            String label = node.getName().replace("(", "").replace(")", "").replace("|", "");
-            System.out.print(label + " " + "\n");
-        }
-
-        LinkedList<Node> allNeighbors = adjacencyMap.get(node);
-        if (allNeighbors == null)
-            return;
-
-        for (Node neighbor : allNeighbors) {
-            if (!neighbor.isVisited())
-                depthFirstSearch(neighbor);
-        }
+    public String getStandardOutput(Node goal){
+        StringBuilder sb = new StringBuilder();
+        sb.append("==>").append(System.getProperty("line.separator"));
+        this.dfsTyped(goal, TaskType.ACTION, sb);
+        this.resetNodesVisited();
+        this.dfsTyped(goal, TaskType.METHOD, sb);
+        sb.append("<==").append(System.getProperty("line.separator"));
+        return sb.toString();
     }
 
-    public void depthFirstSearchModified(Node node) {
-        depthFirstSearch(node);
-
-        for (Node n : adjacencyMap.keySet()) {
-            if (!n.isVisited()) {
-                depthFirstSearch(n);
-            }
-        }
-    }
-
-    public HashMap<Integer, String> getObjectToInt() {
-        return intToObject;
+    public void printStandardOutput(){
+        System.out.println(getStandardOutput(root));
     }
 
     public void setIntFromInversemap(LinkedHashMap<String, Integer> objectToInt) {
@@ -187,5 +172,13 @@ public class Graph {
             map.put(entry.getValue(), entry.getKey());
         }
         this.intToObject = map;
+    }
+
+    public Node getRoot() {
+        return root;
+    }
+
+    public void setRoot(Node root) {
+        this.root = root;
     }
 }
