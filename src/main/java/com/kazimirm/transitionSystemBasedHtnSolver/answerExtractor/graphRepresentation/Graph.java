@@ -17,6 +17,9 @@ public class Graph {
     private Expr answer;
     private Node root;
     private String problemName;
+    private final String RELEVANT_NODE = "Z3_OP_PR_HYPER_RESOLVE";
+    private final String METHOD_PRECONDITION_SUFFIX = "_Precondition#";
+
 
     public Graph(String problemName, HashMap<String, Integer> objectToInt, Expr answer) {
         this.problemName = problemName;
@@ -50,7 +53,7 @@ public class Graph {
 
                     for (Expr arg : sorted){
                         exprHashMap.put(arg.hashCode(), arg);
-                        if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name())) && i != 0) {
+                        if (!(arg instanceof BoolExpr) && (RELEVANT_NODE.equals(arg.getFuncDecl().getDeclKind().name())) && i != 0) {
 
                             if (expressionHashToNode.get(e.hashCode()) == null){
                                 Node node = createNode(e, order++);
@@ -75,12 +78,7 @@ public class Graph {
     }
 
     private Node createNode(Expr e, int order){
-        String name = "";
-        if (!(e instanceof BoolExpr) && "Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
-            name =  (e.getArgs()[e.getNumArgs() - 1]).toString()
-                    .replace("true", "").replace("false", "")
-                    .replace("\n", "").replace("\r", "").trim().replaceAll(" +", " ");
-        }
+        String name = extractTaskNameFromExpr(e);
         TaskType type = e.getNumArgs() > 2 ? TaskType.METHOD :  TaskType.ACTION;
         Node node = new Node();
         node.setName(name);
@@ -172,7 +170,7 @@ public class Graph {
     private String getStandardOutputOfTask(Node node){
         StringBuilder sb = new StringBuilder();
         // we want to ignore our added actions
-        if (node.getName().contains("_Precondition")){
+        if (node.getName().contains(METHOD_PRECONDITION_SUFFIX)){
             return "";
         }
         sb.append(node.getN() + " ");
@@ -208,10 +206,10 @@ public class Graph {
             sb.append("-> ");
             Node precondition = adjacencyMap.get(node).get(0);
             String preconditionName = precondition.getName();
-            String methodName = preconditionName.substring(preconditionName.indexOf('|') + 1, preconditionName.indexOf("_Precondition#"));
+            String methodName = preconditionName.substring(preconditionName.indexOf('|') + 1, preconditionName.indexOf(METHOD_PRECONDITION_SUFFIX));
             sb.append(methodName);
             for (Node child : adjacencyMap.get(node)){
-                if (child.getName().contains("_Precondition#")){
+                if (child.getName().contains(METHOD_PRECONDITION_SUFFIX)){
                     continue;
                 }
                 sb.append(" ");
@@ -260,9 +258,9 @@ public class Graph {
                 String label = getExpressionLabel(e);
                 if (!(e instanceof BoolExpr) && i != 0){
                     String color;
-                    if ("Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
+                    if (RELEVANT_NODE.equals(e.getFuncDecl().getDeclKind().name())){
                         color = "red";
-                        //if (!label.contains("_Precondition#")) {
+                        //if (!label.contains(METHOD_PRECONDITION_SUFFIX)) {
                         sb.append(label + "[color=" + color + ", ordering=out];").append(System.getProperty("line.separator"));
                         //}
                     }
@@ -276,8 +274,8 @@ public class Graph {
 
                     for (Expr arg : sorted){
                         exprHashMap.put(arg.hashCode(), arg);
-                        if (!(arg instanceof BoolExpr) && ("Z3_OP_PR_HYPER_RESOLVE".equals(arg.getFuncDecl().getDeclKind().name())) && i != 0) {
-                            // && !label.contains("_Precondition#") && !getExpressionLabel(arg).contains("_Precondition#")) {
+                        if (!(arg instanceof BoolExpr) && (RELEVANT_NODE.equals(arg.getFuncDecl().getDeclKind().name())) && i != 0) {
+                            // && !label.contains(METHOD_PRECONDITION_SUFFIX) && !getExpressionLabel(arg).contains(METHOD_PRECONDITION_SUFFIX)) {
                             sb.append(e.hashCode() + " -> " + arg.hashCode() + ";").append(System.getProperty("line.separator"));
                         }
                     }
@@ -299,14 +297,19 @@ public class Graph {
     }
 
     private String getExpressionLabel(Expr e){
+        String name = extractTaskNameFromExpr(e);
+        String description = e.getNumArgs() > 2 ? "method" : "action";
+        return e.hashCode() + " [label=\"" + name + "\"]" + "[description=\"" + description + "\"]";
+    }
+
+    private String extractTaskNameFromExpr(Expr e) {
         String name = "";
-        if (!(e instanceof BoolExpr) && "Z3_OP_PR_HYPER_RESOLVE".equals(e.getFuncDecl().getDeclKind().name())){
+        if (!(e instanceof BoolExpr) && RELEVANT_NODE.equals(e.getFuncDecl().getDeclKind().name())){
             name =  (e.getArgs()[e.getNumArgs() - 1]).toString()
                     .replace("true", "").replace("false", "")
                     .replace("\n", "").replace("\r", "").trim().replaceAll(" +", " ");
         }
-        String description = e.getNumArgs() > 2 ? "method" : "action";
-        return e.hashCode() + " [label=\"" + name + "\"]" + "[description=\"" + description + "\"]";
+        return name;
     }
 
     private int getOrderOfTask(String label){
@@ -333,21 +336,5 @@ public class Graph {
 
     public void setAnswer(Expr answer) {
         this.answer = answer;
-    }
-
-    public String getProblemName() {
-        return problemName;
-    }
-
-    public void setProblemName(String problemName) {
-        this.problemName = problemName;
-    }
-
-    public HashMap<String, Integer> getObjectToInt() {
-        return objectToInt;
-    }
-
-    public void setObjectToInt(HashMap<String, Integer> objectToInt) {
-        this.objectToInt = objectToInt;
     }
 }
