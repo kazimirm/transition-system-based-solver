@@ -190,7 +190,9 @@ public class ProblemEnricher {
             }
 
 
+            HashMap<String, Subtask> subtasks = new HashMap<>();
             for (Subtask s : m.getSubtasks()) {
+                subtasks.put(s.getName(), s);
                 Task st = s.getTask();
 
                 List<Predicate> subTaskPreConditions = cloneList(predicatesVariables);
@@ -200,6 +202,14 @@ public class ProblemEnricher {
                 List<Predicate> subTaskPostConditions = cloneList(predicatesVariables);
                 subTaskPostConditions.forEach(p -> p.setIndex(m.getSubtasks().indexOf(s) + 1));
                 st.setPostConditions(subTaskPostConditions);
+            }
+
+            // changing order of subtasks if there is explicit ordering
+            for (Ordering o : m.getOrdering()){
+                Subtask before = subtasks.get(o.getSubtaskBefore());
+                Subtask after = subtasks.get(o.getSubtaskAfter());
+                m.getSubtasks().remove(before);
+                m.getSubtasks().add(m.getSubtasks().indexOf(after), before);
             }
         }
     }
@@ -300,9 +310,10 @@ public class ProblemEnricher {
 
 //        logger.debug("⊥ :- " + predicates.stream().map(Predicate::toStringWithOptionalNegation)
 //                .collect(Collectors.joining(" ∧ ")) + " ∧");
+        HashMap<String, Subtask> subtasks = new HashMap<>();
 
         for (Subtask subtask : problem.getHtn().getSubtasks()) {
-
+            subtasks.put(subtask.getName(), subtask);
             subtask.setName(subtask.getName() + "#" + problem.getHtn().getSubtasks().indexOf(subtask));
 
             List<Predicate> preConditions = cloneList(predicates);
@@ -318,6 +329,14 @@ public class ProblemEnricher {
 //                    postConditions.stream().map(Predicate::toString)
 //                            .collect(Collectors.joining(", ")) + ")"
 //            );
+        }
+
+        // changing order of subtasks if there is explicit ordering
+        for (Ordering o : problem.getHtn().getOrdering()){
+            Subtask before = subtasks.get(o.getSubtaskBefore());
+            Subtask after = subtasks.get(o.getSubtaskAfter());
+            problem.getHtn().getSubtasks().remove(before);
+            problem.getHtn().getSubtasks().add(problem.getHtn().getSubtasks().indexOf(after), before);
         }
     }
 }

@@ -66,6 +66,19 @@ public class IpcTasksTest {
     }
 
     @Test
+    void testRover01() throws FileNotFoundException, ParseException {
+        dmn = "IPC_2020/rover01/rover/domains/rover-domain.hddl";
+        prb = "IPC_2020/rover01/rover/problems/pfile01.hddl";
+        setUp(dmn, prb);
+        ProblemEnricher pE = new ProblemEnricher(domain, problem);
+        Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
+        encoder.encodeToZ3ExpressionsAndGetResult();
+        AnswerExtractor extractor = new AnswerExtractor(encoder);
+        Graph graph = extractor.getGraphFromAnswer();
+        System.out.println(graph.getStandardOutput());
+    }
+
+    @Test
     // Uses constraints
     void testSattelite01() throws FileNotFoundException, ParseException {
         dmn = "IPC_2020/satellite01/Satellite/domains/satellite2.hddl";
