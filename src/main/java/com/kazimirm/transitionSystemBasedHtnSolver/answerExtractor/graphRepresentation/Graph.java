@@ -19,6 +19,7 @@ public class Graph {
     private String problemName;
     private final String RELEVANT_NODE = "Z3_OP_PR_HYPER_RESOLVE";
     private final String METHOD_PRECONDITION_SUFFIX = "_Precondition#";
+    private final boolean satisfiable;
 
 
     public Graph(String problemName, HashMap<String, Integer> objectToInt, Expr answer) {
@@ -28,6 +29,7 @@ public class Graph {
         setIntToObjectFromInversemap(objectToInt);
         adjacencyMap = new HashMap<>();
         createGraph();
+        satisfiable = answer.getArgs()[0].isProofAsserted();
     }
 
     private void createGraph() {
@@ -221,6 +223,10 @@ public class Graph {
 
     public String getStandardOutput(Node goal){
         StringBuilder sb = new StringBuilder();
+        if (!satisfiable){
+            sb.append("The combination of PD an PP does not have a solution!");
+            return sb.toString();
+        }
         sb.append("==>").append(System.getProperty("line.separator"));
         this.dfsTyped(goal, TaskType.ACTION, sb);
         this.resetNodesVisited();
