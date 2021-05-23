@@ -56,7 +56,6 @@ public class ProblemEnricher {
      * This method takes given domain and problem and creates variables for all ground instances of predicate
      */
     private void enrichPredicates() {
-
         for (Type t : domain.getTypes()) {
             if (!typeToListOfTypedObjects.containsKey(t.getName())){
                 typeToListOfTypedObjects.put(t.getName(), new ArrayList<>());
@@ -75,17 +74,22 @@ public class ProblemEnricher {
             if (!typeNameToExtendedTypes.containsKey(t.getBaseType())){
                 typeNameToExtendedTypes.put(t.getBaseType(), new HashSet<>());
                 typeNameToExtendedTypes.get(t.getBaseType()).add(t.getBaseType());
+            } else {
+                for (String entry : typeNameToExtendedTypes.get(t.getBaseType())) {
+                    typeNameToExtendedTypes.get(t.getName()).add(entry);
+                }
             }
 
             for (HashSet<String> entry : typeNameToExtendedTypes.values()){
                 if (entry.contains(t.getName())){
-                    entry.add(t.getBaseType());
+                    for (String subtype : typeNameToExtendedTypes.get(t.getBaseType())) {
+                        entry.add(subtype);
+                    }
                 }
             }
         }
 
         for (Argument a : problem.getObjects()) {
-
             String type = a.getType();
             for (String subtype : typeNameToExtendedTypes.get(type)) {
                 typeToListOfTypedObjects.get(subtype).add(a);
