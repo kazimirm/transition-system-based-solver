@@ -611,8 +611,8 @@ Action getAction():
     <LPAR> <COLON> <ACTION>
     actionName = getAttribute()
     parameters = getParameters()
-    <COLON> <PRECONDITION> preconditions = getActionPredicates()
-    <COLON> <EFFECT> effects = getActionPredicates()
+    (<COLON> <PRECONDITION> ((preconditions =  getActionPredicate() | preconditions = getActionPredicates())) | (<LPAR> <RPAR>))?
+    (<COLON> <EFFECT> ((effects =  getActionPredicate() | effects = getActionPredicates())) | (<LPAR> <RPAR>))?
     <RPAR>
     {
         action.setName(actionName);
@@ -830,17 +830,20 @@ Htn getHtn():
     List<Parameter> parameters = new ArrayList<>();
     List<Subtask> subtasks = new ArrayList<>();
     List<Ordering> ordering = new ArrayList<>();
+    List<Constraint> constraints = new ArrayList<>();
 }
 {
     <LPAR> <COLON> <HTN>
     (parameters = getParameters())?
     subtasks = getProblemSubtasks()
     (ordering = getOrdering())?
+    (constraints = getConstraints())?
     <RPAR>
     {
         htn.setParameters(parameters);
         htn.setSubtasks(subtasks);
         htn.setOrdering(ordering);
+        htn.setConstraints(constraints);
         return htn;
     }
 

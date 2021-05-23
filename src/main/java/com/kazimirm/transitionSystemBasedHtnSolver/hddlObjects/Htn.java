@@ -6,6 +6,7 @@ public class Htn {
     List<Parameter> parameters;
     List<Subtask> subtasks;
     List<Ordering> ordering;
+    private List<Constraint> constraints;
 
     public Htn() {
     }
@@ -32,5 +33,13 @@ public class Htn {
 
     public void setOrdering(List<Ordering> ordering) {
         this.ordering = ordering;
+    }
+
+    public List<Constraint> getConstraints() {
+        return constraints;
+    }
+
+    public void setConstraints(List<Constraint> constraints) {
+        this.constraints = constraints;
     }
 }

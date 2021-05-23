@@ -167,7 +167,7 @@ public class ProblemEnricher {
             // for each method that has some preconditions. This action has the same parameters and preconditions as method,
             // no effects and it will be the first subtask of the method.
             // Firstly, the purpose was just to encode method preconditions, but to construct plan in the standard output
-            // format we need method names of abstract tasks. For this purpose we create action precondition in all methods
+            // format we need method names for abstract tasks. For this purpose we create action precondition in all methods
             // where this precondition holds the method name that can be later extracted.
             {
                 Action preconditionAction = new Action();

@@ -40,9 +40,22 @@ public class IpcTasksTest {
     }
 
     @Test
-    void testRoverTransport() throws FileNotFoundException, ParseException {
+    void testPRover01() throws FileNotFoundException, ParseException {
         dmn = "IPC_2020/p-rover01/rover/domains/rover-domain.hddl";
         prb = "IPC_2020/p-rover01/rover/problems/pfile01.hddl";
+        setUp(dmn, prb);
+        ProblemEnricher pE = new ProblemEnricher(domain, problem);
+        Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
+        encoder.encodeToZ3ExpressionsAndGetResult();
+        AnswerExtractor extractor = new AnswerExtractor(encoder);
+        Graph graph = extractor.getGraphFromAnswer();
+        System.out.println(graph.getStandardOutput());
+    }
+
+    @Test
+    void testPTransport01() throws FileNotFoundException, ParseException {
+        dmn = "IPC_2020/p-transport01/transport/domains/domain-htn.hddl";
+        prb = "IPC_2020/p-transport01/transport/problems/pfile01.hddl";
         setUp(dmn, prb);
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
         Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
