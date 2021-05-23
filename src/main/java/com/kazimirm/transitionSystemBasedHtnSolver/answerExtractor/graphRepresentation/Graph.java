@@ -173,7 +173,7 @@ public class Graph {
         if (node.getName().contains(METHOD_PRECONDITION_SUFFIX)){
             return "";
         }
-        sb.append(node.getN() + " ");
+        sb.append(node.getN());
         String label = node.getName().replace("(", "").replace(")", "").replace("|", "");
 
         try {
@@ -199,11 +199,11 @@ public class Graph {
             } catch (NumberFormatException e) {
                 //nothing to there in such case
             }
-            sb.append(args[i] + " ");
+            sb.append(" " + args[i]);
         }
 
         if (TaskType.METHOD == node.getType()){
-            sb.append("-> ");
+            sb.append(" -> ");
             Node precondition = adjacencyMap.get(node).get(0);
             String preconditionName = precondition.getName();
             String methodName = preconditionName.substring(preconditionName.indexOf('|') + 1, preconditionName.indexOf(METHOD_PRECONDITION_SUFFIX));
