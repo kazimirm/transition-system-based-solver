@@ -27,6 +27,7 @@ public class Z3Encoder {
     private Expr answer;
     private int MAX_NUMBER_OF_SUBTASKS;
     private final String HASH = "#";
+    private boolean satisfiable;
 
     public Z3Encoder(Domain domain, Problem problem) {
         this.domain = domain;
@@ -266,7 +267,7 @@ public class Z3Encoder {
         Quantifier quant = ctx.mkForall(boolPredicates.toArray(new Expr[0]), impl, 0, null, null, null, null);
 
         fix.addRule(quant, ctx.mkSymbol("INIT"));
-        fix.query(mainGoal);
+        satisfiable = fix.query(mainGoal).equals(Status.SATISFIABLE);
         answer = fix.getAnswer();
         //logger.debug("INIT:   " + impl.toString());
     }
@@ -413,5 +414,9 @@ public class Z3Encoder {
 
     public Expr getAnswer() {
         return answer;
+    }
+
+    public boolean isSatisfiable() {
+        return satisfiable;
     }
 }

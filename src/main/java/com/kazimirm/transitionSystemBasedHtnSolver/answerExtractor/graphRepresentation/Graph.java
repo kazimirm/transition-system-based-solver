@@ -22,14 +22,14 @@ public class Graph {
     private final boolean satisfiable;
 
 
-    public Graph(String problemName, HashMap<String, Integer> objectToInt, Expr answer) {
+    public Graph(String problemName, HashMap<String, Integer> objectToInt, Expr answer, boolean satisfiable) {
         this.problemName = problemName;
         this.objectToInt = objectToInt;
         this.answer = answer;
+        this.satisfiable = satisfiable;
         setIntToObjectFromInversemap(objectToInt);
         adjacencyMap = new HashMap<>();
         createGraph();
-        satisfiable = answer.getArgs()[0].isProofAsserted();
     }
 
     private void createGraph() {

@@ -13,7 +13,7 @@ public class AnswerExtractor {
     }
 
     public Graph getGraphFromAnswer() {
-        Graph graph = new Graph(encoder.getProblem().getName(), encoder.getObjectToInt(), encoder.getAnswer());
+        Graph graph = new Graph(encoder.getProblem().getName(), encoder.getObjectToInt(), encoder.getAnswer(), encoder.isSatisfiable());
         return graph;
     }
 }
