@@ -6,9 +6,9 @@
 	(:types
 		calib_direction - direction
 		image_direction - direction
-		instrument
-		mode
-		satellite
+		instrument - object
+		mode - object
+		satellite - object
 	)
 	(:predicates
 		(calibrated ?arg0 - instrument)

@@ -58,9 +58,4 @@
 		(RV_Compatible Paris_London_Air_Route FlugzeugAirFrance)
 		(At_Package Drucker FlughafenStuttgart)
 	)
-	(:goal
-		(and
-		(Delivered Drucker)
-		)
-	)
 )

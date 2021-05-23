@@ -87,11 +87,26 @@ public class IpcTasksTest {
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
         Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
         encoder.encodeToZ3ExpressionsAndGetResult();
-        System.out.println();
+        AnswerExtractor extractor = new AnswerExtractor(encoder);
+        Graph graph = extractor.getGraphFromAnswer();
+        System.out.println(graph.getStandardOutput());
+    }
+
+    @Test
+    void testTransport01() throws FileNotFoundException, ParseException {
+        dmn = "IPC_2020/transport01/transport/domains/domain-htn.hddl";
+        prb = "IPC_2020/transport01/transport/problems/pfile01.hddl";
+        setUp(dmn, prb);
+        ProblemEnricher pE = new ProblemEnricher(domain, problem);
+        Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
+        encoder.encodeToZ3ExpressionsAndGetResult();
+        AnswerExtractor extractor = new AnswerExtractor(encoder);
+        Graph graph = extractor.getGraphFromAnswer();
+        System.out.println(graph.getStandardOutput());
     }
 
 //    @Test
-//    // Uses constraints
+//    // Uses multiple types encapsulation - not yet solved
 //    void testUmTranslog() throws FileNotFoundException, ParseException {
 //        dmn = "IPC_2020/um-translog01/UM-Translog/domains/UMTranslog.hddl";
 //        prb = "IPC_2020/um-translog01/UM-Translog/problems/01-A-AirplanesHub.hddl";
@@ -99,6 +114,8 @@ public class IpcTasksTest {
 //        ProblemEnricher pE = new ProblemEnricher(domain, problem);
 //        Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
 //        encoder.encodeToZ3ExpressionsAndGetResult();
-//        System.out.println();
+//        AnswerExtractor extractor = new AnswerExtractor(encoder);
+//        Graph graph = extractor.getGraphFromAnswer();
+//        System.out.println(graph.getStandardOutput());
 //    }
 }
