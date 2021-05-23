@@ -1,7 +1,6 @@
 package com.kazimirm.transitionSystemBasedHtnSolver.dataEnricher;
 
 import com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.*;
-import com.microsoft.z3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,8 +14,8 @@ public class ProblemEnricher {
     private Domain domain;
     private Problem problem;
     private List<Predicate> predicates = new ArrayList<>();
-    private HashMap<String, List<Argument>> objectsToTypedLists = new HashMap<>(); // for each type creates list with such objects
-    private HashMap<String, Type> typeNameToType = new HashMap<>();
+    private HashMap<String, List<Argument>> typeToListOfTypedObjects = new HashMap<>(); // for each type creates list with such objects
+    private HashMap<String, HashSet<String>> typeNameToExtendedTypes = new HashMap<>();
     private LinkedHashMap<String, Integer> objectToInt = new LinkedHashMap<>();
 
     public ProblemEnricher(Domain domain, Problem problem) {
@@ -48,8 +47,7 @@ public class ProblemEnricher {
         enrichActions();
         enrichInitialTask();
 
-        problem.setObjectsToTypedLists(objectsToTypedLists);
-        problem.setTypeNameToType(typeNameToType);
+        problem.setObjectsToTypedLists(typeToListOfTypedObjects);
         problem.setObjectToInt(objectToInt);
         problem.setPredicates(predicates);
     }
@@ -60,26 +58,44 @@ public class ProblemEnricher {
     private void enrichPredicates() {
 
         for (Type t : domain.getTypes()) {
-            objectsToTypedLists.put(t.getName(), new ArrayList<>());
-            objectsToTypedLists.put(t.getBaseType(), new ArrayList<>());
-            typeNameToType.put(t.getName(), t);
+            if (!typeToListOfTypedObjects.containsKey(t.getName())){
+                typeToListOfTypedObjects.put(t.getName(), new ArrayList<>());
+            }
+
+            if (!typeToListOfTypedObjects.containsKey(t.getBaseType())){
+                typeToListOfTypedObjects.put(t.getBaseType(), new ArrayList<>());
+            }
+
+            if (!typeNameToExtendedTypes.containsKey(t.getName())){
+                typeNameToExtendedTypes.put(t.getName(), new HashSet<>());
+                typeNameToExtendedTypes.get(t.getName()).add(t.getName());
+                typeNameToExtendedTypes.get(t.getName()).add(t.getBaseType());
+            }
+
+            if (!typeNameToExtendedTypes.containsKey(t.getBaseType())){
+                typeNameToExtendedTypes.put(t.getBaseType(), new HashSet<>());
+                typeNameToExtendedTypes.get(t.getBaseType()).add(t.getBaseType());
+            }
+
+            for (HashSet<String> entry : typeNameToExtendedTypes.values()){
+                if (entry.contains(t.getName())){
+                    entry.add(t.getBaseType());
+                }
+            }
         }
 
         for (Argument a : problem.getObjects()) {
 
             String type = a.getType();
-            objectsToTypedLists.get(type).add(a);
-            String baseType = typeNameToType.get(type).getBaseType();
-
-            if (objectsToTypedLists.containsKey(baseType)) {
-                objectsToTypedLists.get(baseType).add(a);
+            for (String subtype : typeNameToExtendedTypes.get(type)) {
+                typeToListOfTypedObjects.get(subtype).add(a);
             }
         }
 
         for (Predicate p : domain.getPredicates()) {
             List<List<Argument>> lists = new ArrayList<>();
             for (Argument a : p.getArguments()) {
-                lists.add(objectsToTypedLists.get(a.getType()));
+                lists.add(typeToListOfTypedObjects.get(a.getType()));
             }
             generatePermutationsForPredicate(p, lists);
         }
@@ -236,7 +252,7 @@ public class ProblemEnricher {
 
             List<List<Argument>> lists = new ArrayList<>();
             for (Parameter p : action.getParameters()) {
-                lists.add(objectsToTypedLists.get(p.getType()));
+                lists.add(typeToListOfTypedObjects.get(p.getType()));
             }
             generatePermutationsForActionParameters(action, lists, 0, "");
 
