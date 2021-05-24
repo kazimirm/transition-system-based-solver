@@ -53,7 +53,8 @@ public class ProblemEnricher {
     }
 
     /**
-     * This method takes given domain and problem and creates variables for all ground instances of predicate
+     * This method takes given domain and problem and creates variables for all ground instances of predicate.
+     * Also, we map all subtypes for each type to support multiple inheritance of data types.
      */
     private void enrichPredicates() {
         for (Type t : domain.getTypes()) {
