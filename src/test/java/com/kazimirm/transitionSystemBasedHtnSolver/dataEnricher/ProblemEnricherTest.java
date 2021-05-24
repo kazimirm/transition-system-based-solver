@@ -1,5 +1,7 @@
 package com.kazimirm.transitionSystemBasedHtnSolver.dataEnricher;
 
+import com.kazimirm.transitionSystemBasedHtnSolver.answerExtractor.AnswerExtractor;
+import com.kazimirm.transitionSystemBasedHtnSolver.answerExtractor.graphRepresentation.Graph;
 import com.kazimirm.transitionSystemBasedHtnSolver.encoder.Z3Encoder;
 import com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.Domain;
 import com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.Problem;
@@ -74,6 +76,9 @@ class ProblemEnricherTest {
         ProblemEnricher pE = new ProblemEnricher(domain, problem);
         Z3Encoder encoder = new Z3Encoder(pE.getDomain(), pE.getProblem());
         encoder.encodeToZ3ExpressionsAndGetResult();
+        AnswerExtractor extractor = new AnswerExtractor(encoder);
+        Graph graph = extractor.getGraphFromAnswer();
+        System.out.println(graph.getStandardOutput());
     }
 
     @Test

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.Domain</OriginalElement>
+  <nodes>
+    <node x="256.5" y="0.0">com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.HtnInput</node>
+    <node x="0.0" y="104.0">com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.Problem</node>
+    <node x="354.0" y="126.0">com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.Domain</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.Domain" target="com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.HtnInput">
+      <point x="0.0" y="-115.0" />
+      <point x="458.0" y="79.0" />
+      <point x="340.5" y="79.0" />
+      <point x="28.0" y="27.0" />
+    </edge>
+    <edge source="com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.Problem" target="com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.HtnInput">
+      <point x="0.0" y="-137.0" />
+      <point x="167.0" y="79.0" />
+      <point x="284.5" y="79.0" />
+      <point x="-28.0" y="27.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="281.0" y="189.0" />
+  <SelectedNodes>
+    <node>com.kazimirm.transitionSystemBasedHtnSolver.hddlObjects.Problem</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
