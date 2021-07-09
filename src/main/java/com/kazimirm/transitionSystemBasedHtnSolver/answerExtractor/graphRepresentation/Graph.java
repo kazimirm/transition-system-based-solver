@@ -169,6 +169,32 @@ public class Graph {
         }
     }
 
+    public void dfsTypedSingleTransition(Node node, StringBuilder actions, StringBuilder methods) {
+        node.visit();
+        if (TaskType.ACTION.equals(node.getType())) {
+            String print = getStandardOutputOfTask(node);
+            if (!"".equals(print)) {
+                actions.append(print);
+                actions.append(System.getProperty("line.separator"));
+            }
+        } else if (TaskType.METHOD.equals(node.getType())) {
+            String print = getStandardOutputOfTask(node);
+            if (!"".equals(print)) {
+                methods.append(print);
+                methods.append(System.getProperty("line.separator"));
+            }
+        }
+
+        LinkedList<Node> allNeighbors = adjacencyMap.get(node);
+        if (allNeighbors == null)
+            return;
+
+        for (Node neighbor : allNeighbors) {
+            if (!neighbor.isVisited())
+                dfsTypedSingleTransition(neighbor, actions, methods);
+        }
+    }
+
     private String getStandardOutputOfTask(Node node){
         StringBuilder sb = new StringBuilder();
         // we want to ignore our added actions
@@ -222,6 +248,23 @@ public class Graph {
     }
 
     public String getStandardOutput(Node goal){
+        StringBuilder sb = new StringBuilder();
+        StringBuilder sbActions = new StringBuilder();
+        StringBuilder sbMethods = new StringBuilder();
+        if (!satisfiable){
+            sb.append("The combination of PD an PP does not have a solution!");
+            return sb.toString();
+        }
+        sb.append("==>").append(System.getProperty("line.separator"));
+        this.dfsTypedSingleTransition(goal, sbActions, sbMethods);
+        this.resetNodesVisited();
+        sb.append(sbActions).append(sbMethods);
+        sb.append("<==").append(System.getProperty("line.separator"));
+        return sb.toString();
+    }
+
+    // Old method where two graph traversals were made
+    public String getStandardOutputTwoTransitions(Node goal){
         StringBuilder sb = new StringBuilder();
         if (!satisfiable){
             sb.append("The combination of PD an PP does not have a solution!");

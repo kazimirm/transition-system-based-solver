@@ -1,6 +1,6 @@
 # Transition-system-based HTN planning solver
 
-This project contains a new-approach solver of HTN tasks in totally-order HDDL language used as bachelor thesis for IPSS on MFF CUNI 2021.
+This project contains a new-approach solver of HTN tasks in totally-ordered HDDL language used as bachelor thesis for IPSS on MFF CUNI 2021.
 
 ## Abstract
 Constrained Horn Clauses (CHC) has recently emerged as an intermediate language for expressing verification conditions in software verification. They extend the classical formats for SAT and SMT by capturing high-level constructs such as loops and recursion in low-level logical representation.

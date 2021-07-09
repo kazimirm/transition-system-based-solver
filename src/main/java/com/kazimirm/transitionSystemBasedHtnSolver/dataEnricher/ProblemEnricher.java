@@ -57,6 +57,7 @@ public class ProblemEnricher {
      * Also, we map all subtypes for each type to support multiple inheritance of data types.
      */
     private void enrichPredicates() {
+        // get types, create list where are inserted objects
         for (Type t : domain.getTypes()) {
             if (!typeToListOfTypedObjects.containsKey(t.getName())){
                 typeToListOfTypedObjects.put(t.getName(), new ArrayList<>());
@@ -90,6 +91,7 @@ public class ProblemEnricher {
             }
         }
 
+        // insert object to each type list where it belongs
         for (Argument a : problem.getObjects()) {
             String type = a.getType();
             for (String subtype : typeNameToExtendedTypes.get(type)) {
@@ -97,6 +99,8 @@ public class ProblemEnricher {
             }
         }
 
+
+        // generate permutations
         for (Predicate p : domain.getPredicates()) {
             List<List<Argument>> lists = new ArrayList<>();
             for (Argument a : p.getArguments()) {

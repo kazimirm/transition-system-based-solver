@@ -27,6 +27,7 @@ public class TransitionSystemBasedHtnSolver {
             throw new IllegalArgumentException("The valid parameters are paths to PD and PP files. Optionally You can add '-dot' " +
                     "as a 3rd parameter to add graph dot format. For more info please check the documentation!");
         }
+        System.out.println("Solver has started...");
         String pD = args[0];
         String pP = args[1];
 
@@ -40,18 +41,27 @@ public class TransitionSystemBasedHtnSolver {
         long startTime = System.nanoTime();
         try (InputStream dI = Files.newInputStream(Paths.get(pD));
              InputStream pI = Files.newInputStream(Paths.get(pP))) {
-
+            System.out.println("Parsing phase initialized..." + java.time.LocalDateTime.now());
             ParserHDDL parser = new ParserHDDL(dI);
             Domain domain = parser.parseDomain();
             parser.ReInit(pI);
             Problem problem = parser.parseProblem();
+            System.out.println("Parsing phase ended..." + java.time.LocalDateTime.now());
 
+            System.out.println("Enrichment phase initialized..." + java.time.LocalDateTime.now());
             ProblemEnricher enricher = new ProblemEnricher(domain, problem);
+            System.out.println("Enrichment phase ended..." + java.time.LocalDateTime.now());
 
+            System.out.println("Encoding phase initialized..." + java.time.LocalDateTime.now());
             Z3Encoder encoder = new Z3Encoder(enricher.getDomain(), enricher.getProblem());
             encoder.encodeToZ3ExpressionsAndGetResult();
+            System.out.println("Encoding phase ended..." + java.time.LocalDateTime.now());
+
+            System.out.println("Extracting the result..." + java.time.LocalDateTime.now());
             AnswerExtractor extractor = new AnswerExtractor(encoder);
             Graph graph = extractor.getGraphFromAnswer();
+            System.out.println("Result extracted..." + java.time.LocalDateTime.now());
+            System.out.println("Printing the result:");
             System.out.println(graph.getStandardOutput());
             if (addDotToPrint){
                 System.out.println();
