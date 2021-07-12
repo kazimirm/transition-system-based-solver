@@ -1,0 +1,56 @@
+(define
+	(problem pfile01)
+	(:domain  domain_htn)
+	(:objects
+		package_0 - package
+		package_1 - package
+		package_2 - package
+        package_3 - package
+        package_4 - package
+		capacity_0 - capacity_number
+		capacity_1 - capacity_number
+		start - location
+		city_loc_0 - location
+		city_loc_1 - location
+		city_loc_2 - location
+		city_loc_3 - location
+		city_loc_4 - location
+		truck_0 - vehicle
+	)
+	(:htn
+		:parameters ()
+		:subtasks (and
+		 (task0 (deliver package_0 city_loc_0))
+		 (task1 (deliver package_1 city_loc_1))
+		 (task2 (deliver package_2 city_loc_2))
+		 (task3 (deliver package_3 city_loc_3))
+		 (task4 (deliver package_4 city_loc_4))
+		)
+		:ordering (and
+			(< task0 task1)
+			(< task1 task2)
+			(< task2 task3)
+			(< task3 task4)
+		)
+	)
+	(:init
+		(capacity_predecessor capacity_0 capacity_1)
+		(road city_loc_0 start)
+        (road start city_loc_0)
+		(road city_loc_0 city_loc_1)
+		(road city_loc_1 city_loc_0)
+		(road city_loc_1 city_loc_2)
+		(road city_loc_2 city_loc_1)
+		(road city_loc_3 city_loc_2)
+        (road city_loc_2 city_loc_3)
+        (road city_loc_3 city_loc_4)
+        (road city_loc_4 city_loc_3)
+		(at package_0 start)
+		(at package_1 start)
+		(at package_2 start)
+		(at package_3 start)
+		(at package_4 start)
+		(at truck_0 start)
+		(capacity truck_0 capacity_1)
+	)
+)
