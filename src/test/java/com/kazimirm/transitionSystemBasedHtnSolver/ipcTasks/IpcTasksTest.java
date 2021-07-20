@@ -39,6 +39,10 @@ public class IpcTasksTest {
         problem = parser.parseProblem();
     }
 
+    /**
+     *  Currently, these are just dummy tests and served mostly for debugging purposes
+     */
+
     @Test
     void testPRover01() throws FileNotFoundException, ParseException {
         dmn = "IPC_2020/p-rover01/rover/domains/rover-domain.hddl";

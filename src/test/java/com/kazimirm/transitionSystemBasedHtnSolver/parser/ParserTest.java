@@ -40,6 +40,10 @@ public class ParserTest {
         problem = parser.parseProblem();
     }
 
+    /**
+     *  Currently, these are just dummy tests and served mostly for debugging purposes
+     */
+
     @Test
     public void testParser_domain_basicInput_from_preliminaries_valid() throws FileNotFoundException, ParseException {
         setUp(DOMAIN_BASIC_FROM_PRELIMINARIES, PROBLEM_INPUT_BASIC_1);

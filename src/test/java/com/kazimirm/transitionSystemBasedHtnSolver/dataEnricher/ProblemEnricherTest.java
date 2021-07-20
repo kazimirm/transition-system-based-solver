@@ -42,6 +42,10 @@ class ProblemEnricherTest {
         problem = parser.parseProblem();
     }
 
+    /**
+     *  Currently, these are just dummy tests and served mostly for debugging purposes
+     */
+
     @Test
     void enrichProblemPreliminaries() throws FileNotFoundException, ParseException {
         setUp(DOMAIN_BASIC_FROM_PRELIMINARIES, PROBLEM_BASIC_FROM_PRELIMINARIES);
