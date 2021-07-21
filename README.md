@@ -58,61 +58,6 @@ these commands:
     cd $PROJECT_ROOT_DIRECTORY
     mvn clean install
 
-# How to run
-
-The program jar file takes these parameters split by space:
-
--   path to file of the HTN domain in HDDL format as the first
-    parameter.
-
--   path to the file of HTN problem in HDDL format (relevant to the
-    domain from previous parameter) as the second parameter.
-
--   Optionally, if a third parameter `'-dot'` is present, in addition to
-    the standard output, also output in a form of graph in the DOT
-    format is printed.
-
-Solver uses few helpful prints so each part of the job can be evaluated.
-Example:
-
-    C:\Users\testing\transition-system-based-solver\target>java -jar Transition-system-based_HTN_planning_solver-1.0-SNAPSHOT.jar C:\Users\testing\domain.hddl C:\Users\testing\problem.hddl
-    Solver has started...
-    Parsing phase initialized...2021-07-13T23:51:30.992593600
-    Parsing phase ended...2021-07-13T23:51:31.022094900
-    Enrichment phase initialized...2021-07-13T23:51:31.022593
-    Enrichment phase ended...2021-07-13T23:51:31.535094200
-    Encoding phase initialized...2021-07-13T23:51:31.535594600
-    Encoding phase ended...2021-07-13T23:51:32.157129
-    Extracting the result...2021-07-13T23:51:32.157600200
-    Result extracted...2021-07-13T23:51:32.237087700
-    Printing the result:
-    ==>
-    14 drive truck_0 city_loc_2 city_loc_1
-    16 pick_up truck_0 city_loc_1 package_0 capacity_0 capacity_1
-    18 drive truck_0 city_loc_1 city_loc_0
-    20 drop truck_0 city_loc_0 package_0 capacity_0 capacity_1
-    22 drive truck_0 city_loc_0 city_loc_1
-    24 pick_up truck_0 city_loc_1 package_1 capacity_0 capacity_1
-    26 drive truck_0 city_loc_1 city_loc_2
-    28 drop truck_0 city_loc_2 package_1 capacity_0 capacity_1
-    root 1 2
-    1 deliver package_0 city_loc_0 -> m_deliver_ordering_0 4 5 6 7
-    4 get_to truck_0 city_loc_1 -> m_drive_to_ordering_0 14
-    5 load truck_0 city_loc_1 package_0 -> m_load_ordering_0 16
-    6 get_to truck_0 city_loc_0 -> m_drive_to_ordering_0 18
-    7 unload truck_0 city_loc_0 package_0 -> m_unload_ordering_0 20
-    2 deliver package_1 city_loc_2 -> m_deliver_ordering_0 9 10 11 12
-    9 get_to truck_0 city_loc_1 -> m_drive_to_ordering_0 22
-    10 load truck_0 city_loc_1 package_1 -> m_load_ordering_0 24
-    11 get_to truck_0 city_loc_2 -> m_drive_to_ordering_0 26
-    12 unload truck_0 city_loc_2 package_1 -> m_unload_ordering_0 28
-    <==
-
-    Execution took '1.2811759' seconds
-
-In case of success, found plan is print in the standard
-format.
-
 ## How to run
 The program has currently the form of console application (executable jar). It takes these parameters split by space:
 > 1. path to file of the HTN domain in HDDL format
