@@ -1,6 +1,6 @@
 # Transition-system-based HTN planning solver
 
-Repository of HTN solver based on translating the planning problem to a reachability problem in a transition system and using off-the-shelf reachability solver for the actual solving.
+Repository of HTN solver based on translating the planning problem to a reachability problem in a transition system and using off-the-shelf reachability solver for the actual solving. This is my defended bachelor thesis including pdf files done during 2020/21 year.
 Expected input are HTN tasks in totally-ordered HDDL language. This project was developed as bachelor thesis for IPSS on MFF CUNI 2021.
 
 ## Abstract
